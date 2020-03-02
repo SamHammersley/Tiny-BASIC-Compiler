@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
  * for matches with said patterns. If all patterns tested and none matched with the start of the remaining string,
  * there is an unexpected character(s).
  * <br />
- * This tokenizer is stateful
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class IteratingRegexTokenizer extends RegexTokenizer {
@@ -27,10 +26,10 @@ public final class IteratingRegexTokenizer extends RegexTokenizer {
     /**
      * Construct a new {@link RegexTokenizer}.
      *
-     * @param grammarRules the regex rules.
+     * @param patterns the regex patterns to match tokens.
      */
-    public IteratingRegexTokenizer(Map<Pattern, Token.Type> grammarRules) {
-        super(grammarRules);
+    public IteratingRegexTokenizer(Map<Pattern, Token.Type> patterns) {
+        super(patterns);
     }
 
     @Override

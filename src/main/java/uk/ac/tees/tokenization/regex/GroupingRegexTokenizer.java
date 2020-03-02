@@ -23,10 +23,10 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
     /**
      * Construct a new {@link RegexTokenizer}.
      *
-     * @param grammarRules the regex rules.
+     * @param patterns the regex patterns to match tokens.
      */
-    public GroupingRegexTokenizer(Map<Pattern, Token.Type> grammarRules) {
-        super(grammarRules);
+    public GroupingRegexTokenizer(Map<Pattern, Token.Type> patterns) {
+        super(patterns);
     }
 
     @Override
@@ -34,55 +34,60 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
         LinkedList<TokenMatchResult> matchResults = new LinkedList<>();
 
         // Check every pattern for matches in the input string.
-        for (Pattern pattern : patterns.keySet()) {
+        for (Map.Entry<Pattern, Token.Type> entry : patterns.entrySet()) {
 
-            Matcher matcher = pattern.matcher(input);
-            Token.Type type = patterns.get(pattern);
+            Matcher matcher = entry.getKey().matcher(input);
+            Token.Type type = entry.getValue();
 
-            // Map each pattern match with a TokenMatchResult.
+            // Map each pattern match to a TokenMatchResult.
             matcher.results().forEach(r -> matchResults.add(TokenMatchResult.fromMatchResult(type, r)));
         }
 
-        // Sort the results by the start index of the match, so they're in the same order as the input string.
+        // Sort the results by the start index of the match, to maintain proper ordering.
         Collections.sort(matchResults);
 
         return validateResults(matchResults, input);
     }
 
     /**
-     * Validates the given {@link List} of {@link TokenMatchResult}s and omits unnecessary detail (starting and ending
-     * positions) to produce a list of {@link Token}s.
+     * Validates the given {@link List} of {@link TokenMatchResult}s, omits unnecessary detail (starting and ending
+     * positions) and produces a list of {@link Token}s.
+     * <br />
+     * The beginning of the string, the end and middle are checked for unmatched, non-whitespace, characters; these
+     * are unexpected and upon detection will throw an exception.
      *
      * @param results the regex pattern matching results.
      * @param input the input string.
      * @return a validated {@link List} of {@link Token}s.
      * @throws UnexpectedCharacterException when unexpected character detected.
      */
-    private Queue<Token> validateResults(LinkedList<TokenMatchResult> results, String input) throws UnexpectedCharacterException {
+    private Queue<Token> validateResults(LinkedList<TokenMatchResult> results, String input)
+            throws UnexpectedCharacterException {
         Queue<Token> tokens = new LinkedList<>();
 
         int lineCount = 1;
         int lastNewLineIndex = -1;
 
-        // Check start of input is valid.
-        validateStart(results.peekFirst(), input, lineCount);
+        // Check start of input is valid, no unexpected chars.
+        validateStart(results, input, lineCount);
 
         TokenMatchResult previous = null;
-        for (TokenMatchResult r : results) {
-            Token token = r.getToken();
+        for (TokenMatchResult result : results) {
+            Token token = result.getToken();
             tokens.add(token);
 
-            validateMiddle(previous, r, input, lineCount, lastNewLineIndex);
+            // Check each non-tokenized section of the input between every interior match.
+            validateMiddle(previous, result, input, lineCount, lastNewLineIndex);
 
             if (token.getType().equals(Token.Type.NEW_LINE)) {
+                lastNewLineIndex = result.start();
                 lineCount++;
-                lastNewLineIndex = r.start();
             }
-            previous = r;
+            previous = result;
         }
 
         // Check start of input is valid.
-        validateEnd(results.peekLast(), input, lineCount);
+        validateEnd(results, input, lineCount);
 
         return tokens;
     }
@@ -91,13 +96,15 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
      * Validates the start of the string by checking the gap between it and the first match. If the first match starts
      * more than 1 character from the start and there is no whitespace at the start, there is an unexpected character.
      *
-     * @param first the first {@link TokenMatchResult}.
+     * @param results the {@link TokenMatchResult}s to validate the start of.
      * @param input the input string to validate the start of.
      * @param lineCount the current line count.
      * @throws UnexpectedCharacterException when unexpected character is detected.
      */
-    private void validateStart(TokenMatchResult first, String input, int lineCount)
+    private void validateStart(LinkedList<TokenMatchResult> results, String input, int lineCount)
             throws UnexpectedCharacterException {
+        TokenMatchResult first = Objects.requireNonNull(results.peekFirst());
+
         if (first.start() > 0) {
             String potential = input.substring(0, first.start()).trim();
 
@@ -112,13 +119,15 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
      * Validates the end of the string by checking the gap between the last match and it. If the last match ends
      * more than 1 character from the end and there is no whitespace at the end, there is an unexpected character.
      *
-     * @param last the last {@link TokenMatchResult}.
+     * @param results the {@link TokenMatchResult}s to validate the start of.
      * @param input the input string to validate the start of.
      * @param lineCount the current line count.
      * @throws UnexpectedCharacterException when unexpected character is detected.
      */
-    private void validateEnd(TokenMatchResult last, String input, int lineCount)
+    private void validateEnd(LinkedList<TokenMatchResult> results, String input, int lineCount)
             throws UnexpectedCharacterException {
+        TokenMatchResult last = Objects.requireNonNull(results.peekLast());
+
         if (input.length() - last.end() > 0) {
             String potential = input.substring(last.end()).trim();
 
@@ -130,8 +139,7 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
     }
 
     /**
-     * Validates the end of the string by checking the gap between the last match and it. If the last match ends
-     * more than 1 character from the end and there is no whitespace at the end, there is an unexpected character.
+     * Validates the middle portion of the input by checking for non-whitespace characters between {@link TokenMatchResult}s.
      *
      * @param previous the previous {@link TokenMatchResult}.
      * @param next the next {@link TokenMatchResult}.
@@ -140,14 +148,15 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
      * @param lastNewLineIndex the index of the last new line character.
      * @throws UnexpectedCharacterException when unexpected character is detected.
      */
-    private void validateMiddle(TokenMatchResult previous, TokenMatchResult next, String input, int lineCount, int lastNewLineIndex)
-            throws UnexpectedCharacterException {
+    private void validateMiddle(TokenMatchResult previous, TokenMatchResult next, String input, int lineCount,
+                                int lastNewLineIndex) throws UnexpectedCharacterException {
         // Check every match with the previous match for too much space between matches.
         if (previous != null && next.start() - previous.end() > 1) {
             String nonTokenized = input.substring(previous.end(), next.start());
 
             // There is unexpected character (not just whitespace) between matches.
             if (!nonTokenized.trim().isBlank()) {
+                // Get the index of the first non-whitespace character.
                 int charIndex = input.indexOf(nonTokenized.trim()) - lastNewLineIndex;
 
                 throw new UnexpectedCharacterException(lineCount, charIndex);
