@@ -70,42 +70,17 @@ public class Token {
 
         DIV,
 
-        REL_OP(true),
+        REL_OP,
 
-        KEYWORD(true),
+        KEYWORD,
 
         L_PARENTHESES,
 
         R_PARENTHESES,
 
-        NUMBER(true),
+        NUMBER,
 
-        NEW_LINE;
-
-        /**
-         * Denotes that a value is required for this token type.
-         */
-        private final boolean valueRequired;
-
-        Type(boolean valueRequired) {
-            this.valueRequired = valueRequired;
-        }
-
-        /**
-         * No args constructor, {@link #valueRequired} is false by default.
-         */
-        Type() {
-            this.valueRequired = false;
-        }
-
-        /**
-         * Gets {@link #valueRequired}.
-         *
-         * @return {@code true} if a value is required.
-         */
-        public boolean isValueRequired() {
-            return valueRequired;
-        }
+        NEW_LINE
 
     }
 
