@@ -15,7 +15,7 @@ public class Token {
     private final Type type;
 
     /**
-     * The value held in this token, certain types do not require a value;
+     * The value held in this token, certain types do not require a value. Null represents empty value.
      */
     private final String value;
 
@@ -29,6 +29,16 @@ public class Token {
         this.type = type;
         this.value = value;
     }
+
+    /**
+     * Constructs a new {@link Token} with an empty value.
+     *
+     * @param type the type of token represented.
+     */
+    public Token(Type type) {
+        this(type, null);
+    }
+
 
     /**
      * Accessor function for type field.
@@ -80,7 +90,9 @@ public class Token {
 
         NUMBER,
 
-        NEW_LINE
+        NEW_LINE,
+
+        STRING_EXPRESSION
 
     }
 

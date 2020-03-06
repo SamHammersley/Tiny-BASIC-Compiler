@@ -1,7 +1,8 @@
-package uk.ac.tees.tokenization.regex;
+package uk.ac.tees.tokenization.regex.group;
 
 import uk.ac.tees.tokenization.Token;
 import uk.ac.tees.tokenization.UnexpectedCharacterException;
+import uk.ac.tees.tokenization.regex.RegexTokenizer;
 
 import java.util.*;
 import java.util.regex.Matcher;

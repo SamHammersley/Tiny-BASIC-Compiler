@@ -2,6 +2,7 @@ package uk.ac.tees.tokenization.regex;
 
 import uk.ac.tees.tokenization.Token;
 import uk.ac.tees.tokenization.TinyBasicTokenizer;
+import uk.ac.tees.tokenization.TokenizationException;
 import uk.ac.tees.tokenization.UnexpectedCharacterException;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.regex.Pattern;
 
 /**
  * A Tiny BASIC tokenizer based on Regular expressions. There are regular expressions for each valid token.
+ *
+ * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public abstract class RegexTokenizer implements TinyBasicTokenizer {
 
@@ -33,8 +36,8 @@ public abstract class RegexTokenizer implements TinyBasicTokenizer {
      *
      * @param input the source code to tokenize.
      * @return a {@link Queue} of {@link Token}s.
-     * @throws UnexpectedCharacterException if an unexpected character was found.
+     * @throws TokenizationException if any exceptional behaviour exhibited.
      */
-    public abstract Queue<Token> tokenize(String input) throws UnexpectedCharacterException;
+    public abstract Queue<Token> tokenize(String input) throws TokenizationException;
 
 }

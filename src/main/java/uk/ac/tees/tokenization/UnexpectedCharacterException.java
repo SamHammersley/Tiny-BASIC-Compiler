@@ -5,7 +5,7 @@ package uk.ac.tees.tokenization;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class UnexpectedCharacterException extends Exception {
+public final class UnexpectedCharacterException extends TokenizationException {
 
     /**
      * The format string for the exception message.

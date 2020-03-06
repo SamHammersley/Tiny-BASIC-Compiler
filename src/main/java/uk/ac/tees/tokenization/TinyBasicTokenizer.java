@@ -7,6 +7,6 @@ import java.util.Queue;
  */
 public interface TinyBasicTokenizer {
 
-    Queue<Token> tokenize(String input) throws UnexpectedCharacterException;
+    Queue<Token> tokenize(String input) throws TokenizationException;
 
 }

@@ -1,4 +1,4 @@
-package uk.ac.tees.tokenization.regex;
+package uk.ac.tees.tokenization.regex.group;
 
 import uk.ac.tees.tokenization.Token;
 
@@ -6,6 +6,8 @@ import java.util.regex.MatchResult;
 
 /**
  * Represents a token matched with regex pattern in source code.
+ *
+ * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class TokenMatchResult implements Comparable<TokenMatchResult> {
 
