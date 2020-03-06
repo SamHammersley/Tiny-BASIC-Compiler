@@ -15,7 +15,7 @@
 <term> ::= <factor> [(* | /) <factor>]*
 <expression> ::= [+ | -] <term> [(+ | -) <term>]*
 <expression-list> ::= <expression> [, <expression>]*
-<identifier> ::= <letter> [<letter> | <digit>]*
+<identifier> ::= <letter>
 <identifier-list> ::= <identifier> [, <identifier>]*
 <number> ::= <digit> <digit>*
 <relational-op> ::= < [> | =] | > [< | =] | =
