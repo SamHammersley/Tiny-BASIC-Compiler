@@ -92,8 +92,11 @@ public class Token {
 
         NEW_LINE,
 
-        STRING_EXPRESSION
+        STRING_EXPRESSION,
 
+        COMMA,
+
+        IDENTIFIER
     }
 
 }
