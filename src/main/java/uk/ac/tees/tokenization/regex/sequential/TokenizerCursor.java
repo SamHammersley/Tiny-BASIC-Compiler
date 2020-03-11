@@ -1,4 +1,4 @@
-package uk.ac.tees.tokenization.regex.linear;
+package uk.ac.tees.tokenization.regex.sequential;
 
 /**
  * Represents a position of a tokenizer, in an input string. The remaining input, substring from the current index,

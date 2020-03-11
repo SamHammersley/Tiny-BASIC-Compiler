@@ -1,4 +1,4 @@
-package uk.ac.tees.tokenization.regex.linear;
+package uk.ac.tees.tokenization.regex.sequential;
 
 import uk.ac.tees.tokenization.Token;
 import uk.ac.tees.tokenization.UnexpectedCharacterException;
