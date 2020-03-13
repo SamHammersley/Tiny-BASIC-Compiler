@@ -3,10 +3,10 @@ package uk.ac.tees.tokenization.regex.group;
 import uk.ac.tees.tokenization.Token;
 import uk.ac.tees.tokenization.UnexpectedCharacterException;
 import uk.ac.tees.tokenization.regex.RegexTokenizer;
+import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
 
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Tokenizes some string input given a set of regular expressions that are mapped to {@link Token.Type}s.
@@ -24,9 +24,9 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
     /**
      * Construct a new {@link RegexTokenizer}.
      *
-     * @param patterns the regex patterns to match tokens.
+     * @param patterns provides regex patterns and corresponding {@link Token.Type}s.
      */
-    public GroupingRegexTokenizer(Map<Pattern, Token.Type> patterns) {
+    public GroupingRegexTokenizer(RegexTokenizerPatternsCache patterns) {
         super(patterns);
     }
 
@@ -34,11 +34,9 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
     public Queue<Token> tokenize(String input) throws UnexpectedCharacterException {
         LinkedList<TokenMatchResult> matchResults = new LinkedList<>();
 
-        // Check every pattern for matches in the input string.
-        for (Map.Entry<Pattern, Token.Type> entry : patterns.entrySet()) {
-
-            Matcher matcher = entry.getKey().matcher(input);
-            Token.Type type = entry.getValue();
+        // Check each token type.
+        for (Token.Type type : patterns.supportedTypes()) {
+            Matcher matcher = patterns.getPattern(type).matcher(input);
 
             // Map each pattern match to a TokenMatchResult.
             matcher.results().forEach(r -> matchResults.add(TokenMatchResult.fromMatchResult(type, r)));

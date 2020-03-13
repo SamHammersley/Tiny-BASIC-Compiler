@@ -3,6 +3,7 @@ package uk.ac.tees.tokenization.regex.sequential;
 import uk.ac.tees.tokenization.Token;
 import uk.ac.tees.tokenization.UnexpectedCharacterException;
 import uk.ac.tees.tokenization.regex.RegexTokenizer;
+import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -11,9 +12,9 @@ import java.util.regex.Pattern;
 /**
  * Tokenizes some string input given a set of regular expressions that are mapped to {@link Token.Type}s.
  * <br />
- * This tokenizer iterates over the regex patterns and repeatedly checks the beginning of the input string,
- * for matches with said patterns. If all patterns tested and none matched with the start of the remaining string,
- * there is an unexpected character(s).
+ * This tokenizer iterates over the supported regex patterns and repeatedly checks the beginning of the input string,
+ * for matches with these patterns. If all no patterns match with the start of the remaining string, there is an
+ * unexpected character(s).
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
@@ -27,9 +28,9 @@ public final class SequentialRegexTokenizer extends RegexTokenizer {
     /**
      * Construct a new {@link SequentialRegexTokenizer}.
      *
-     * @param patterns the regex patterns to match tokens.
+     * @param patterns provides regex patterns and corresponding {@link Token.Type}s.
      */
-    public SequentialRegexTokenizer(Map<Pattern, Token.Type> patterns) {
+    public SequentialRegexTokenizer(RegexTokenizerPatternsCache patterns) {
         super(patterns);
     }
 
@@ -49,14 +50,12 @@ public final class SequentialRegexTokenizer extends RegexTokenizer {
 
             Optional<Token> matchedToken = Optional.empty();
 
-            for (Pattern pattern : patterns.keySet()) {
-                Matcher matcher = pattern.matcher(cursor.remaining());
+            for (Token.Type type : patterns.supportedTypes()) {
+                Matcher matcher = patterns.getPattern(type).matcher(cursor.remaining());
 
                 // Check if the start of remaining input matches one of the regex rules.
                 if (matcher.lookingAt()) {
                     cursor.advance(matcher.group());
-
-                    Token.Type type = patterns.get(pattern);
 
                     if (type.equals(Token.Type.NEW_LINE)) {
                         cursor.nextLine();

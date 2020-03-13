@@ -3,10 +3,7 @@ package uk.ac.tees.tokenization.regex;
 import uk.ac.tees.tokenization.Token;
 import uk.ac.tees.tokenization.TinyBasicTokenizer;
 import uk.ac.tees.tokenization.TokenizationException;
-import uk.ac.tees.tokenization.UnexpectedCharacterException;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Pattern;
 
@@ -18,16 +15,16 @@ import java.util.regex.Pattern;
 public abstract class RegexTokenizer implements TinyBasicTokenizer {
 
     /**
-     * The patterns by which tokens are matched.
+     * Provides regular expression {@link Pattern}s and their corresponding {@link Token.Type}s.
      */
-    protected final Map<Pattern, Token.Type> patterns;
+    protected final RegexTokenizerPatternsCache patterns;
 
     /**
      * Construct a new {@link RegexTokenizer}.
      *
-     * @param patterns the regex rules.
+     * @param patterns provides the regex patterns and token types.
      */
-    protected RegexTokenizer(Map<Pattern, Token.Type> patterns) {
+    protected RegexTokenizer(RegexTokenizerPatternsCache patterns) {
         this.patterns = patterns;
     }
 
