@@ -67,6 +67,17 @@ public class Token {
         return bldr.toString();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Token)) {
+            return false;
+        }
+
+        Token other = (Token) object;
+
+        return type.equals(other.type) && value.equals(other.value);
+    }
+
     /**
      * Token type
      */
@@ -80,7 +91,17 @@ public class Token {
 
         DIV,
 
-        REL_OP,
+        LESS_THAN,
+
+        LESS_THAN_EQUAL,
+
+        MORE_THAN,
+
+        MORE_THAN_EQUAL,
+
+        EQUAL,
+
+        NOT_EQUAL,
 
         KEYWORD,
 
