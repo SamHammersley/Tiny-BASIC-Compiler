@@ -109,7 +109,7 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
 
             // There is unexpected character at the start
             if (!potential.isBlank()) {
-                throw new UnexpectedCharacterException(lineCount, 0);
+                throw new UnexpectedCharacterException(lineCount, 1);
             }
         }
     }
@@ -127,12 +127,12 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
             throws UnexpectedCharacterException {
         TokenMatchResult last = Objects.requireNonNull(results.peekLast());
 
-        if (input.length() - last.end() > 0) {
+        if (input.length() != last.end()) {
             String potential = input.substring(last.end()).trim();
 
             // There is unexpected character at the end
             if (!potential.isBlank()) {
-                throw new UnexpectedCharacterException(lineCount, last.end() - input.lastIndexOf("\n"));
+                throw new UnexpectedCharacterException(lineCount, input.lastIndexOf(potential) - input.lastIndexOf("\n"));
             }
         }
     }
@@ -149,14 +149,18 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
      */
     private void validateMiddle(TokenMatchResult previous, TokenMatchResult next, String input, int lineCount,
                                 int lastNewLineIndex) throws UnexpectedCharacterException {
+        if (previous == null) {
+            return;
+        }
+
         // Check every match with the previous match for too much space between matches.
-        if (previous != null && next.start() - previous.end() > 1) {
-            String nonTokenized = input.substring(previous.end(), next.start());
+        if (next.start() > previous.end()) {
+            String disjunctive = input.substring(previous.end(), next.start());
 
             // There is unexpected character (not just whitespace) between matches.
-            if (!nonTokenized.trim().isBlank()) {
+            if (!disjunctive.trim().isBlank()) {
                 // Get the index of the first non-whitespace character.
-                int charIndex = input.indexOf(nonTokenized.trim()) - lastNewLineIndex;
+                int charIndex = input.indexOf(disjunctive.trim()) - lastNewLineIndex;
 
                 throw new UnexpectedCharacterException(lineCount, charIndex);
             }
