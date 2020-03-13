@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -22,7 +22,7 @@ public final class FromFileProvider implements RegexPatternsProvider {
     @Override
     public RegexTokenizerPatternsCache cache() {
         Path path = Paths.get(file);
-        Map<Token.Type, Pattern> map = new HashMap<>();
+        Map<Token.Type, Pattern> map = new LinkedHashMap<>();
 
         try {
             Files.lines(path).forEach(l -> {
