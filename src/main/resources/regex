@@ -1,0 +1,13 @@
+NUMBER: \d+
+MULTIPLY: \*
+DIV: /
+PLUS: \+
+MINUS: -
+L_PARENTHESES: \(
+R_PARENTHESES: \)
+NEW_LINE: \n
+REL_OP: (?:<[=>]?|>[=<]?|=)
+KEYWORD: [a-zA-Z]{2,}
+IDENTIFIER: [a-zA-Z]\b
+STRING_EXPRESSION: \"[^\"]*\"
+COMMA: ,
