@@ -91,18 +91,6 @@ public class Token {
 
         DIV,
 
-        LESS_THAN,
-
-        LESS_THAN_EQUAL,
-
-        MORE_THAN,
-
-        MORE_THAN_EQUAL,
-
-        EQUAL,
-
-        NOT_EQUAL,
-
         KEYWORD,
 
         L_PARENTHESES,
@@ -117,7 +105,9 @@ public class Token {
 
         COMMA,
 
-        IDENTIFIER
+        IDENTIFIER,
+
+        REL_OP
     }
 
 }

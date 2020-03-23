@@ -7,6 +7,7 @@ import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
 
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 /**
  * Tokenizes some string input given a set of regular expressions that are mapped to {@link Token.Type}s.
@@ -32,138 +33,52 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
 
     @Override
     public Queue<Token> tokenize(String input) throws UnexpectedCharacterException {
-        LinkedList<TokenMatchResult> matchResults = new LinkedList<>();
+        List<TokenMatchResult> tokenMatches = new ArrayList<>();
 
-        // Check each token type.
+        String remainingInput = input;
         for (Token.Type type : patterns.supportedTypes()) {
-            Matcher matcher = patterns.getPattern(type).matcher(input);
+            Matcher matcher = patterns.getPattern(type).matcher(remainingInput);
 
-            // Map each pattern match to a TokenMatchResult.
-            matcher.results().forEach(r -> matchResults.add(TokenMatchResult.fromMatchResult(type, r)));
+            int previousIndex = -1;
+
+            while(matcher.find()) {
+                String tokenText = matcher.group();
+                previousIndex = input.indexOf(tokenText, previousIndex + 1);
+
+                Token token = new Token(type, tokenText);
+                int endIndex = previousIndex + tokenText.length();
+                tokenMatches.add(new TokenMatchResult(previousIndex, endIndex, token));
+            }
+
+            remainingInput = matcher.replaceAll("");
         }
 
-        // Sort the results by the start index of the match, to maintain proper ordering.
-        Collections.sort(matchResults);
+        Collections.sort(tokenMatches);
+        validateResults(input, remainingInput);
 
-        return validateResults(matchResults, input);
+        return tokenMatches.stream().map(TokenMatchResult::getToken).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
-     * Validates the given {@link List} of {@link TokenMatchResult}s, omits unnecessary detail (starting and ending
-     * positions) and produces a list of {@link Token}s.
-     * <br />
-     * The beginning of the string, the end and middle are checked for unmatched, non-whitespace, characters; these
-     * are unexpected and upon detection will throw an exception.
+     * Validates the given input, if the remaining input is non-whitespace then there are unexpected characters.
      *
-     * @param results the regex pattern matching results.
-     * @param input the input string.
-     * @return a validated {@link List} of {@link Token}s.
+     * @param input the initial input.
+     * @param remainingInput the remaining input after tokenization.
      * @throws UnexpectedCharacterException when unexpected character detected.
      */
-    private Queue<Token> validateResults(LinkedList<TokenMatchResult> results, String input)
-            throws UnexpectedCharacterException {
-        Queue<Token> tokens = new LinkedList<>();
+    private void validateResults(String input, String remainingInput) throws UnexpectedCharacterException {
+        if (!remainingInput.isBlank()) {
+            int unexpectedIndex = input.indexOf(remainingInput.trim().charAt(0)) + 1;
+            int lastNewLineCharacter = input.substring(0, unexpectedIndex).lastIndexOf("\n") + 1;
 
-        int lineCount = 1;
-        int lastNewLineIndex = -1;
-
-        // Check start of input is valid, no unexpected chars.
-        validateStart(results, input, lineCount);
-
-        TokenMatchResult previous = null;
-        for (TokenMatchResult result : results) {
-            Token token = result.getToken();
-            tokens.add(token);
-
-            // Check each non-tokenized section of the input between every interior match.
-            validateMiddle(previous, result, input, lineCount, lastNewLineIndex);
-
-            if (token.getType().equals(Token.Type.NEW_LINE)) {
-                lastNewLineIndex = result.start();
-                lineCount++;
+            int lineCount = 1;
+            for (int index = 0; index < unexpectedIndex; index++) {
+                if (input.charAt(index) == '\n') {
+                    lineCount++;
+                }
             }
-            previous = result;
-        }
 
-        // Check start of input is valid.
-        validateEnd(results, input, lineCount);
-
-        return tokens;
-    }
-
-    /**
-     * Validates the start of the string by checking the gap between it and the first match. If the first match starts
-     * more than 1 character from the start and there is no whitespace at the start, there is an unexpected character.
-     *
-     * @param results the {@link TokenMatchResult}s to validate the start of.
-     * @param input the input string to validate the start of.
-     * @param lineCount the current line count.
-     * @throws UnexpectedCharacterException when unexpected character is detected.
-     */
-    private void validateStart(LinkedList<TokenMatchResult> results, String input, int lineCount)
-            throws UnexpectedCharacterException {
-        TokenMatchResult first = Objects.requireNonNull(results.peekFirst());
-
-        if (first.start() > 0) {
-            String potential = input.substring(0, first.start()).trim();
-
-            // There is unexpected character at the start
-            if (!potential.isBlank()) {
-                throw new UnexpectedCharacterException(lineCount, 1);
-            }
-        }
-    }
-
-    /**
-     * Validates the end of the string by checking the gap between the last match and it. If the last match ends
-     * more than 1 character from the end and there is no whitespace at the end, there is an unexpected character.
-     *
-     * @param results the {@link TokenMatchResult}s to validate the start of.
-     * @param input the input string to validate the start of.
-     * @param lineCount the current line count.
-     * @throws UnexpectedCharacterException when unexpected character is detected.
-     */
-    private void validateEnd(LinkedList<TokenMatchResult> results, String input, int lineCount)
-            throws UnexpectedCharacterException {
-        TokenMatchResult last = Objects.requireNonNull(results.peekLast());
-
-        if (input.length() != last.end()) {
-            String potential = input.substring(last.end()).trim();
-
-            // There is unexpected character at the end
-            if (!potential.isBlank()) {
-                throw new UnexpectedCharacterException(lineCount, input.lastIndexOf(potential) - input.lastIndexOf("\n"));
-            }
-        }
-    }
-
-    /**
-     * Validates the middle portion of the input by checking for non-whitespace characters between {@link TokenMatchResult}s.
-     *
-     * @param previous the previous {@link TokenMatchResult}.
-     * @param next the next {@link TokenMatchResult}.
-     * @param input the input string to validate.
-     * @param lineCount the current line count.
-     * @param lastNewLineIndex the index of the last new line character.
-     * @throws UnexpectedCharacterException when unexpected character is detected.
-     */
-    private void validateMiddle(TokenMatchResult previous, TokenMatchResult next, String input, int lineCount,
-                                int lastNewLineIndex) throws UnexpectedCharacterException {
-        if (previous == null) {
-            return;
-        }
-
-        // Check every match with the previous match for too much space between matches.
-        if (next.start() > previous.end()) {
-            String disjunctive = input.substring(previous.end(), next.start());
-
-            // There is unexpected character (not just whitespace) between matches.
-            if (!disjunctive.trim().isBlank()) {
-                // Get the index of the first non-whitespace character.
-                int charIndex = input.indexOf(disjunctive.trim()) - lastNewLineIndex;
-
-                throw new UnexpectedCharacterException(lineCount, charIndex);
-            }
+            throw new UnexpectedCharacterException(lineCount, Math.abs(lastNewLineCharacter - unexpectedIndex));
         }
     }
 

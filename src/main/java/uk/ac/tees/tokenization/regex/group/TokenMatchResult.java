@@ -22,32 +22,14 @@ public final class TokenMatchResult implements Comparable<TokenMatchResult> {
     private final int endIndex;
 
     /**
-     * The token matched.
+     * The matched token.
      */
     private final Token token;
 
     TokenMatchResult(int startIndex, int endIndex, Token token) {
         this.startIndex = startIndex;
-        this.endIndex = endIndex;
         this.token = token;
-    }
-
-    /**
-     * Accessor method for the start index for this match.
-     *
-     * @return {@link #startIndex}.
-     */
-    int start() {
-        return startIndex;
-    }
-
-    /**
-     * Accessor method for the end index for this match.
-     *
-     * @return {@link #endIndex}.
-     */
-    int end() {
-        return endIndex;
+        this.endIndex = endIndex;
     }
 
     /**
@@ -59,20 +41,9 @@ public final class TokenMatchResult implements Comparable<TokenMatchResult> {
         return token;
     }
 
-    /**
-     * Creates a new instance of @{link TokenMatchResult} from the given {@link Token.Type} and {@link MatchResult}.
-     *
-     * @param type the type of the token matched.
-     * @param r the {@link MatchResult}.
-     * @return a new {@link TokenMatchResult} containing the start index, end index and the matched token.
-     */
-    public static TokenMatchResult fromMatchResult(Token.Type type, MatchResult r) {
-        return new TokenMatchResult(r.start(), r.end(), new Token(type, r.group()));
-    }
-
     @Override
     public String toString() {
-        return "(" + startIndex + ":" + endIndex + "): " + token.toString();
+        return token.toString() + " [" + startIndex + "," + endIndex + "]";
     }
 
     @Override
