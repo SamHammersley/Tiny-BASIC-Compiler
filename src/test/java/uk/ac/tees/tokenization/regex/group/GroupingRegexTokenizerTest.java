@@ -1,4 +1,4 @@
-package uk.ac.tees.regex.group;
+package uk.ac.tees.tokenization.regex.group;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
