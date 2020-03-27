@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import uk.ac.tees.EntryPoint;
 import uk.ac.tees.tokenization.Token;
 import uk.ac.tees.tokenization.TokenizationException;
 import uk.ac.tees.tokenization.UnexpectedCharacterException;
 import uk.ac.tees.tokenization.regex.RegexTokenizer;
 import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
-import uk.ac.tees.tokenization.regex.group.GroupingRegexTokenizer;
 import uk.ac.tees.tokenization.regex.provider.FromFileProvider;
 
 import java.util.Queue;
@@ -22,7 +20,7 @@ final class SequentialRegexTokenizerTest {
 
     @BeforeAll
     static void setup() {
-        String regexFile = EntryPoint.class.getClassLoader().getResource("regex").getFile();
+        String regexFile = SequentialRegexTokenizerTest.class.getClassLoader().getResource("regex").getFile();
 
         cache = new FromFileProvider(regexFile).cache();
     }
