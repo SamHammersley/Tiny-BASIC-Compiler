@@ -29,10 +29,13 @@ final class SequentialRegexTokenizerTest {
     void testUnexpectedCharacter() {
         RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
 
-        Exception e = assertThrows(UnexpectedCharacterException.class,
-                () -> tokenizer.tokenize("10 LET N = 5\n20 PRINT N ."));
+        UnexpectedCharacterException e = assertThrows(UnexpectedCharacterException.class,
+                () -> tokenizer.tokenize("10 LET N = 5\n20 PRINT N\n30 LET ]"));
 
-        assertEquals("Unexpected character on line 2, character 12)", e.getMessage());
+        assertEquals(8, e.getIndex());
+        assertEquals(3, e.getLine());
+
+        assertEquals("Unexpected character on line 8, character 3)", e.getMessage());
     }
 
     @Test
