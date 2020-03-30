@@ -1,7 +1,5 @@
 package uk.ac.tees.tokenization;
 
-import java.util.Optional;
-
 /**
  * Represents a token of some input source code.
  *
@@ -31,16 +29,6 @@ public class Token {
     }
 
     /**
-     * Constructs a new {@link Token} with an empty value.
-     *
-     * @param type the type of token represented.
-     */
-    public Token(Type type) {
-        this(type, null);
-    }
-
-
-    /**
      * Accessor function for type field.
      *
      * @return the {@link #type} of this function.
@@ -52,19 +40,15 @@ public class Token {
     /**
      * Accessor function for value field.
      *
-     * @return an {@link Optional}, since nullable, for the value field.
+     * @return the string value for this token.
      */
-    public Optional<String> getValue() {
-        return Optional.ofNullable(value);
+    public String getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
-        StringBuilder bldr = new StringBuilder(type.name());
-
-        getValue().ifPresent(v -> bldr.append(", ").append(v));
-
-        return bldr.toString();
+        return type + ", " + value;
     }
 
     @Override
