@@ -1,4 +1,4 @@
-<line> ::= <number> <statement> CR | <statement> CR
+<line> ::= <number> <statement> LF
 
 <statement> ::= PRINT <expression-list>
               IF <expression> <relational-op> <expression> THEN <statement>
