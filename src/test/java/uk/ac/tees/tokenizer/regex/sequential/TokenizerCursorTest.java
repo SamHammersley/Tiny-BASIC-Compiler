@@ -1,4 +1,4 @@
-package uk.ac.tees.tokenization.regex.sequential;
+package uk.ac.tees.tokenizer.regex.sequential;
 
 import org.junit.jupiter.api.Test;
 

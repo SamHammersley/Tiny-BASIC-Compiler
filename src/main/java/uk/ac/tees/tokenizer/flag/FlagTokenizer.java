@@ -1,6 +1,9 @@
-package uk.ac.tees.tokenization.flag;
+package uk.ac.tees.tokenizer.flag;
 
-import uk.ac.tees.tokenization.*;
+import uk.ac.tees.tokenizer.TinyBasicTokenizer;
+import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.TokenizationException;
+import uk.ac.tees.tokenizer.UnexpectedCharacterException;
 
 import java.util.LinkedList;
 import java.util.Optional;

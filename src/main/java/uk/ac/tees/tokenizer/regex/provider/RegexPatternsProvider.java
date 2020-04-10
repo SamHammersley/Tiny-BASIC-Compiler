@@ -1,6 +1,6 @@
-package uk.ac.tees.tokenization.regex.provider;
+package uk.ac.tees.tokenizer.regex.provider;
 
-import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
 
 /**
  * Abstracts away the details of the source of regular expression patterns.

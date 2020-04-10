@@ -1,4 +1,4 @@
-package uk.ac.tees.tokenization;
+package uk.ac.tees.tokenizer;
 
 /**
  * The {@link Exception} thrown upon detecting an unexpected character in a Tiny BASIC input char sequence.

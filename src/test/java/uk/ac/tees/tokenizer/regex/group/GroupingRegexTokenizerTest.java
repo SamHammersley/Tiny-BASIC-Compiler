@@ -1,33 +1,46 @@
-package uk.ac.tees.tokenization.flag;
+package uk.ac.tees.tokenizer.regex.group;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import uk.ac.tees.tokenization.Token;
-import uk.ac.tees.tokenization.TokenizationException;
-import uk.ac.tees.tokenization.UnexpectedCharacterException;
+import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.TokenizationException;
+import uk.ac.tees.tokenizer.UnexpectedCharacterException;
+import uk.ac.tees.tokenizer.regex.RegexTokenizer;
+import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.regex.provider.FromFileProvider;
 
 import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-final class FlagTokenizerTest {
+final class GroupingRegexTokenizerTest {
+
+    private static RegexTokenizerPatternsCache cache;
+
+    @BeforeAll
+    static void setup() {
+        String regexFile = GroupingRegexTokenizerTest.class.getClassLoader().getResource("regex").getFile();
+
+        cache = new FromFileProvider(regexFile).cache();
+    }
 
     @Test
     void testUnexpectedCharacter() {
-        FlagTokenizer tokenizer = new FlagTokenizer();
+        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
 
         UnexpectedCharacterException e = assertThrows(UnexpectedCharacterException.class,
-                () -> tokenizer.tokenize("3 * (6 + 2 - 3) / 5\n10 LET N = 5\n20 PRINT N\n30 LET ]"));
+                () -> tokenizer.tokenize("10 LET N = 5\n20 PRINT N\n30 LET ]"));
 
         assertEquals(8, e.getIndex());
-        assertEquals(4, e.getLine());
+        assertEquals(3, e.getLine());
 
-        assertEquals("Unexpected character on line 4, character 8)", e.getMessage());
+        assertEquals("Unexpected character on line 8, character 3)", e.getMessage());
     }
 
     @Test
     void testLetBinding() throws TokenizationException {
-        FlagTokenizer tokenizer = new FlagTokenizer();
+        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("10 LET N = 5\n20 PRINT N");
 
@@ -46,7 +59,7 @@ final class FlagTokenizerTest {
 
     @Test
     void testPrint() throws TokenizationException {
-        FlagTokenizer tokenizer = new FlagTokenizer();
+        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("10 PRINT \"Hello, World!\"");
 
@@ -59,7 +72,7 @@ final class FlagTokenizerTest {
 
     @Test
     void testInput() throws TokenizationException {
-        FlagTokenizer tokenizer = new FlagTokenizer();
+        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("10 INPUT X, Y, Z");
 
@@ -76,7 +89,7 @@ final class FlagTokenizerTest {
 
     @Test
     void testArithmetic() throws TokenizationException {
-        FlagTokenizer tokenizer = new FlagTokenizer();
+        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("3 * (6 + 2 - 3) / 5");
 
@@ -97,7 +110,7 @@ final class FlagTokenizerTest {
 
     @Test
     void testRelationalOperators() throws TokenizationException {
-        FlagTokenizer tokenizer = new FlagTokenizer();
+        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("< <= > >= <> >< =");
 

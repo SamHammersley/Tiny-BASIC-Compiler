@@ -1,8 +1,8 @@
-package uk.ac.tees.tokenization.regex;
+package uk.ac.tees.tokenizer.regex;
 
-import uk.ac.tees.tokenization.Token;
-import uk.ac.tees.tokenization.TinyBasicTokenizer;
-import uk.ac.tees.tokenization.TokenizationException;
+import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.TinyBasicTokenizer;
+import uk.ac.tees.tokenizer.TokenizationException;
 
 import java.util.Queue;
 import java.util.regex.Pattern;
@@ -29,7 +29,7 @@ public abstract class RegexTokenizer implements TinyBasicTokenizer {
     }
 
     /**
-     * Produces a {@link Queue} of {@link Token}s via tokenization of the specified input string.
+     * Produces a {@link Queue} of {@link Token}s via tokenizer of the specified input string.
      *
      * @param input the source code to tokenize.
      * @return a {@link Queue} of {@link Token}s.

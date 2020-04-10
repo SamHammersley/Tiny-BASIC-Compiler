@@ -1,9 +1,9 @@
-package uk.ac.tees.tokenization.regex.sequential;
+package uk.ac.tees.tokenizer.regex.sequential;
 
-import uk.ac.tees.tokenization.Token;
-import uk.ac.tees.tokenization.UnexpectedCharacterException;
-import uk.ac.tees.tokenization.regex.RegexTokenizer;
-import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.UnexpectedCharacterException;
+import uk.ac.tees.tokenizer.regex.RegexTokenizer;
+import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
 
 import java.util.*;
 import java.util.regex.Matcher;

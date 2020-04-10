@@ -1,7 +1,7 @@
-package uk.ac.tees.tokenization.regex.provider;
+package uk.ac.tees.tokenizer.regex.provider;
 
-import uk.ac.tees.tokenization.Token;
-import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
 
 import java.io.IOException;
 import java.nio.file.Files;

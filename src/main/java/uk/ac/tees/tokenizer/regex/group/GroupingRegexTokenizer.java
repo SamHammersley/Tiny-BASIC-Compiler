@@ -1,9 +1,9 @@
-package uk.ac.tees.tokenization.regex.group;
+package uk.ac.tees.tokenizer.regex.group;
 
-import uk.ac.tees.tokenization.Token;
-import uk.ac.tees.tokenization.UnexpectedCharacterException;
-import uk.ac.tees.tokenization.regex.RegexTokenizer;
-import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.UnexpectedCharacterException;
+import uk.ac.tees.tokenizer.regex.RegexTokenizer;
+import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -63,7 +63,7 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
      * Validates the given input, if the remaining input is non-whitespace then there are unexpected characters.
      *
      * @param input the initial input.
-     * @param remainingInput the remaining input after tokenization.
+     * @param remainingInput the remaining input after tokenizer.
      * @throws UnexpectedCharacterException when unexpected character detected.
      */
     private void validateResults(String input, String remainingInput) throws UnexpectedCharacterException {

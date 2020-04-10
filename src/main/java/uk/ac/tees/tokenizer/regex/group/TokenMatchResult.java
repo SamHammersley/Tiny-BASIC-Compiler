@@ -1,8 +1,6 @@
-package uk.ac.tees.tokenization.regex.group;
+package uk.ac.tees.tokenizer.regex.group;
 
-import uk.ac.tees.tokenization.Token;
-
-import java.util.regex.MatchResult;
+import uk.ac.tees.tokenizer.Token;
 
 /**
  * Represents a token matched with regex pattern in source code.

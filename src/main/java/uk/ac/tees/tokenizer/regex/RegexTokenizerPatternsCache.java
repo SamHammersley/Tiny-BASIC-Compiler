@@ -1,6 +1,6 @@
-package uk.ac.tees.tokenization.regex;
+package uk.ac.tees.tokenizer.regex;
 
-import uk.ac.tees.tokenization.Token;
+import uk.ac.tees.tokenizer.Token;
 
 import java.util.Collection;
 import java.util.Map;

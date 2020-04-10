@@ -1,4 +1,4 @@
-package uk.ac.tees.tokenization;
+package uk.ac.tees.tokenizer;
 
 /**
  * Represents a token of some input source code.

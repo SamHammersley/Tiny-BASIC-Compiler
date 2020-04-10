@@ -1,33 +1,33 @@
-package uk.ac.tees.tokenization.regex.group;
+package uk.ac.tees.tokenizer.regex.sequential;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import uk.ac.tees.tokenization.Token;
-import uk.ac.tees.tokenization.TokenizationException;
-import uk.ac.tees.tokenization.UnexpectedCharacterException;
-import uk.ac.tees.tokenization.regex.RegexTokenizer;
-import uk.ac.tees.tokenization.regex.RegexTokenizerPatternsCache;
-import uk.ac.tees.tokenization.regex.provider.FromFileProvider;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.TokenizationException;
+import uk.ac.tees.tokenizer.UnexpectedCharacterException;
+import uk.ac.tees.tokenizer.regex.RegexTokenizer;
+import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.regex.provider.FromFileProvider;
 
 import java.util.Queue;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-final class GroupingRegexTokenizerTest {
+final class SequentialRegexTokenizerTest {
 
     private static RegexTokenizerPatternsCache cache;
 
     @BeforeAll
     static void setup() {
-        String regexFile = GroupingRegexTokenizerTest.class.getClassLoader().getResource("regex").getFile();
+        String regexFile = SequentialRegexTokenizerTest.class.getClassLoader().getResource("regex").getFile();
 
         cache = new FromFileProvider(regexFile).cache();
     }
 
     @Test
     void testUnexpectedCharacter() {
-        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
 
         UnexpectedCharacterException e = assertThrows(UnexpectedCharacterException.class,
                 () -> tokenizer.tokenize("10 LET N = 5\n20 PRINT N\n30 LET ]"));
@@ -40,7 +40,7 @@ final class GroupingRegexTokenizerTest {
 
     @Test
     void testLetBinding() throws TokenizationException {
-        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("10 LET N = 5\n20 PRINT N");
 
@@ -59,7 +59,7 @@ final class GroupingRegexTokenizerTest {
 
     @Test
     void testPrint() throws TokenizationException {
-        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("10 PRINT \"Hello, World!\"");
 
@@ -72,7 +72,7 @@ final class GroupingRegexTokenizerTest {
 
     @Test
     void testInput() throws TokenizationException {
-        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("10 INPUT X, Y, Z");
 
@@ -89,7 +89,7 @@ final class GroupingRegexTokenizerTest {
 
     @Test
     void testArithmetic() throws TokenizationException {
-        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("3 * (6 + 2 - 3) / 5");
 
@@ -110,7 +110,7 @@ final class GroupingRegexTokenizerTest {
 
     @Test
     void testRelationalOperators() throws TokenizationException {
-        RegexTokenizer tokenizer = new GroupingRegexTokenizer(cache);
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
 
         Queue<Token> tokens = tokenizer.tokenize("< <= > >= <> >< =");
 
