@@ -40,13 +40,17 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
             Matcher matcher = patterns.getPattern(type).matcher(remainingInput);
 
             int previousIndex = -1;
+            int row = 1;
 
             while (matcher.find()) {
+                if (type.equals(Token.Type.NEW_LINE)) {
+                    row++;
+                }
                 String tokenText = matcher.group();
                 previousIndex = input.indexOf(tokenText, previousIndex + 1);
-                int column = input.substring(0, previousIndex).lastIndexOf("\n") + 1;
+                int column = input.substring(0, matcher.start()).lastIndexOf('\n') + 1;
 
-                Token token = new Token(type, tokenText, countLines(input, previousIndex), column);
+                Token token = new Token(type, tokenText, row, column);
                 int endIndex = previousIndex + tokenText.length();
                 tokenMatches.add(new TokenMatchResult(previousIndex, endIndex, token));
             }
