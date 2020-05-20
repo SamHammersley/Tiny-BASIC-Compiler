@@ -16,7 +16,7 @@ The following (backus-naur form) rewriting rules outline the supported grammar, 
 
 <digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 <letter> ::= A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y
-<factor> ::= <identifier> | <number> | <expression>
+<factor> ::= <identifier> | <number> | (<expression>)
 <term> ::= <factor> [(* | /) <factor>]*
 <expression> ::= [+ | -] <term> [(+ | -) <term>]*
 <expression-list> ::= <expression> [, <expression>]*
@@ -30,7 +30,7 @@ The following (backus-naur form) rewriting rules outline the supported grammar, 
 There are three different strategies used to tokenize Tiny BASIC source code input. Two of which use regular expressions to find suppported tokens in an input source. The tokenizers throw an exception where there are unsupported/undefined tokens in the input.
 
 ### Regex Tokenizers
-The difference between these two tokenization strategies is rooted in the order by which tokens are matched. 
+The difference between these two tokenization strategies is rooted in the order by which tokens are matched.
 
 One iterates over the supported type regular expression patterns, checking if each of the patterns match some portion of the input at the start of the string. 
 
