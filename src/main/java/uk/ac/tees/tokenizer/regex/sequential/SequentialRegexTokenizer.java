@@ -5,7 +5,9 @@ import uk.ac.tees.tokenizer.UnexpectedCharacterException;
 import uk.ac.tees.tokenizer.regex.RegexTokenizer;
 import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +42,7 @@ public final class SequentialRegexTokenizer extends RegexTokenizer {
         Queue<Token> tokens = new LinkedList<>();
 
         // Whilst there is still some remaining input to be tokenized.
-        while(cursor.hasRemaining()) {
+        while (cursor.hasRemaining()) {
             Matcher wsMatcher = WHITESPACE_PATTERN.matcher(cursor.remaining());
 
             if (wsMatcher.lookingAt()) {
@@ -61,7 +63,7 @@ public final class SequentialRegexTokenizer extends RegexTokenizer {
                         cursor.nextLine();
                     }
 
-                    matchedToken = Optional.of(new Token(type, matcher.group()));
+                    matchedToken = Optional.of(new Token(type, matcher.group(), cursor.row(), cursor.column()));
                     break;
                 }
             }

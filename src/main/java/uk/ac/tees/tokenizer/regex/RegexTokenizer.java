@@ -1,7 +1,7 @@
 package uk.ac.tees.tokenizer.regex;
 
-import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.TinyBasicTokenizer;
+import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.TokenizationException;
 
 import java.util.Queue;

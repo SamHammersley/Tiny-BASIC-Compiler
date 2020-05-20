@@ -19,30 +19,31 @@ import java.util.stream.Collectors;
  */
 public final class FlagTokenizer implements TinyBasicTokenizer {
 
+    private int column, row;
+
     @Override
     public Queue<Token> tokenize(String input) throws TokenizationException {
+        column = row = 1;
+
         Queue<Token> tokens = new LinkedList<>();
 
         Queue<Character> chars = input.chars().mapToObj(i -> (char) i).collect(Collectors.toCollection(LinkedList::new));
-
-        int currentIndex = 1;
-        int currentLine = 1;
 
         while (!chars.isEmpty()) {
             char nextCharacter = chars.poll();
 
             if (nextCharacter == '\n') {
-                currentIndex = 0;
-                currentLine++;
+                column = 0;
+                row++;
             } else if (Character.isWhitespace(nextCharacter)) {
-                currentIndex++;
+                column++;
                 continue;
             }
 
-            UnexpectedCharacterException e = new UnexpectedCharacterException(currentLine, currentIndex);
+            UnexpectedCharacterException e = new UnexpectedCharacterException(row, column);
             Token nextToken = nextToken(nextCharacter, chars).orElseThrow(() -> e);
 
-            currentIndex += nextToken.getValue().length();
+            column += nextToken.getValue().length();
             tokens.add(nextToken);
         }
 
@@ -53,8 +54,7 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
      * Gets the next token from the character queue.
      *
      * @param firstChar the first character, polled, of the queue.
-     * @param chars the character queue to take tokens from.
-     *
+     * @param chars     the character queue to take tokensIterator from.
      * @return the next {@link Token} wrapped in an {@link Optional}
      */
     private Optional<Token> nextToken(char firstChar, Queue<Character> chars) {
@@ -63,9 +63,10 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
         if (Character.isLetter(firstChar)) {
 
             if (chars.isEmpty() || !Character.isLetter(chars.peek())) {
-                nextToken = new Token(Token.Type.IDENTIFIER, Character.toString(firstChar));
+                nextToken = new Token(Token.Type.IDENTIFIER, Character.toString(firstChar), row, column);
 
             } else {
+
                 nextToken = nextKeywordToken(firstChar, chars);
             }
 
@@ -79,7 +80,7 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
             StringBuilder tokenBuilder = nextCharSequence(firstChar, chars, Predicate.not(this::isQuotationMark))
                     .append(chars.poll());
 
-            nextToken = new Token(Token.Type.STRING_EXPRESSION, tokenBuilder.toString());
+            nextToken = new Token(Token.Type.STRING_EXPRESSION, tokenBuilder.toString(), row, column);
         }
 
         return Optional.ofNullable(nextToken);
@@ -88,8 +89,8 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
     /**
      * Gets sequence of characters from the character queue until the given loop predicate is no longer satisfied.
      *
-     * @param firstChar the first character, polled, of the queue.
-     * @param chars the character queue to take tokens from.
+     * @param firstChar     the first character, polled, of the queue.
+     * @param chars         the character queue to take tokensIterator from.
      * @param loopPredicate the predicate that is to be satisfied for each character from the queue.
      * @return a {@link StringBuilder} containing the sequence of characters.
      */
@@ -109,33 +110,33 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
      * Gets the next keyword token from the character queue.
      *
      * @param firstChar the first character, polled, of the queue.
-     * @param chars the character queue to take tokens from.
+     * @param chars     the character queue to take tokensIterator from.
      * @return a {@link Token.Type#KEYWORD} token with the char sequence from the character queue.
      */
     private Token nextKeywordToken(char firstChar, Queue<Character> chars) {
-        return new Token(Token.Type.KEYWORD, nextCharSequence(firstChar, chars, Character::isLetter).toString());
+        return new Token(Token.Type.KEYWORD, nextCharSequence(firstChar, chars, Character::isLetter).toString(), row, column);
     }
 
     /**
      * Gets the next number token from the character queue.
      *
      * @param firstChar the first character, polled, of the queue.
-     * @param chars the character queue to take tokens from.
+     * @param chars     the character queue to take tokensIterator from.
      * @return a {@link Token.Type#NUMBER} token with the char sequence from the character queue.
      */
     private Token nextNumberToken(char firstChar, Queue<Character> chars) {
-        return new Token(Token.Type.NUMBER, nextCharSequence(firstChar, chars, Character::isDigit).toString());
+        return new Token(Token.Type.NUMBER, nextCharSequence(firstChar, chars, Character::isDigit).toString(), row, column);
     }
 
     /**
      * Gets the next keyword token from the character queue.
      *
      * @param firstChar the first character, polled, of the queue.
-     * @param chars the character queue to take tokens from.
+     * @param chars     the character queue to take tokensIterator from.
      * @return a {@link Token.Type#REL_OP} token with the char sequence from the character queue.
      */
     private Token nextRelOpToken(char firstChar, Queue<Character> chars) {
-        return new Token(Token.Type.REL_OP, nextCharSequence(firstChar, chars, this::isRelationalOperator).toString());
+        return new Token(Token.Type.REL_OP, nextCharSequence(firstChar, chars, this::isRelationalOperator).toString(), row, column);
     }
 
     /**
@@ -143,30 +144,30 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
      * following types:
      *
      * <ul>
-     *   <li>
-     *     {@link Token.Type#COMMA}
-     *   </li>
-     *   <li>
-     *     {@link Token.Type#NEW_LINE}
-     *   </li>
-     *   <li>
-     *     {@link Token.Type#PLUS}
-     *   </li>
-     *   <li>
-     *     {@link Token.Type#MINUS}
-     *   </li>
-     *   <li>
-     *     {@link Token.Type#DIV}
-     *   </li>
-     *   <li>
-     *     {@link Token.Type#MULTIPLY}
-     *   </li>
-     *   <li>
-     *     {@link Token.Type#L_PARENTHESES}
-     *   </li>
-     *   <li>
-     *     {@link Token.Type#R_PARENTHESES}
-     *   </li>
+     * <li>
+     * {@link Token.Type#COMMA}
+     * </li>
+     * <li>
+     * {@link Token.Type#NEW_LINE}
+     * </li>
+     * <li>
+     * {@link Token.Type#PLUS}
+     * </li>
+     * <li>
+     * {@link Token.Type#MINUS}
+     * </li>
+     * <li>
+     * {@link Token.Type#DIV}
+     * </li>
+     * <li>
+     * {@link Token.Type#MULTIPLY}
+     * </li>
+     * <li>
+     * {@link Token.Type#L_PARENTHESES}
+     * </li>
+     * <li>
+     * {@link Token.Type#R_PARENTHESES}
+     * </li>
      * </ul>
      *
      * @param firstChar the first character, polled, of the queue.
@@ -175,23 +176,23 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
     private Token nextOneCharToken(char firstChar) {
         String asString = Character.toString(firstChar);
 
-        switch(firstChar) {
+        switch (firstChar) {
             case ',':
-                return new Token(Token.Type.COMMA, asString);
+                return new Token(Token.Type.COMMA, asString, row, column);
             case '\n':
-                return new Token(Token.Type.NEW_LINE, asString);
+                return new Token(Token.Type.NEW_LINE, asString, row, column);
             case '+':
-                return new Token(Token.Type.PLUS, asString);
+                return new Token(Token.Type.PLUS, asString, row, column);
             case '-':
-                return new Token(Token.Type.MINUS, asString);
+                return new Token(Token.Type.MINUS, asString, row, column);
             case '/':
-                return new Token(Token.Type.DIV, asString);
+                return new Token(Token.Type.DIV, asString, row, column);
             case '*':
-                return new Token(Token.Type.MULTIPLY, asString);
+                return new Token(Token.Type.MULTIPLY, asString, row, column);
             case '(':
-                return new Token(Token.Type.L_PARENTHESES, asString);
+                return new Token(Token.Type.L_PARENTHESES, asString, row, column);
             case ')':
-                return new Token(Token.Type.R_PARENTHESES, asString);
+                return new Token(Token.Type.R_PARENTHESES, asString, row, column);
         }
 
         return null;

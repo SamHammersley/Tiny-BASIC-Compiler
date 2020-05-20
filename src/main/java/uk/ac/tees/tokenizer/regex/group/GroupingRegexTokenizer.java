@@ -41,11 +41,12 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
 
             int previousIndex = -1;
 
-            while(matcher.find()) {
+            while (matcher.find()) {
                 String tokenText = matcher.group();
                 previousIndex = input.indexOf(tokenText, previousIndex + 1);
+                int column = input.substring(0, previousIndex).lastIndexOf("\n") + 1;
 
-                Token token = new Token(type, tokenText);
+                Token token = new Token(type, tokenText, countLines(input, previousIndex), column);
                 int endIndex = previousIndex + tokenText.length();
                 tokenMatches.add(new TokenMatchResult(previousIndex, endIndex, token));
             }
@@ -62,7 +63,7 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
     /**
      * Validates the given input, if the remaining input is non-whitespace then there are unexpected characters.
      *
-     * @param input the initial input.
+     * @param input          the initial input.
      * @param remainingInput the remaining input after tokenizer.
      * @throws UnexpectedCharacterException when unexpected character detected.
      */
@@ -70,16 +71,29 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
         if (!remainingInput.isBlank()) {
             int unexpectedIndex = input.indexOf(remainingInput.trim().charAt(0)) + 1;
             int lastNewLineCharacter = input.substring(0, unexpectedIndex).lastIndexOf("\n") + 1;
-
-            int lineCount = 1;
-            for (int index = 0; index < unexpectedIndex; index++) {
-                if (input.charAt(index) == '\n') {
-                    lineCount++;
-                }
-            }
+            int lineCount = countLines(input, unexpectedIndex);
 
             throw new UnexpectedCharacterException(lineCount, Math.abs(lastNewLineCharacter - unexpectedIndex));
         }
+    }
+
+    /**
+     * Counts the number of new line characters in an input string up to the given index.
+     *
+     * @param input the string to count new lines from.
+     * @param to    the index to count new line characters up to.
+     * @return the number of new line characters in the specified input string.
+     */
+    private int countLines(String input, int to) {
+        int lineCount = 1;
+
+        for (int index = 0; index < to; index++) {
+            if (input.charAt(index) == '\n') {
+                lineCount++;
+            }
+        }
+
+        return lineCount;
     }
 
 }

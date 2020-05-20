@@ -33,15 +33,15 @@ final class FlagTokenizerTest {
 
         assertEquals(9, tokens.size());
 
-        assertEquals(new Token(Token.Type.NUMBER, "10"), tokens.poll());
-        assertEquals(new Token(Token.Type.KEYWORD, "LET"), tokens.poll());
-        assertEquals(new Token(Token.Type.IDENTIFIER, "N"), tokens.poll());
-        assertEquals(new Token(Token.Type.REL_OP, "="), tokens.poll());
-        assertEquals(new Token(Token.Type.NUMBER, "5"), tokens.poll());
-        assertEquals(new Token(Token.Type.NEW_LINE, "\n"), tokens.poll());
-        assertEquals(new Token(Token.Type.NUMBER, "20"), tokens.poll());
-        assertEquals(new Token(Token.Type.KEYWORD, "PRINT"), tokens.poll());
-        assertEquals(new Token(Token.Type.IDENTIFIER, "N"), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "10", 1, 1), tokens.poll());
+        assertEquals(new Token(Token.Type.KEYWORD, "LET", 1, 4), tokens.poll());
+        assertEquals(new Token(Token.Type.IDENTIFIER, "N", 1, 8), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, "=", 1, 10), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "5", 1, 12), tokens.poll());
+        assertEquals(new Token(Token.Type.NEW_LINE, "\n", 1, 11), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "20", 2, 1), tokens.poll());
+        assertEquals(new Token(Token.Type.KEYWORD, "PRINT", 2, 4), tokens.poll());
+        assertEquals(new Token(Token.Type.IDENTIFIER, "N", 2, 10), tokens.poll());
     }
 
     @Test
@@ -52,9 +52,9 @@ final class FlagTokenizerTest {
 
         assertEquals(3, tokens.size());
 
-        assertEquals(new Token(Token.Type.NUMBER, "10"), tokens.poll());
-        assertEquals(new Token(Token.Type.KEYWORD, "PRINT"), tokens.poll());
-        assertEquals(new Token(Token.Type.STRING_EXPRESSION, "\"Hello, World!\""), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "10", 1, 1), tokens.poll());
+        assertEquals(new Token(Token.Type.KEYWORD, "PRINT", 1, 4), tokens.poll());
+        assertEquals(new Token(Token.Type.STRING_EXPRESSION, "\"Hello, World!\"", 1, 10), tokens.poll());
     }
 
     @Test
@@ -65,13 +65,13 @@ final class FlagTokenizerTest {
 
         assertEquals(7, tokens.size());
 
-        assertEquals(new Token(Token.Type.NUMBER, "10"), tokens.poll());
-        assertEquals(new Token(Token.Type.KEYWORD, "INPUT"), tokens.poll());
-        assertEquals(new Token(Token.Type.IDENTIFIER, "X"), tokens.poll());
-        assertEquals(new Token(Token.Type.COMMA, ","), tokens.poll());
-        assertEquals(new Token(Token.Type.IDENTIFIER, "Y"), tokens.poll());
-        assertEquals(new Token(Token.Type.COMMA, ","), tokens.poll());
-        assertEquals(new Token(Token.Type.IDENTIFIER, "Z"), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "10", 1, 1), tokens.poll());
+        assertEquals(new Token(Token.Type.KEYWORD, "INPUT", 1, 4), tokens.poll());
+        assertEquals(new Token(Token.Type.IDENTIFIER, "X", 1, 10), tokens.poll());
+        assertEquals(new Token(Token.Type.COMMA, ",", 1, 11), tokens.poll());
+        assertEquals(new Token(Token.Type.IDENTIFIER, "Y", 1, 13), tokens.poll());
+        assertEquals(new Token(Token.Type.COMMA, ",", 1, 14), tokens.poll());
+        assertEquals(new Token(Token.Type.IDENTIFIER, "Z", 1, 16), tokens.poll());
     }
 
     @Test
@@ -82,17 +82,17 @@ final class FlagTokenizerTest {
 
         assertEquals(11, tokens.size());
 
-        assertEquals(new Token(Token.Type.NUMBER, "3"), tokens.poll());
-        assertEquals(new Token(Token.Type.MULTIPLY, "*"), tokens.poll());
-        assertEquals(new Token(Token.Type.L_PARENTHESES, "("), tokens.poll());
-        assertEquals(new Token(Token.Type.NUMBER, "6"), tokens.poll());
-        assertEquals(new Token(Token.Type.PLUS, "+"), tokens.poll());
-        assertEquals(new Token(Token.Type.NUMBER, "2"), tokens.poll());
-        assertEquals(new Token(Token.Type.MINUS, "-"), tokens.poll());
-        assertEquals(new Token(Token.Type.NUMBER, "3"), tokens.poll());
-        assertEquals(new Token(Token.Type.R_PARENTHESES, ")"), tokens.poll());
-        assertEquals(new Token(Token.Type.DIV, "/"), tokens.poll());
-        assertEquals(new Token(Token.Type.NUMBER, "5"), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "3", 1, 1), tokens.poll());
+        assertEquals(new Token(Token.Type.MULTIPLY, "*", 1, 3), tokens.poll());
+        assertEquals(new Token(Token.Type.L_PARENTHESES, "(", 1, 5), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "6", 1, 6), tokens.poll());
+        assertEquals(new Token(Token.Type.PLUS, "+", 1, 8), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "2", 1, 10), tokens.poll());
+        assertEquals(new Token(Token.Type.MINUS, "-", 1, 12), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "3", 1, 14), tokens.poll());
+        assertEquals(new Token(Token.Type.R_PARENTHESES, ")", 1, 15), tokens.poll());
+        assertEquals(new Token(Token.Type.DIV, "/", 1, 17), tokens.poll());
+        assertEquals(new Token(Token.Type.NUMBER, "5", 1, 19), tokens.poll());
     }
 
     @Test
@@ -103,13 +103,13 @@ final class FlagTokenizerTest {
 
         assertEquals(7, tokens.size());
 
-        assertEquals(new Token(Token.Type.REL_OP, "<"), tokens.poll());
-        assertEquals(new Token(Token.Type.REL_OP, "<="), tokens.poll());
-        assertEquals(new Token(Token.Type.REL_OP, ">"), tokens.poll());
-        assertEquals(new Token(Token.Type.REL_OP, ">="), tokens.poll());
-        assertEquals(new Token(Token.Type.REL_OP, "<>"), tokens.poll());
-        assertEquals(new Token(Token.Type.REL_OP, "><"), tokens.poll());
-        assertEquals(new Token(Token.Type.REL_OP, "="), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, "<", 1, 1), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, "<=", 1, 3), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, ">", 1, 6), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, ">=", 1, 8), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, "<>", 1, 11), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, "><", 1, 14), tokens.poll());
+        assertEquals(new Token(Token.Type.REL_OP, "=", 1, 17), tokens.poll());
     }
 
 }
