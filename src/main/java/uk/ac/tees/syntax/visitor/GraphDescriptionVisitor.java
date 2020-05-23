@@ -4,7 +4,7 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.expression.ArithmeticBinaryExpression;
-import uk.ac.tees.syntax.grammar.expression.BooleanBinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
@@ -95,7 +95,7 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeNodeVisi
     }
 
     @Override
-    public String acceptTree(AbstractSyntaxTreeNode root) {
+    public String visitTree(AbstractSyntaxTreeNode root) {
         root.accept(this);
 
         final String graphDescription = graphBuilder.append(DOT_FILE_FOOTER).toString();
@@ -144,7 +144,7 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeNodeVisi
     }
 
     @Override
-    public void visit(BooleanBinaryExpression node) {
+    public void visit(RelationalBinaryExpression node) {
         addNode(node);
         associate(node, node.getLeft());
         associate(node, node.getRight());

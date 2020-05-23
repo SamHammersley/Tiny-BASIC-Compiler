@@ -4,7 +4,7 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.expression.ArithmeticBinaryExpression;
-import uk.ac.tees.syntax.grammar.expression.BooleanBinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
@@ -25,7 +25,7 @@ public interface AbstractSyntaxTreeNodeVisitor<T> {
      * @param root the root node of the tree.
      * @return an instance of type T, the result of visiting the whole tree.
      */
-    T acceptTree(AbstractSyntaxTreeNode root);
+    T visitTree(AbstractSyntaxTreeNode root);
 
     void visit(IdentifierFactor node);
 
@@ -35,7 +35,7 @@ public interface AbstractSyntaxTreeNodeVisitor<T> {
 
     void visit(ArithmeticBinaryExpression node);
 
-    void visit(BooleanBinaryExpression node);
+    void visit(RelationalBinaryExpression node);
 
     void visit(Program root);
 

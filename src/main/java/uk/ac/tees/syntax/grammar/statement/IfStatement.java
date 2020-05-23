@@ -1,6 +1,6 @@
 package uk.ac.tees.syntax.grammar.statement;
 
-import uk.ac.tees.syntax.grammar.expression.BooleanBinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.RelationalBinaryExpression;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
 import java.util.Objects;
@@ -15,21 +15,21 @@ public final class IfStatement extends Statement {
     /**
      * A binary expression that has a relational operator. Should evaluate to {@code true} or {@code false}.
      */
-    private final BooleanBinaryExpression expression;
+    private final RelationalBinaryExpression expression;
 
     /**
      * The statement if the {@link #expression} passes.
      */
     private final Statement statement;
 
-    public IfStatement(BooleanBinaryExpression expression, Statement statement) {
+    public IfStatement(RelationalBinaryExpression expression, Statement statement) {
         super("IF");
 
         this.expression = expression;
         this.statement = statement;
     }
 
-    public BooleanBinaryExpression getExpression() {
+    public RelationalBinaryExpression getExpression() {
         return expression;
     }
 

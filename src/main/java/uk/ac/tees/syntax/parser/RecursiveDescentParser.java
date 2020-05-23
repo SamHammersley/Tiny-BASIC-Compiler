@@ -5,7 +5,7 @@ import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.expression.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.ArithmeticOperator;
-import uk.ac.tees.syntax.grammar.expression.BooleanBinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.RelationalOperator;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
@@ -131,7 +131,7 @@ public final class RecursiveDescentParser extends Parser {
         RelationalOperator operator = supplier.getValue(RelationalOperator::fromSymbol);
         supplier.nextToken();
 
-        BooleanBinaryExpression expression = new BooleanBinaryExpression(left, parseExpression(), operator);
+        RelationalBinaryExpression expression = new RelationalBinaryExpression(left, parseExpression(), operator);
 
         supplier.expectValue("THEN"::equals);
 

@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * {@author Sam Hammersley - Gonsalves (q5315908)}
  */
-public final class BooleanBinaryExpression implements AbstractSyntaxTreeNode {
+public final class RelationalBinaryExpression implements AbstractSyntaxTreeNode {
 
     /**
      * The left hand side of the expression, this is a node of the tree and may itself be an expression.
@@ -27,7 +27,7 @@ public final class BooleanBinaryExpression implements AbstractSyntaxTreeNode {
      */
     private final RelationalOperator operator;
 
-    public BooleanBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, RelationalOperator operator) {
+    public RelationalBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, RelationalOperator operator) {
         this.left = left;
         this.right = right;
         this.operator = operator;
