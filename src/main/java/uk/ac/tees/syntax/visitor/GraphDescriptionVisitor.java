@@ -20,7 +20,7 @@ import java.io.UncheckedIOException;
  * <p>
  * {@see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>}
  * <p>
- * {@author Sam Hammersley - Gonsalves (q5315908)}
+ * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class GraphDescriptionVisitor implements AbstractSyntaxTreeNodeVisitor<String> {
 

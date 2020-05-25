@@ -15,7 +15,7 @@ import uk.ac.tees.syntax.grammar.statement.*;
  * <p>
  * TODO: needs refactoring, breaks open/closed principle (have to add new functions to add a new node type).
  * <p>
- * {@author Sam Hammersley - Gonsalves (q5315908)}
+ * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public interface AbstractSyntaxTreeNodeVisitor<T> {
 

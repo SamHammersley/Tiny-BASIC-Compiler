@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * A boolean binary expression, that has a {@link RelationalOperator} and two operands.
  *
- * {@author Sam Hammersley - Gonsalves (q5315908)}
+ * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class RelationalBinaryExpression implements AbstractSyntaxTreeNode {
 

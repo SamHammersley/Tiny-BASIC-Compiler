@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * An arithmetic binary expression, that has an {@link ArithmeticOperator} and two operands.
  *
- * {@author Sam Hammersley - Gonsalves (q5315908)}
+ * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class ArithmeticBinaryExpression implements AbstractSyntaxTreeNode {
 

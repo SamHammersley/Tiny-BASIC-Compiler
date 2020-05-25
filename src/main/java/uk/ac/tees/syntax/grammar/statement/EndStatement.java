@@ -5,7 +5,7 @@ import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 /**
  * An END statement, denotes the end of the program.
  *
- * {@author Sam Hammersley - Gonsalves (q5315908)}
+ * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class EndStatement extends Statement {
 
