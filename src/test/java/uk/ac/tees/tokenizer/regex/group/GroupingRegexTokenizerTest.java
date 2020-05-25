@@ -6,8 +6,8 @@ import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.TokenizationException;
 import uk.ac.tees.tokenizer.UnexpectedCharacterException;
 import uk.ac.tees.tokenizer.regex.RegexTokenizer;
-import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
-import uk.ac.tees.tokenizer.regex.provider.FromFileProvider;
+import uk.ac.tees.tokenizer.regex.patterns.FromFileProvider;
+import uk.ac.tees.tokenizer.regex.patterns.TokenizerPatternsCache;
 
 import java.util.Queue;
 
@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 final class GroupingRegexTokenizerTest {
 
-    private static RegexTokenizerPatternsCache cache;
+    private static TokenizerPatternsCache cache;
 
     @BeforeAll
     static void setup() {
         String regexFile = GroupingRegexTokenizerTest.class.getClassLoader().getResource("regex").getFile();
 
-        cache = new FromFileProvider(regexFile).cache();
+        cache = new FromFileProvider(regexFile).newCache();
     }
 
     @Test

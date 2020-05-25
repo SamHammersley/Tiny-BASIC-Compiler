@@ -3,7 +3,7 @@ package uk.ac.tees.tokenizer.regex.sequential;
 import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.UnexpectedCharacterException;
 import uk.ac.tees.tokenizer.regex.RegexTokenizer;
-import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.regex.patterns.TokenizerPatternsCache;
 
 import java.util.LinkedList;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public final class SequentialRegexTokenizer extends RegexTokenizer {
      *
      * @param patterns provides regex patterns and corresponding {@link Token.Type}s.
      */
-    public SequentialRegexTokenizer(RegexTokenizerPatternsCache patterns) {
+    public SequentialRegexTokenizer(TokenizerPatternsCache patterns) {
         super(patterns);
     }
 

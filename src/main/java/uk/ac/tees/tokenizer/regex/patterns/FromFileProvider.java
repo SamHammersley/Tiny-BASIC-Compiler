@@ -1,9 +1,9 @@
-package uk.ac.tees.tokenizer.regex.provider;
+package uk.ac.tees.tokenizer.regex.patterns;
 
 import uk.ac.tees.tokenizer.Token;
-import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,20 +11,35 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public final class FromFileProvider implements RegexPatternsProvider {
+/**
+ * Gets {@link Pattern}s for {@link Token.Type}s from a file. The expected syntax is as follows:
+ * <pre>{@code TOKEN_NAME: Regex pattern}</pre>
+ *
+ * @author Sam Hammersley - Gonsalves (q5315908)
+ */
+public final class FromFileProvider extends TokenizerPatternsProvider {
 
+    /**
+     * The name of the file containing the regex patterns.
+     */
     private final String file;
 
+    /**
+     * Constructs new {@link FromFileProvider} with the given file name.
+     *
+     * @param file the name of the file containing the patterns.
+     */
     public FromFileProvider(String file) {
         this.file = file;
     }
 
     @Override
-    public RegexTokenizerPatternsCache cache() {
+    protected Map<Token.Type, Pattern> getPatterns() {
         Path path = Paths.get(file);
         Map<Token.Type, Pattern> map = new LinkedHashMap<>();
 
         try {
+
             Files.lines(path).forEach(l -> {
                 String[] parts = l.split(": ");
 
@@ -34,10 +49,12 @@ public final class FromFileProvider implements RegexPatternsProvider {
 
                 map.put(Token.Type.valueOf(parts[0]), Pattern.compile(parts[1]));
             });
+
         } catch(IOException e) {
-            e.printStackTrace();
+            throw new UncheckedIOException(e);
         }
 
-        return new RegexTokenizerPatternsCache(map);
+        return map;
     }
+
 }

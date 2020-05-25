@@ -3,7 +3,7 @@ package uk.ac.tees.tokenizer.regex.group;
 import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.UnexpectedCharacterException;
 import uk.ac.tees.tokenizer.regex.RegexTokenizer;
-import uk.ac.tees.tokenizer.regex.RegexTokenizerPatternsCache;
+import uk.ac.tees.tokenizer.regex.patterns.TokenizerPatternsCache;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -27,7 +27,7 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
      *
      * @param patterns provides regex patterns and corresponding {@link Token.Type}s.
      */
-    public GroupingRegexTokenizer(RegexTokenizerPatternsCache patterns) {
+    public GroupingRegexTokenizer(TokenizerPatternsCache patterns) {
         super(patterns);
     }
 

@@ -1,25 +1,28 @@
-package uk.ac.tees.tokenizer.regex;
+package uk.ac.tees.tokenizer.regex.patterns;
 
 import uk.ac.tees.tokenizer.Token;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
+ * Represents a temporary dictionary of {@link Token.Type}s and corresponding {@link Pattern}s.
+ *
  * This class encapsulates the associations between Token types and regular expression patterns. Supported
- * {@link Token.Type}s are stored with their associated {@link Pattern}s as key-value pairs.
+ * {@link Token.Type}s are associated with {@link Pattern}s as key-value pairs.
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class RegexTokenizerPatternsCache {
+public final class TokenizerPatternsCache {
 
     /**
      * {@link Token.Type}s mapped to their associated regex {@link Pattern}s.
      */
     private final Map<Token.Type, Pattern> map;
 
-    public RegexTokenizerPatternsCache(Map<Token.Type, Pattern> map) {
+    TokenizerPatternsCache(Map<Token.Type, Pattern> map) {
         this.map = map;
     }
 
@@ -28,7 +31,7 @@ public final class RegexTokenizerPatternsCache {
      *
      * @return the supported token types.
      */
-    public Collection<Token.Type> supportedTypes() {
+    public Set<Token.Type> supportedTypes() {
         return map.keySet();
     }
 

@@ -3,6 +3,7 @@ package uk.ac.tees.tokenizer.regex;
 import uk.ac.tees.tokenizer.TinyBasicTokenizer;
 import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.TokenizationException;
+import uk.ac.tees.tokenizer.regex.patterns.TokenizerPatternsCache;
 
 import java.util.Queue;
 import java.util.regex.Pattern;
@@ -17,14 +18,14 @@ public abstract class RegexTokenizer implements TinyBasicTokenizer {
     /**
      * Provides regular expression {@link Pattern}s and their corresponding {@link Token.Type}s.
      */
-    protected final RegexTokenizerPatternsCache patterns;
+    protected final TokenizerPatternsCache patterns;
 
     /**
      * Construct a new {@link RegexTokenizer}.
      *
      * @param patterns provides the regex patterns and token types.
      */
-    protected RegexTokenizer(RegexTokenizerPatternsCache patterns) {
+    protected RegexTokenizer(TokenizerPatternsCache patterns) {
         this.patterns = patterns;
     }
 
