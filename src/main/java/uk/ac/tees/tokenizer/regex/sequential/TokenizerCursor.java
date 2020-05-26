@@ -64,7 +64,7 @@ final class TokenizerCursor {
      * @param value the string value, to move the cursor for.
      */
     void advance(String value) {
-        if (!remainingInput.contains(value)) {
+        if (!remainingInput.startsWith(value)) {
             throw new IllegalStateException("The remaining string does not contain " + value);
         }
 
