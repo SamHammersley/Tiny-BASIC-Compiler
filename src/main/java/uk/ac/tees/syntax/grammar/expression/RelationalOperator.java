@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public enum RelationalOperator {
+public enum RelationalOperator implements BinaryOperator {
 
     LESS("<"),
 
