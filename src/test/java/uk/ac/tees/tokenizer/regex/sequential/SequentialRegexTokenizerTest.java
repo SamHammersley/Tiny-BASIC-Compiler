@@ -1,33 +1,44 @@
 package uk.ac.tees.tokenizer.regex.sequential;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.TokenizationException;
 import uk.ac.tees.tokenizer.UnexpectedCharacterException;
 import uk.ac.tees.tokenizer.regex.RegexTokenizer;
-import uk.ac.tees.tokenizer.regex.patterns.FromFileProvider;
 import uk.ac.tees.tokenizer.regex.patterns.TokenizerPatternsCache;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Queue;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static uk.ac.tees.tokenizer.Token.Type.*;
 
 final class SequentialRegexTokenizerTest {
 
-    private static TokenizerPatternsCache cache;
+    private TokenizerPatternsCache supporting(Token.Type...types) {
+        TokenizerPatternsCache mock = mock(TokenizerPatternsCache.class);
 
-    @BeforeAll
-    static void setup() {
-        String regexFile = SequentialRegexTokenizerTest.class.getClassLoader().getResource("regex").getFile();
-
-        cache = new FromFileProvider(regexFile).newCache();
+        List<Token.Type> l = Arrays.asList(types);
+        return when(mock.supportedTypes()).thenReturn(new LinkedHashSet<>(l)).getMock();
     }
 
     @Test
     void testUnexpectedCharacter() {
-        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
+        TokenizerPatternsCache mock = supporting(NUMBER, KEYWORD, IDENTIFIER, REL_OP, NEW_LINE);
+
+        when(mock.getPattern(NUMBER)).thenReturn(Pattern.compile("\\d+"));
+        when(mock.getPattern(KEYWORD)).thenReturn(Pattern.compile("[a-zA-Z]{2,}"));
+        when(mock.getPattern(IDENTIFIER)).thenReturn(Pattern.compile("\\b[a-zA-Z]\\b"));
+        when(mock.getPattern(REL_OP)).thenReturn(Pattern.compile("(<[=>]?|>[=<]?|=)"));
+        when(mock.getPattern(NEW_LINE)).thenReturn(Pattern.compile("\\n"));
+
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(mock);
 
         UnexpectedCharacterException e = assertThrows(UnexpectedCharacterException.class,
                 () -> tokenizer.tokenize("10 LET N = 5\n20 PRINT N\n30 LET ]"));
@@ -40,7 +51,15 @@ final class SequentialRegexTokenizerTest {
 
     @Test
     void testLetBinding() throws TokenizationException {
-        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
+        TokenizerPatternsCache mock = supporting(NUMBER, KEYWORD, IDENTIFIER, REL_OP, NEW_LINE);
+
+        when(mock.getPattern(NUMBER)).thenReturn(Pattern.compile("\\d+"));
+        when(mock.getPattern(KEYWORD)).thenReturn(Pattern.compile("[a-zA-Z]{2,}"));
+        when(mock.getPattern(IDENTIFIER)).thenReturn(Pattern.compile("\\b[a-zA-Z]\\b"));
+        when(mock.getPattern(REL_OP)).thenReturn(Pattern.compile("(<[=>]?|>[=<]?|=)"));
+        when(mock.getPattern(NEW_LINE)).thenReturn(Pattern.compile("\\n"));
+
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(mock);
 
         Queue<Token> tokens = tokenizer.tokenize("10 LET N = 5\n20 PRINT N");
 
@@ -59,7 +78,13 @@ final class SequentialRegexTokenizerTest {
 
     @Test
     void testPrint() throws TokenizationException {
-        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
+        TokenizerPatternsCache mock = supporting(STRING_EXPRESSION, NUMBER, KEYWORD);
+
+        when(mock.getPattern(STRING_EXPRESSION)).thenReturn(Pattern.compile("\"[^\"]*\""));
+        when(mock.getPattern(NUMBER)).thenReturn(Pattern.compile("\\d+"));
+        when(mock.getPattern(KEYWORD)).thenReturn(Pattern.compile("[a-zA-Z]{2,}"));
+
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(mock);
 
         Queue<Token> tokens = tokenizer.tokenize("10 PRINT \"Hello, World!\"");
 
@@ -72,7 +97,14 @@ final class SequentialRegexTokenizerTest {
 
     @Test
     void testInput() throws TokenizationException {
-        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
+        TokenizerPatternsCache mock = supporting(NUMBER, KEYWORD, IDENTIFIER, COMMA);
+
+        when(mock.getPattern(NUMBER)).thenReturn(Pattern.compile("\\d+"));
+        when(mock.getPattern(KEYWORD)).thenReturn(Pattern.compile("[a-zA-Z]{2,}"));
+        when(mock.getPattern(IDENTIFIER)).thenReturn(Pattern.compile("\\b[a-zA-Z]\\b"));
+        when(mock.getPattern(COMMA)).thenReturn(Pattern.compile(","));
+
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(mock);
 
         Queue<Token> tokens = tokenizer.tokenize("10 INPUT X, Y, Z");
 
@@ -89,7 +121,17 @@ final class SequentialRegexTokenizerTest {
 
     @Test
     void testArithmetic() throws TokenizationException {
-        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
+        TokenizerPatternsCache mock = supporting(NUMBER, MULTIPLY, DIV, L_PARENTHESES, R_PARENTHESES, PLUS, MINUS);
+
+        when(mock.getPattern(NUMBER)).thenReturn(Pattern.compile("\\d+"));
+        when(mock.getPattern(MULTIPLY)).thenReturn(Pattern.compile("\\*"));
+        when(mock.getPattern(DIV)).thenReturn(Pattern.compile("/"));
+        when(mock.getPattern(L_PARENTHESES)).thenReturn(Pattern.compile("\\("));
+        when(mock.getPattern(R_PARENTHESES)).thenReturn(Pattern.compile("\\)"));
+        when(mock.getPattern(PLUS)).thenReturn(Pattern.compile("\\+"));
+        when(mock.getPattern(MINUS)).thenReturn(Pattern.compile("-"));
+
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(mock);
 
         Queue<Token> tokens = tokenizer.tokenize("3 * (6 + 2 - 3) / 5");
 
@@ -110,7 +152,11 @@ final class SequentialRegexTokenizerTest {
 
     @Test
     void testRelationalOperators() throws TokenizationException {
-        RegexTokenizer tokenizer = new SequentialRegexTokenizer(cache);
+        TokenizerPatternsCache mock = supporting(REL_OP);
+
+        when(mock.getPattern(REL_OP)).thenReturn(Pattern.compile("(<[=>]?|>[=<]?|=)"));
+
+        RegexTokenizer tokenizer = new SequentialRegexTokenizer(mock);
 
         Queue<Token> tokens = tokenizer.tokenize("< <= > >= <> >< =");
 
