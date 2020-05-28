@@ -4,6 +4,7 @@ import uk.ac.tees.tokenizer.Token;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,20 +23,20 @@ public final class FromFileProvider extends TokenizerPatternsProvider {
     /**
      * The name of the file containing the regex patterns.
      */
-    private final String file;
+    private final URL file;
 
     /**
      * Constructs new {@link FromFileProvider} with the given file name.
      *
      * @param file the name of the file containing the patterns.
      */
-    public FromFileProvider(String file) {
+    public FromFileProvider(URL file) {
         this.file = file;
     }
 
     @Override
     protected Map<Token.Type, Pattern> getPatterns() {
-        Path path = Paths.get(file);
+        Path path = Paths.get(file.getPath());
         Map<Token.Type, Pattern> map = new LinkedHashMap<>();
 
         try {
