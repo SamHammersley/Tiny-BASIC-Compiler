@@ -1,6 +1,6 @@
 package uk.ac.tees.syntax.grammar.statement;
 
-import uk.ac.tees.syntax.grammar.expression.RelationalBinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
 import java.util.Objects;

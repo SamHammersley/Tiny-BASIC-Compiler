@@ -1,4 +1,6 @@
-package uk.ac.tees.syntax.grammar.expression;
+package uk.ac.tees.syntax.grammar.expression.relational;
+
+import uk.ac.tees.syntax.grammar.expression.BinaryOperator;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;

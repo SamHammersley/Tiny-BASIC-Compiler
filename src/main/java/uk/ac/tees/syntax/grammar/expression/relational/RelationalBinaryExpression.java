@@ -1,16 +1,17 @@
-package uk.ac.tees.syntax.grammar.expression;
+package uk.ac.tees.syntax.grammar.expression.relational;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
+import uk.ac.tees.syntax.grammar.expression.BinaryExpression;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
 /**
- * An arithmetic binary expression, that has an {@link ArithmeticOperator} and two operands.
+ * A boolean binary expression, that has a {@link RelationalOperator} and two operands.
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class ArithmeticBinaryExpression extends BinaryExpression<ArithmeticOperator> {
+public final class RelationalBinaryExpression  extends BinaryExpression<RelationalOperator> {
 
-    public ArithmeticBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, ArithmeticOperator operator) {
+    public RelationalBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, RelationalOperator operator) {
         super(left, right, operator);
     }
 
@@ -26,7 +27,7 @@ public final class ArithmeticBinaryExpression extends BinaryExpression<Arithmeti
 
     @Override
     public String toString() {
-        return "Arithmetic(" + operator.toString() + ")";
+        return "Relational(" + operator.toString() + ")";
     }
 
 }

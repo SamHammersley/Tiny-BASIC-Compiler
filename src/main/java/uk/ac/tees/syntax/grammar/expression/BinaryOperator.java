@@ -1,4 +1,4 @@
 package uk.ac.tees.syntax.grammar.expression;
 
-interface BinaryOperator {
+public interface BinaryOperator {
 }
