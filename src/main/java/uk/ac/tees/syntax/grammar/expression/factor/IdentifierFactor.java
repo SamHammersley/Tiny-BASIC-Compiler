@@ -1,36 +1,26 @@
 package uk.ac.tees.syntax.grammar.expression.factor;
 
-import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
+import uk.ac.tees.syntax.grammar.Identifier;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
-import java.util.Objects;
-
 /**
- * A factor that has an identifier.
+ * An {@link Identifier} that is a factor of an expression; this means objects of this type must be assigned a value.
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class IdentifierFactor implements AbstractSyntaxTreeNode {
+public final class IdentifierFactor extends Identifier {
 
-    private final String identifier;
-
-    public IdentifierFactor(String identifier) {
-        this.identifier = identifier;
+    public IdentifierFactor(char name) {
+        super(name);
     }
 
-    @Override
-    public String toString() {
-        return "Var(" + identifier + ")";
+    public IdentifierFactor(String name) {
+        super(name.charAt(0));
     }
 
     @Override
     public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), identifier);
     }
 
 }

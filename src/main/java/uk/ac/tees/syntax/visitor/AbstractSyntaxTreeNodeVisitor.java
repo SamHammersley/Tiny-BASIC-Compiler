@@ -3,6 +3,7 @@ package uk.ac.tees.syntax.visitor;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
+import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
@@ -26,6 +27,8 @@ public interface AbstractSyntaxTreeNodeVisitor<T> {
      * @return an instance of type T, the result of visiting the whole tree.
      */
     T visitTree(AbstractSyntaxTreeNode root);
+
+    void visit(UnassignedIdentifier node);
 
     void visit(IdentifierFactor node);
 

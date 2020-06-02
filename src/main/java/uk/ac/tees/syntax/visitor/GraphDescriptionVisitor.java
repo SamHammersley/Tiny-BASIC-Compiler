@@ -3,6 +3,7 @@ package uk.ac.tees.syntax.visitor;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
+import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
@@ -122,6 +123,11 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeNodeVisi
     }
 
     @Override
+    public void visit(UnassignedIdentifier node) {
+        addNode(node);
+    }
+
+    @Override
     public void visit(IdentifierFactor node) {
         addNode(node);
     }
@@ -198,7 +204,7 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeNodeVisi
     public void visit(InputStatement node) {
         addNode(node);
 
-        for (IdentifierFactor factor : node.getIdentifiers()) {
+        for (UnassignedIdentifier factor : node.getIdentifiers()) {
             associate(node, factor);
         }
     }
@@ -206,6 +212,7 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeNodeVisi
     @Override
     public void visit(LetStatement node) {
         addNode(node);
+
         associate(node, node.getIdentifier());
         associate(node, node.getValue());
     }

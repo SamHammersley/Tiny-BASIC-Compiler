@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
-import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
+import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
 import java.util.Objects;
@@ -16,20 +16,20 @@ public final class LetStatement extends Statement {
     /**
      * The identifier to be assigned the value.
      */
-    private final IdentifierFactor identifier;
+    private final UnassignedIdentifier identifier;
 
     /**
      * The value to be assigned to the identifier.
      */
     private final AbstractSyntaxTreeNode value;
 
-    public LetStatement(IdentifierFactor identifier, AbstractSyntaxTreeNode value) {
+    public LetStatement(UnassignedIdentifier identifier, AbstractSyntaxTreeNode value) {
         super("LET");
         this.identifier = identifier;
         this.value = value;
     }
 
-    public IdentifierFactor getIdentifier() {
+    public UnassignedIdentifier getIdentifier() {
         return identifier;
     }
 

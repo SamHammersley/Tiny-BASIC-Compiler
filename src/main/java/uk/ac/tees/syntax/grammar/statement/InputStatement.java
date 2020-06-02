@@ -1,5 +1,6 @@
 package uk.ac.tees.syntax.grammar.statement;
 
+import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
@@ -16,15 +17,15 @@ public final class InputStatement extends Statement {
     /**
      * {@link List} of identifiers to assign values to, from the user.
      */
-    private final List<IdentifierFactor> identifiers;
+    private final List<UnassignedIdentifier> identifiers;
 
-    public InputStatement(List<IdentifierFactor> identifiers) {
+    public InputStatement(List<UnassignedIdentifier> identifiers) {
         super("INPUT");
 
         this.identifiers = identifiers;
     }
 
-    public List<IdentifierFactor> getIdentifiers() {
+    public List<UnassignedIdentifier> getIdentifiers() {
         return identifiers;
     }
 

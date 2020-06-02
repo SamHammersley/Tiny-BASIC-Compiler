@@ -3,6 +3,7 @@ package uk.ac.tees.syntax.parser;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
+import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticOperator;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
@@ -169,7 +170,7 @@ public final class RecursiveDescentParser extends Parser {
      */
     private LetStatement parseLetStatement() throws ParseException {
         supplier.expectType(IDENTIFIER);
-        IdentifierFactor identifier = supplier.getValue(IdentifierFactor::new);
+        UnassignedIdentifier identifier = supplier.getValue(UnassignedIdentifier::new);
 
         supplier.nextToken("="::equals);
         supplier.nextToken();
@@ -186,16 +187,16 @@ public final class RecursiveDescentParser extends Parser {
      * @return an {@link InputStatement} object.
      */
     private InputStatement parseInputStatement() throws ParseException {
-        List<IdentifierFactor> identifiers = new ArrayList<>();
+        List<UnassignedIdentifier> identifiers = new ArrayList<>();
 
         supplier.expectType(IDENTIFIER);
-        identifiers.add(supplier.getValue(IdentifierFactor::new));
+        identifiers.add(supplier.getValue(UnassignedIdentifier::new));
         supplier.nextToken();
 
         while (supplier.currentTypeIs(COMMA)) {
             supplier.nextToken(IDENTIFIER);
 
-            identifiers.add(supplier.getValue(IdentifierFactor::new));
+            identifiers.add(supplier.getValue(UnassignedIdentifier::new));
         }
 
         return new InputStatement(identifiers);

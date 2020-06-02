@@ -8,6 +8,6 @@ L_PARENTHESES: \(
 R_PARENTHESES: \)
 NEW_LINE: \n
 KEYWORD: [a-zA-Z]{2,}
-IDENTIFIER: \b[a-zA-Z]\b
+IDENTIFIER: \b[A-Z]\b
 COMMA: ,
 REL_OP: (<[=>]?|>[=<]?|=)
