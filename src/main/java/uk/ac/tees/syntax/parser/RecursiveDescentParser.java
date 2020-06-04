@@ -13,7 +13,7 @@ import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
-import uk.ac.tees.syntax.parser.exception.UndefinedSymbolException;
+import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -107,7 +107,7 @@ public final class RecursiveDescentParser extends Parser {
             return (Statement) method.invoke(this);
 
         } catch (NoSuchMethodException e) {
-            throw new UndefinedSymbolException(supplier.getCurrentToken());
+            throw new UnrecognisedCommand(supplier.getCurrentToken());
 
         } catch (InvocationTargetException e) {
             throw (ParseException) e.getCause();
