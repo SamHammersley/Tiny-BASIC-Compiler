@@ -1,3 +1,4 @@
-10 LET A = "Hello World!\n"
-20 PRINT A
-30 END
+10 LET A = 5
+20 LET B = 6
+30 PRINT A, B
+40 END
