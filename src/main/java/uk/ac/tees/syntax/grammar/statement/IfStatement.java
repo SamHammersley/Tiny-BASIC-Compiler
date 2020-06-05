@@ -3,8 +3,6 @@ package uk.ac.tees.syntax.grammar.statement;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
-import java.util.Objects;
-
 /**
  * Represents a one-armed if statement.
  *
@@ -44,11 +42,6 @@ public final class IfStatement extends Statement {
         statement.accept(visitor);
 
         visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), expression, statement);
     }
 
 }

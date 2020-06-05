@@ -3,10 +3,9 @@ package uk.ac.tees.syntax.grammar;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
- *
+ * Represents a named sequence of lines of Tiny BASIC source code that is referred to as a program.
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
@@ -36,6 +35,15 @@ public final class Program implements AbstractSyntaxTreeNode {
         return lines;
     }
 
+    /**
+     * Accessor method for {@link #name}.
+     *
+     * @return the name of the program.
+     */
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "Program(" + name + ")";
@@ -48,11 +56,6 @@ public final class Program implements AbstractSyntaxTreeNode {
 
         // Accept each of the lines of code.
         lines.forEach(l -> l.accept(visitor));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, lines);
     }
 
 }

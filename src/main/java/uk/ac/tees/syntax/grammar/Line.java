@@ -3,8 +3,6 @@ package uk.ac.tees.syntax.grammar;
 import uk.ac.tees.syntax.grammar.statement.Statement;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
-import java.util.Objects;
-
 /**
  * Represents a line of Tiny BASIC source code, the structure of which is defined by the following:
  *
@@ -20,7 +18,7 @@ public final class Line implements AbstractSyntaxTreeNode {
     private final int lineNumber;
 
     /**
-     * The statement for the line.
+     * The statement for the line, there will always exist a statement on every line of source code.
      */
     private final Statement statement;
 
@@ -29,18 +27,27 @@ public final class Line implements AbstractSyntaxTreeNode {
         this.statement = statement;
     }
 
+    /**
+     * Accessor method for {@link #statement} field.
+     *
+     * @return the statement for this line.
+     */
     public Statement getStatement() {
         return statement;
+    }
+
+    /**
+     * Accessor method for {@link #lineNumber} field.
+     *
+     * @return the line number of this line.
+     */
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     @Override
     public String toString() {
         return "Line(" + lineNumber + ")";
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), lineNumber, statement);
     }
 
     @Override

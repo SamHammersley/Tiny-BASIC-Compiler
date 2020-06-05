@@ -4,8 +4,6 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
-import java.util.Objects;
-
 /**
  * LET statement assigns the value of an expression to an identifier.
  *
@@ -43,11 +41,6 @@ public final class LetStatement extends Statement {
         value.accept(visitor);
 
         visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), identifier, value);
     }
 
 }

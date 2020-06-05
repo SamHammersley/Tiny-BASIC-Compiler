@@ -3,8 +3,6 @@ package uk.ac.tees.syntax.grammar.statement;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
-import java.util.Objects;
-
 /**
  * GOTO jumps to the given target line.
  *
@@ -31,11 +29,6 @@ public final class GoToStatement extends Statement {
         expression.accept(visitor);
 
         visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), expression);
     }
 
 }

@@ -1,11 +1,9 @@
 package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
-import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Signifies that there should be n numbers input from the user, one for each identifier.
@@ -34,11 +32,6 @@ public final class InputStatement extends Statement {
         identifiers.forEach(i -> i.accept(visitor));
 
         visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), identifiers);
     }
 
 }

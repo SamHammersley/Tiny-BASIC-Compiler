@@ -4,7 +4,6 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * PRINT statement prints each of the expressions to standard out, seperated by \n.
@@ -32,11 +31,6 @@ public final class PrintStatement extends Statement {
         expressions.forEach(e -> e.accept(visitor));
 
         visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), expressions);
     }
 
 }

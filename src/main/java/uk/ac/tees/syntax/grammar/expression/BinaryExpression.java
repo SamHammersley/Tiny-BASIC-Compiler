@@ -2,8 +2,6 @@ package uk.ac.tees.syntax.grammar.expression;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 
-import java.util.Objects;
-
 /**
  * An expression with two operands and an operator. This class is a composite {@link AbstractSyntaxTreeNode} and can be
  * treated as such, where the two operands are themselves {@link AbstractSyntaxTreeNode}s. This allows the expression
@@ -51,11 +49,6 @@ public abstract class BinaryExpression<T extends BinaryOperator> implements Abst
      */
     public AbstractSyntaxTreeNode getRight() {
         return right;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), left, right, operator);
     }
 
 }
