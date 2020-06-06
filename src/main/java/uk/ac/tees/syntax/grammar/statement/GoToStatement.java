@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * GOTO jumps to the given target line.
@@ -25,7 +25,7 @@ public final class GoToStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         expression.accept(visitor);
 
         visitor.visit(this);

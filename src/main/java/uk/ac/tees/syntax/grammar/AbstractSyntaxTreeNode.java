@@ -1,6 +1,6 @@
 package uk.ac.tees.syntax.grammar;
 
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * Represents a node in an Abstract Syntax Tree.
@@ -15,7 +15,7 @@ public interface AbstractSyntaxTreeNode {
     /**
      * This function is called when traversing the tree, implementations should accept any child nodes, in the
      * correct order. This function should invoke the visit function, corresponding to this node type, of the given
-     * {@link AbstractSyntaxTreeNodeVisitor} to visit this node and accept any child nodes.
+     * {@link AbstractSyntaxTreeVisitor} to visit this node and accept any child nodes.
      *
      * Where there are child nodes, the order in which they are accepted and this node is visited should be considered.
      * For example, visiting this node before accepting the child nodes would be pre-order traversal. On the contrary,
@@ -23,6 +23,6 @@ public interface AbstractSyntaxTreeNode {
      *
      * @param visitor defines the actions to be executed upon visiting a node.
      */
-    void accept(AbstractSyntaxTreeNodeVisitor visitor);
+    void accept(AbstractSyntaxTreeVisitor visitor);
 
 }

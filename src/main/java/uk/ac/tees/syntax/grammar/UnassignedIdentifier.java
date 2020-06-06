@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar;
 
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * An {@link AbstractSyntaxTreeNode} representing an identifier for a variable that is to be assigned a value. The
@@ -22,7 +22,7 @@ public final class UnassignedIdentifier extends Identifier {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         visitor.visit(this);
     }
 }

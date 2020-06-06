@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public final class InputStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         identifiers.forEach(i -> i.accept(visitor));
 
         visitor.visit(this);

@@ -18,7 +18,7 @@ import uk.ac.tees.syntax.grammar.statement.*;
  * <p>
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public interface AbstractSyntaxTreeNodeVisitor<T> {
+public interface AbstractSyntaxTreeVisitor<T> {
 
     /**
      * This function should be called with the root node of a tree, returning the result of visiting the whole tree.

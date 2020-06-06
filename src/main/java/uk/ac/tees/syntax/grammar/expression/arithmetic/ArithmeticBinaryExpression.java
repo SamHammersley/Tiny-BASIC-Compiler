@@ -2,7 +2,7 @@ package uk.ac.tees.syntax.grammar.expression.arithmetic;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.expression.BinaryExpression;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * An arithmetic binary expression, that has an {@link ArithmeticOperator} and two operands.
@@ -16,7 +16,7 @@ public final class ArithmeticBinaryExpression extends BinaryExpression<Arithmeti
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         // Need to accept both sides/child nodes of the expression first.
         left.accept(visitor);
         right.accept(visitor);

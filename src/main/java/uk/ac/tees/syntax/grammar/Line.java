@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar;
 
 import uk.ac.tees.syntax.grammar.statement.Statement;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * Represents a line of Tiny BASIC source code, the structure of which is defined by the following:
@@ -51,7 +51,7 @@ public final class Line implements AbstractSyntaxTreeNode {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         visitor.visit(this);
 
         statement.accept(visitor);

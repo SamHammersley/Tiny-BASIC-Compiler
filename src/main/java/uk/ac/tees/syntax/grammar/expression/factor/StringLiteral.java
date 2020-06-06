@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar.expression.factor;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * Represents a string literal factor, a string of characters surrounded by "".
@@ -26,7 +26,7 @@ public final class StringLiteral implements AbstractSyntaxTreeNode {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         visitor.visit(this);
     }
 

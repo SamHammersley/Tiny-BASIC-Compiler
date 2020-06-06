@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * Represents a one-armed if statement.
@@ -36,7 +36,7 @@ public final class IfStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         // Accept the child nodes before visiting this node.
         expression.accept(visitor);
         statement.accept(visitor);

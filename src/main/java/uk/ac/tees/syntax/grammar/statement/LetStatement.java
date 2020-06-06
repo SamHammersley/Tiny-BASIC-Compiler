@@ -2,7 +2,7 @@ package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * LET statement assigns the value of an expression to an identifier.
@@ -36,7 +36,7 @@ public final class LetStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         identifier.accept(visitor);
         value.accept(visitor);
 

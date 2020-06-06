@@ -1,6 +1,6 @@
 package uk.ac.tees.syntax.grammar.statement;
 
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * An END statement, denotes the end of the program.
@@ -14,7 +14,7 @@ public final class EndStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         visitor.visit(this);
     }
 

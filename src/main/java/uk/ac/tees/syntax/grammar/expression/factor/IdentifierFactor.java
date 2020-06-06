@@ -1,7 +1,7 @@
 package uk.ac.tees.syntax.grammar.expression.factor;
 
 import uk.ac.tees.syntax.grammar.Identifier;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeNodeVisitor;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * An {@link Identifier} that is a factor of an expression; this means objects of this type must be assigned a value.
@@ -19,7 +19,7 @@ public final class IdentifierFactor extends Identifier {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeNodeVisitor visitor) {
+    public void accept(AbstractSyntaxTreeVisitor visitor) {
         visitor.visit(this);
     }
 

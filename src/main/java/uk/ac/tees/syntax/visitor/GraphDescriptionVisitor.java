@@ -16,14 +16,14 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 /**
- * An {@link AbstractSyntaxTreeNodeVisitor} that creates a DOT graph description for a given Abstract Syntax Tree. DOT
+ * An {@link AbstractSyntaxTreeVisitor} that creates a DOT graph description for a given Abstract Syntax Tree. DOT
  * is a graph description language whereby described graphs can be visualised using Graphviz software.
  * <p>
  * {@see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>}
  * <p>
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class GraphDescriptionVisitor implements AbstractSyntaxTreeNodeVisitor<String> {
+public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<String> {
 
     /**
      * The first part of the dot graph description representing abstract syntax trees.
