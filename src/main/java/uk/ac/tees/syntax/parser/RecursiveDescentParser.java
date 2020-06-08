@@ -173,7 +173,7 @@ public final class RecursiveDescentParser extends Parser {
         UnassignedIdentifier identifier = supplier.getValue(UnassignedIdentifier::new);
 
         supplier.nextToken("="::equals);
-        supplier.nextToken(NUMBER);
+        supplier.nextToken(NUMBER, IDENTIFIER);
 
         return new LetStatement(identifier, parseExpression());
     }
