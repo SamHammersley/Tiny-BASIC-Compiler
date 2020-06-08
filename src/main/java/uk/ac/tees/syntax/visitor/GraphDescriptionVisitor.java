@@ -14,6 +14,10 @@ import uk.ac.tees.syntax.grammar.statement.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An {@link AbstractSyntaxTreeVisitor} that creates a DOT graph description for a given Abstract Syntax Tree. DOT
@@ -51,6 +55,12 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
     private final String outputFile;
 
     /**
+     * Maps parent node ids to a set of child node ids, whereby the parent node is associated, downward, to each of the
+     * child nodes.
+     */
+    private final Map<Integer, Set<Integer>> associations = new HashMap<>();
+
+    /**
      * Constructs a {@link GraphDescriptionVisitor} with a given outputFile and graphName. If no outputFile is given,
      * the graph description produced will not be persisted in a file.
      *
@@ -73,17 +83,17 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
     }
 
     /**
-     * Adds an association/edge between a parent node and a child node. Using the following syntax:
+     * Associates the given parent {@link AbstractSyntaxTreeNode} with the given child {@link AbstractSyntaxTreeNode},
+     * arrow going down.
      *
-     * <pre>{@code parent_node_id -> child_node_id}</pre>
-     * <p>
-     * In this case, {@link Object#hashCode()} is used to identify node objects.
-     *
-     * @param parent the parent node to connect the edge to.
-     * @param child  the child node to connect the edge to.
+     * @param parent the parent node.
+     * @param child the child node.
      */
     private void associate(AbstractSyntaxTreeNode parent, AbstractSyntaxTreeNode child) {
-        graphBuilder.append("\t").append(parent.hashCode()).append(DOT_FILE_ASSOCIATION).append(child.hashCode()).append("\n");
+        Set<Integer> children = associations.getOrDefault(parent.hashCode(), new HashSet<>());
+        children.add(child.hashCode());
+
+        associations.put(parent.hashCode(), children);
     }
 
     /**
@@ -95,9 +105,25 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
         graphBuilder.append("\t").append(node.hashCode()).append(" [label=\"").append(node.toString()).append("\"]\n");
     }
 
+    /**
+     * Adds an association/edge between a parent node and a child node. Using the following syntax:
+     *
+     * <pre>{@code parent_node_id -> child_node_id}</pre>
+     *
+     * In this case, {@link Object#hashCode()} is used to identify node objects.
+     *
+     * @param parentId the id of the parent node to connect the edge to.
+     * @param childId  the id of the child node to connect the edge to.
+     */
+    private void addAssociation(int parentId, int childId) {
+        graphBuilder.append("\t").append(parentId).append(DOT_FILE_ASSOCIATION).append(childId).append("\n");
+    }
+
     @Override
     public String visitTree(AbstractSyntaxTreeNode root) {
         root.accept(this);
+
+        associations.forEach((parentId, children) -> children.forEach(childId -> addAssociation(parentId, childId)));
 
         final String graphDescription = graphBuilder.append(DOT_FILE_FOOTER).toString();
 
