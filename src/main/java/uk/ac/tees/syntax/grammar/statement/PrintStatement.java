@@ -28,9 +28,11 @@ public final class PrintStatement extends Statement {
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        expressions.forEach(e -> e.accept(visitor));
+        expressions.forEach(e -> {
+            e.accept(visitor);
 
-        visitor.visit(this);
+            visitor.visit(this);
+        });
     }
 
 }
