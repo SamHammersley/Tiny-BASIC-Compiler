@@ -18,7 +18,7 @@ public enum RelationalOperator implements BinaryOperator {
 
     EQUAL("="),
 
-    NOT_EQUAL("!="),
+    NOT_EQUAL("<>"),
 
     GREATER(">"),
 
@@ -31,6 +31,22 @@ public enum RelationalOperator implements BinaryOperator {
 
     RelationalOperator(String symbol) {
         this.symbol = symbol;
+    }
+
+    public RelationalOperator negate() {
+        switch(this) {
+            case LESS: return GREATER_EQUAL;
+            case LESS_EQUAL: return GREATER;
+
+            case GREATER: return LESS_EQUAL;
+            case GREATER_EQUAL: return LESS;
+
+            case EQUAL: return NOT_EQUAL;
+            case NOT_EQUAL: return EQUAL;
+
+            default:
+                throw new RuntimeException();
+        }
     }
 
     /**
