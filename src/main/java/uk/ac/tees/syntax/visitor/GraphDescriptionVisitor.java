@@ -217,13 +217,13 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
     @Override
     public void visit(GoSubStatement node) {
         addNode(node);
-        associate(node, node.getExpression());
+        associate(node, node.getLineNumber());
     }
 
     @Override
     public void visit(GoToStatement node) {
         addNode(node);
-        associate(node, node.getExpression());
+        associate(node, node.getLineNumber());
     }
 
     @Override

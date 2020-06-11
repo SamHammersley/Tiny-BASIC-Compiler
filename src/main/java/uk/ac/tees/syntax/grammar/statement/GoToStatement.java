@@ -1,6 +1,6 @@
 package uk.ac.tees.syntax.grammar.statement;
 
-import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
+import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
@@ -11,22 +11,22 @@ import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 public final class GoToStatement extends Statement {
 
     /**
-     * The expression that evaluates to the target location.
+     * The numerical value of the line to go to.
      */
-    private final AbstractSyntaxTreeNode expression;
+    private final NumberFactor lineNumber;
 
-    public GoToStatement(AbstractSyntaxTreeNode expression) {
+    public GoToStatement(NumberFactor lineNumber) {
         super("GOTO");
-        this.expression = expression;
+        this.lineNumber = lineNumber;
     }
 
-    public AbstractSyntaxTreeNode getExpression() {
-        return expression;
+    public NumberFactor getLineNumber() {
+        return lineNumber;
     }
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        expression.accept(visitor);
+        lineNumber.accept(visitor);
 
         visitor.visit(this);
     }

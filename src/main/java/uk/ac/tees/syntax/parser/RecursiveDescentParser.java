@@ -211,7 +211,11 @@ public final class RecursiveDescentParser extends Parser {
      * @return a {@link GoToStatement} object.
      */
     private GoToStatement parseGotoStatement() throws ParseException {
-        return new GoToStatement(parseExpression());
+        supplier.expectType(NUMBER);
+        int lineNumber = supplier.getValue(Integer::parseInt);
+
+        supplier.nextToken();
+        return new GoToStatement(new NumberFactor(lineNumber));
     }
 
     /**
@@ -223,7 +227,11 @@ public final class RecursiveDescentParser extends Parser {
      * @return a {@link GoToStatement} object.
      */
     private GoSubStatement parseGosubStatement() throws ParseException {
-        return new GoSubStatement(parseExpression());
+        supplier.expectType(NUMBER);
+        int lineNumber = supplier.getValue(Integer::parseInt);
+
+        supplier.nextToken();
+        return new GoSubStatement(new NumberFactor(lineNumber));
     }
 
     /**
