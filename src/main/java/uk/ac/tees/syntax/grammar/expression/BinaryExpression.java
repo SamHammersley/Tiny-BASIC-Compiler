@@ -51,4 +51,8 @@ public abstract class BinaryExpression<T extends BinaryOperator> implements Abst
         return right;
     }
 
+    public T getOperator() {
+        return operator;
+    }
+
 }
