@@ -49,7 +49,7 @@ public final class RecursiveDescentParser extends Parser {
             lines.add(parseLine());
         }
 
-        supplier.expectValue("END"::equals);
+        //supplier.expectValue("END"::equals);
 
         return new Program(name, lines);
     }
