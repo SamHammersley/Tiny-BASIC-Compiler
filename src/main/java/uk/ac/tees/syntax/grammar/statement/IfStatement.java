@@ -37,11 +37,12 @@ public final class IfStatement extends Statement {
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        // Accept the child nodes before visiting this node.
+        // Accept (visit) the expression first.
         expression.accept(visitor);
-        statement.accept(visitor);
 
         visitor.visit(this);
+
+        statement.accept(visitor);
     }
 
 }
