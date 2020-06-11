@@ -13,12 +13,14 @@ import uk.ac.tees.syntax.grammar.statement.*;
 
 /**
  * Implementations of this interface define actions that are executed upon visiting a node of particular types.
- * <p>
  * TODO: needs refactoring, breaks open/closed principle (have to add new functions to add a new node type).
- * <p>
+ *
+ * @param <T> The type for output of this {@link AbstractSyntaxTreeVisitor}.
+ * @param <K> The intended root node type for this {@link AbstractSyntaxTreeVisitor}.
+ *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public interface AbstractSyntaxTreeVisitor<T> {
+public interface AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeNode> {
 
     /**
      * This function should be called with the root node of a tree, returning the result of visiting the whole tree.
@@ -26,7 +28,7 @@ public interface AbstractSyntaxTreeVisitor<T> {
      * @param root the root node of the tree.
      * @return an instance of type T, the result of visiting the whole tree.
      */
-    T visitTree(AbstractSyntaxTreeNode root);
+    T visitTree(K root);
 
     void visit(UnassignedIdentifier node);
 

@@ -14,20 +14,22 @@ import uk.ac.tees.syntax.grammar.statement.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * An {@link AbstractSyntaxTreeVisitor} that creates a DOT graph description for a given Abstract Syntax Tree. DOT
  * is a graph description language whereby described graphs can be visualised using Graphviz software.
+ *
+ * A graph description can be generated for any Abstract Syntax Tree or sub-tree of an Abstract Syntax Tree.
+ *
  * <p>
  * {@see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>}
  * <p>
+ *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<String> {
+public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<String, AbstractSyntaxTreeNode> {
 
     /**
      * The first part of the dot graph description representing abstract syntax trees.
@@ -127,9 +129,8 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
 
         final String graphDescription = graphBuilder.append(DOT_FILE_FOOTER).toString();
 
-        if (outputFile != null && !outputFile.isBlank()) {
-            persist(graphDescription);
-        }
+        Predicate<String> blank = String::isBlank;
+        Optional.ofNullable(outputFile).filter(blank.negate()).ifPresent(s -> persist(graphDescription));
 
         return graphDescription;
     }
