@@ -2,14 +2,10 @@ package uk.ac.tees.semantics;
 
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
-import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
-import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
-import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
-import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
-import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
+import uk.ac.tees.syntax.visitor.Visitor;
 
 import java.util.*;
 
@@ -30,7 +26,7 @@ import java.util.*;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class ProgramSemanticsAnalyzer implements AbstractSyntaxTreeVisitor<Program, Program> {
+public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Program, Program> {
 
     private final Deque<Integer> lineNumbers = new ArrayDeque<>();
 
@@ -67,8 +63,8 @@ public final class ProgramSemanticsAnalyzer implements AbstractSyntaxTreeVisitor
         }
     }
 
-    @Override
-    public void visit(Line node) {
+    @Visitor
+    private void visit(Line node) {
         if (lineNumbers.contains(node.getLineNumber())) {
             throw new RuntimeException("Duplicate line numbers!");
         }
@@ -86,87 +82,43 @@ public final class ProgramSemanticsAnalyzer implements AbstractSyntaxTreeVisitor
         lineNumbers.push(node.getLineNumber());
     }
 
-    @Override
-    public void visit(IdentifierFactor node) {
+    @Visitor
+    private void visit(IdentifierFactor node) {
         if (!identifiers.contains(node.getName())) {
             throw new RuntimeException("Variable referenced without INPUT or LET statement!");
         }
     }
 
-    @Override
-    public void visit(EndStatement node) {
+    @Visitor
+    private void visit(EndStatement node) {
         ends = true;
     }
 
-    @Override
-    public void visit(ReturnStatement node) {
+    @Visitor
+    private void visit(ReturnStatement node) {
         requiresReturn = false;
     }
 
-    @Override
-    public void visit(GoSubStatement node) {
+    @Visitor
+    private void visit(GoSubStatement node) {
         requiresReturn = true;
 
         branchStatementTargets.add(node.getLineNumber().getValue());
     }
 
-    @Override
-    public void visit(GoToStatement node) {
+    @Visitor
+    private void visit(GoToStatement node) {
         branchStatementTargets.add(node.getLineNumber().getValue());
     }
 
-    @Override
-    public void visit(LetStatement node) {
+    @Visitor
+    private void visit(LetStatement node) {
         identifiers.add(node.getIdentifier().getName());
     }
 
-    @Override
-    public void visit(InputStatement node) {
+    @Visitor
+    private void visit(InputStatement node) {
         node.getIdentifiers().forEach(i -> identifiers.add(i.getName()));
-    }
-
-    @Override
-    public void visit(Program root) {
-    }
-
-    @Override
-    public void visit(UnassignedIdentifier node) {
-
-    }
-
-    @Override
-    public void visit(NumberFactor node) {
-
-    }
-
-    @Override
-    public void visit(StringLiteral node) {
-
-    }
-
-    @Override
-    public void visit(ArithmeticBinaryExpression node) {
-
-    }
-
-    @Override
-    public void visit(RelationalBinaryExpression node) {
-
-    }
-
-    @Override
-    public void visit(IfStatement node) {
-
-    }
-
-    @Override
-    public void visit(PrintStatement node) {
-
-    }
-
-    @Override
-    public void visit(CompoundPrintStatement node) {
-
     }
 
 }

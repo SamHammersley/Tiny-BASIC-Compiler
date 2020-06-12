@@ -1,67 +1,86 @@
 package uk.ac.tees.syntax.visitor;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
-import uk.ac.tees.syntax.grammar.Line;
-import uk.ac.tees.syntax.grammar.Program;
-import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
-import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
-import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
-import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
-import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
-import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
-import uk.ac.tees.syntax.grammar.statement.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
- * Implementations of this interface define actions that are executed upon visiting a node of particular types.
- * TODO: needs refactoring, breaks open/closed principle (have to add new functions to add a new node type).
+ * A method is an appropriate visitor where the method is annotated with the {@link Visitor} annotation and the
+ * the given node's type either matches that of the parameter or is listed in the annotation as an accepted type.
  *
- * @param <T> The type for output of this {@link AbstractSyntaxTreeVisitor}.
- * @param <K> The intended root node type for this {@link AbstractSyntaxTreeVisitor}.
+ * If there is no appropriate visitor method for a type of node, then there is no implemented behaviour for nodes of
+ * that type in this implementation.
+ *
+ * This class is an implementation of the Visitor pattern, a behavioural design pattern. It allows the tree to be
+ * visited and evaluated in a certain way without adding behaviour to the nodes themselves.
+ *
+ * @param <T> the expected output type from visiting an Abstract Syntax Tree.
+ * @param <K> the expected input type of the root node of the visited Abstract Syntax Tree.
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public interface AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeNode> {
+public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeNode> {
 
     /**
-     * This function should be called with the root node of a tree, returning the result of visiting the whole tree.
+     * Visits a tree from the given root node. This can be a subtree of another abstract syntax tree.
      *
-     * @param root the root node of the tree.
-     * @return an instance of type T, the result of visiting the whole tree.
+     * @param rootNode the root {@link AbstractSyntaxTreeNode} of the tree to visit.
+     * @return the output from visiting the tree of the given root node.
      */
-    T visitTree(K root);
+    public abstract T visitTree(K rootNode);
 
-    void visit(UnassignedIdentifier node);
+    /**
+     * Visits the given node by finding the appropriate visitor method and invoking that method.
+     *
+     * @param node the node to visit.
+     */
+    public void visit(AbstractSyntaxTreeNode node) {
+        Optional<Method> visitor = Arrays
+                .stream(getClass().getDeclaredMethods())
+                .filter(m -> isAppropriateVisitor(node, m))
+                .findAny();
 
-    void visit(IdentifierFactor node);
+        visitor.ifPresent(m -> invokeVisitor(m, node));
+    }
 
-    void visit(NumberFactor node);
+    /**
+     * Invokes a method with the given {@link AbstractSyntaxTreeNode} as a parameter.
+     *
+     * @param visitor the method to invoke.
+     * @param node the node to be given as a parameter to the visitor method.
+     */
+    private void invokeVisitor(Method visitor, AbstractSyntaxTreeNode node) {
+        try {
+            visitor.setAccessible(true);
+            visitor.invoke(this, node);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    void visit(StringLiteral node);
+    /**
+     * This function determines whether a given method is appropriate for the given node.
+     *
+     * @param node the node that is to be visited.
+     * @param method the method that is being checked.
+     * @return {@code true} if the given method is appropriate for the given node.
+     */
+    private boolean isAppropriateVisitor(AbstractSyntaxTreeNode node, Method method) {
+        if (!method.isAnnotationPresent(Visitor.class) || method.getParameterCount() != 1) {
+            return false;
+        }
 
-    void visit(ArithmeticBinaryExpression node);
+        Visitor annotation = method.getAnnotation(Visitor.class);
+        for (Class<? extends AbstractSyntaxTreeNode> type : annotation.types()) {
+            if (node.getClass().equals(type)) {
+                return true;
+            }
+        }
 
-    void visit(RelationalBinaryExpression node);
-
-    void visit(Program root);
-
-    void visit(Line node);
-
-    void visit(IfStatement node);
-
-    void visit(EndStatement node);
-
-    void visit(GoSubStatement node);
-
-    void visit(GoToStatement node);
-
-    void visit(InputStatement node);
-
-    void visit(LetStatement node);
-
-    void visit(PrintStatement node);
-
-    void visit(CompoundPrintStatement node);
-
-    void visit(ReturnStatement node);
+        return node.getClass().isAssignableFrom(method.getParameterTypes()[0]);
+    }
 
 }

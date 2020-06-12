@@ -11,11 +11,7 @@ import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
 import uk.ac.tees.syntax.grammar.statement.*;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * An {@link AbstractSyntaxTreeVisitor} that creates a DOT graph description for a given Abstract Syntax Tree. DOT
@@ -29,7 +25,7 @@ import java.util.function.Predicate;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<String, AbstractSyntaxTreeNode> {
+public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<String, AbstractSyntaxTreeNode> {
 
     /**
      * The first part of the dot graph description representing abstract syntax trees.
@@ -52,11 +48,6 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
     private final StringBuilder graphBuilder;
 
     /**
-     * The file in which the DOT graph description is to be persisted.
-     */
-    private final String outputFile;
-
-    /**
      * Maps parent node ids to a set of child node ids, whereby the parent node is associated, downward, to each of the
      * child nodes.
      */
@@ -66,22 +57,10 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
      * Constructs a {@link GraphDescriptionVisitor} with a given outputFile and graphName. If no outputFile is given,
      * the graph description produced will not be persisted in a file.
      *
-     * @param outputFile the file to persist the graph description in, empty if persistence is not desired.
      * @param graphName  the name of the graph (typically the name of the program).
      */
-    public GraphDescriptionVisitor(String outputFile, String graphName) {
-        this.graphBuilder = new StringBuilder(String.format(DOT_FILE_HEADER_FORMAT, graphName));
-        this.outputFile = outputFile;
-    }
-
-    /**
-     * Constructs a {@link GraphDescriptionVisitor} with a graphName and no given outputFile, the graph description
-     * produced will not be persisted in a file.
-     *
-     * @param graphName the name of the graph (typically the name of the program).
-     */
     public GraphDescriptionVisitor(String graphName) {
-        this("", graphName);
+        this.graphBuilder = new StringBuilder(String.format(DOT_FILE_HEADER_FORMAT, graphName));
     }
 
     /**
@@ -147,74 +126,34 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
         associations.forEach((parent, children) ->
                 children.forEach(child -> addAssociation(parent.hashCode(), child.hashCode())));
 
-        final String graphDescription = graphBuilder.append(DOT_FILE_FOOTER).toString();
-
-        Predicate<String> blank = String::isBlank;
-        Optional.ofNullable(outputFile).filter(blank.negate()).ifPresent(s -> persist(graphDescription));
-
-        return graphDescription;
+        return graphBuilder.append(DOT_FILE_FOOTER).toString();
     }
 
-    /**
-     * Writes this graph description to a file with the .dot extension.
-     *
-     * @param graphDescription the DOT textual graph description.
-     */
-    private void persist(String graphDescription) {
-        try (FileWriter writer = new FileWriter(outputFile)) {
-            writer.write(graphDescription);
-
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    @Override
-    public void visit(UnassignedIdentifier node) {
+    @Visitor(types={
+            UnassignedIdentifier.class, IdentifierFactor.class,
+            NumberFactor.class, StringLiteral.class,
+            ReturnStatement.class, EndStatement.class
+    })
+    private void visitLeafNodes(AbstractSyntaxTreeNode node) {
         create(node);
     }
 
-    @Override
-    public void visit(IdentifierFactor node) {
-        create(node);
-    }
-
-    @Override
-    public void visit(NumberFactor node) {
-        create(node);
-    }
-
-    @Override
-    public void visit(StringLiteral node) {
-        create(node);
-    }
-
-    @Override
-    public void visit(ArithmeticBinaryExpression node) {
+    @Visitor
+    private void visit(ArithmeticBinaryExpression node) {
         create(node);
         associate(node, node.getLeft());
         associate(node, node.getRight());
     }
 
-    @Override
-    public void visit(RelationalBinaryExpression node) {
+    @Visitor
+    private void visit(RelationalBinaryExpression node) {
         create(node);
         associate(node, node.getLeft());
         associate(node, node.getRight());
     }
 
-    @Override
-    public void visit(ReturnStatement node) {
-        create(node);
-    }
-
-    @Override
-    public void visit(EndStatement node) {
-        create(node);
-    }
-
-    @Override
-    public void visit(Program root) {
+    @Visitor
+    private void visit(Program root) {
         create(root);
 
         for (Line line : root.lines()) {
@@ -222,33 +161,33 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
         }
     }
 
-    @Override
-    public void visit(Line node) {
+    @Visitor
+    private void visit(Line node) {
         create(node);
         associate(node, node.getStatement());
     }
 
-    @Override
-    public void visit(IfStatement node) {
+    @Visitor
+    private void visit(IfStatement node) {
         create(node);
         associate(node, node.getExpression());
         associate(node, node.getStatement());
     }
 
-    @Override
-    public void visit(GoSubStatement node) {
+    @Visitor
+    private void visit(GoSubStatement node) {
         create(node);
         associate(node, node.getLineNumber());
     }
 
-    @Override
-    public void visit(GoToStatement node) {
+    @Visitor
+    private void visit(GoToStatement node) {
         create(node);
         associate(node, node.getLineNumber());
     }
 
-    @Override
-    public void visit(InputStatement node) {
+    @Visitor
+    private void visit(InputStatement node) {
         create(node);
 
         for (UnassignedIdentifier factor : node.getIdentifiers()) {
@@ -256,23 +195,23 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
         }
     }
 
-    @Override
-    public void visit(LetStatement node) {
+    @Visitor
+    private void visit(LetStatement node) {
         create(node);
 
         associate(node, node.getIdentifier());
         associate(node, node.getValue());
     }
 
-    @Override
-    public void visit(PrintStatement node) {
+    @Visitor
+    private void visit(PrintStatement node) {
         create(node);
 
         associate(node, node.getExpression());
     }
 
-    @Override
-    public void visit(CompoundPrintStatement node) {
+    @Visitor
+    private void visit(CompoundPrintStatement node) {
         create(node);
 
         for (PrintStatement child : node.getStatements()) {
@@ -280,5 +219,4 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
             associate(node, child.getExpression());
         }
     }
-
 }
