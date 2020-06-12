@@ -3,36 +3,32 @@ package uk.ac.tees.syntax.grammar.statement;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
-import java.util.List;
-
 /**
- * PRINT statement prints each of the expressions to standard out, seperated by \n.
+ * PRINT statement prints the expression to standard out, followed by a new line.
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class PrintStatement extends Statement {
+public class PrintStatement extends Statement {
 
     /**
-     * {@link List} of expressions to print.
+     * The {@link AbstractSyntaxTreeNode} expression to print.
      */
-    private final List<AbstractSyntaxTreeNode> expressions;
+    private final AbstractSyntaxTreeNode expression;
 
-    public PrintStatement(List<AbstractSyntaxTreeNode> expressions) {
+    public PrintStatement(AbstractSyntaxTreeNode expression) {
         super("PRINT");
-        this.expressions = expressions;
+        this.expression = expression;
     }
 
-    public List<AbstractSyntaxTreeNode> getExpressions() {
-        return expressions;
+    public AbstractSyntaxTreeNode getExpression() {
+        return expression;
     }
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        expressions.forEach(e -> {
-            e.accept(visitor);
+        expression.accept(visitor);
 
-            visitor.visit(this);
-        });
+        visitor.visit(this);
     }
 
 }

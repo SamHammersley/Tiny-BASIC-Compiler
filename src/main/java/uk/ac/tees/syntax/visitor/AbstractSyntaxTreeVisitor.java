@@ -60,6 +60,8 @@ public interface AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeNode> 
 
     void visit(PrintStatement node);
 
+    void visit(CompoundPrintStatement node);
+
     void visit(ReturnStatement node);
 
 }

@@ -60,7 +60,7 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
      * Maps parent node ids to a set of child node ids, whereby the parent node is associated, downward, to each of the
      * child nodes.
      */
-    private final Map<Integer, Set<Integer>> associations = new HashMap<>();
+    private final Map<AbstractSyntaxTreeNode, Set<AbstractSyntaxTreeNode>> associations = new LinkedHashMap<>();
 
     /**
      * Constructs a {@link GraphDescriptionVisitor} with a given outputFile and graphName. If no outputFile is given,
@@ -92,10 +92,28 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
      * @param child the child node.
      */
     private void associate(AbstractSyntaxTreeNode parent, AbstractSyntaxTreeNode child) {
-        Set<Integer> children = associations.getOrDefault(parent.hashCode(), new HashSet<>());
-        children.add(child.hashCode());
+        Set<AbstractSyntaxTreeNode> children = associations.get(parent);
+        children.add(child);
 
-        associations.put(parent.hashCode(), children);
+        associations.put(parent, children);
+    }
+
+    /**
+     * Removes the given {@link AbstractSyntaxTreeNode} from the graph.
+     *
+     * @param node the node to remove.
+     */
+    private void remove(AbstractSyntaxTreeNode node) {
+        associations.remove(node);
+    }
+
+    /**
+     * Creates a new node in the graph structure for the given {@link AbstractSyntaxTreeNode}.
+     *
+     * @param node the node to add to the graph description.
+     */
+    private void create(AbstractSyntaxTreeNode node) {
+        associations.put(node, new HashSet<>());
     }
 
     /**
@@ -125,7 +143,9 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
     public String visitTree(AbstractSyntaxTreeNode root) {
         root.accept(this);
 
-        associations.forEach((parentId, children) -> children.forEach(childId -> addAssociation(parentId, childId)));
+        associations.keySet().forEach(this::addNode);
+        associations.forEach((parent, children) ->
+                children.forEach(child -> addAssociation(parent.hashCode(), child.hashCode())));
 
         final String graphDescription = graphBuilder.append(DOT_FILE_FOOTER).toString();
 
@@ -151,51 +171,51 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
 
     @Override
     public void visit(UnassignedIdentifier node) {
-        addNode(node);
+        create(node);
     }
 
     @Override
     public void visit(IdentifierFactor node) {
-        addNode(node);
+        create(node);
     }
 
     @Override
     public void visit(NumberFactor node) {
-        addNode(node);
+        create(node);
     }
 
     @Override
     public void visit(StringLiteral node) {
-        addNode(node);
+        create(node);
     }
 
     @Override
     public void visit(ArithmeticBinaryExpression node) {
-        addNode(node);
+        create(node);
         associate(node, node.getLeft());
         associate(node, node.getRight());
     }
 
     @Override
     public void visit(RelationalBinaryExpression node) {
-        addNode(node);
+        create(node);
         associate(node, node.getLeft());
         associate(node, node.getRight());
     }
 
     @Override
     public void visit(ReturnStatement node) {
-        addNode(node);
+        create(node);
     }
 
     @Override
     public void visit(EndStatement node) {
-        addNode(node);
+        create(node);
     }
 
     @Override
     public void visit(Program root) {
-        addNode(root);
+        create(root);
 
         for (Line line : root.lines()) {
             associate(root, line);
@@ -204,32 +224,32 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
 
     @Override
     public void visit(Line node) {
-        addNode(node);
+        create(node);
         associate(node, node.getStatement());
     }
 
     @Override
     public void visit(IfStatement node) {
-        addNode(node);
+        create(node);
         associate(node, node.getExpression());
         associate(node, node.getStatement());
     }
 
     @Override
     public void visit(GoSubStatement node) {
-        addNode(node);
+        create(node);
         associate(node, node.getLineNumber());
     }
 
     @Override
     public void visit(GoToStatement node) {
-        addNode(node);
+        create(node);
         associate(node, node.getLineNumber());
     }
 
     @Override
     public void visit(InputStatement node) {
-        addNode(node);
+        create(node);
 
         for (UnassignedIdentifier factor : node.getIdentifiers()) {
             associate(node, factor);
@@ -238,7 +258,7 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
 
     @Override
     public void visit(LetStatement node) {
-        addNode(node);
+        create(node);
 
         associate(node, node.getIdentifier());
         associate(node, node.getValue());
@@ -246,10 +266,18 @@ public final class GraphDescriptionVisitor implements AbstractSyntaxTreeVisitor<
 
     @Override
     public void visit(PrintStatement node) {
-        addNode(node);
+        create(node);
 
-        for (AbstractSyntaxTreeNode expression : node.getExpressions()) {
-            associate(node, expression);
+        associate(node, node.getExpression());
+    }
+
+    @Override
+    public void visit(CompoundPrintStatement node) {
+        create(node);
+
+        for (PrintStatement child : node.getStatements()) {
+            remove(child);
+            associate(node, child.getExpression());
         }
     }
 

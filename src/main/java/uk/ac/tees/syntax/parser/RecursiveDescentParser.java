@@ -147,17 +147,23 @@ public final class RecursiveDescentParser extends Parser {
      *
      * @return a {@link PrintStatement} object.
      */
-    private PrintStatement parsePrintStatement() throws ParseException {
-        List<AbstractSyntaxTreeNode> expressions = new ArrayList<>();
-        expressions.add(parseExpression());
+    private Statement parsePrintStatement() throws ParseException {
+        AbstractSyntaxTreeNode expression = parseExpression();
+
+        if (!supplier.currentTypeIs(COMMA)) {
+            return new PrintStatement(expression);
+        }
+
+        CompoundPrintStatement statement = new CompoundPrintStatement();
+        statement.addExpression(expression);
 
         while (supplier.currentTypeIs(COMMA)) {
             supplier.nextToken();
 
-            expressions.add(parseExpression());
+            statement.addExpression(parseExpression());
         }
 
-        return new PrintStatement(expressions);
+        return statement;
     }
 
     /**
