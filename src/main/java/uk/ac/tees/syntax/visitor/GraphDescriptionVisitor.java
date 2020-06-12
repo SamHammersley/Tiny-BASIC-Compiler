@@ -134,7 +134,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
             NumberFactor.class, StringLiteral.class,
             ReturnStatement.class, EndStatement.class
     })
-    private void visitLeafNodes(AbstractSyntaxTreeNode node) {
+    private void visit(AbstractSyntaxTreeNode node) {
         create(node);
     }
 

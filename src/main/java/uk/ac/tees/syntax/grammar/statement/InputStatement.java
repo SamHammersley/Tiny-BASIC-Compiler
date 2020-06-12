@@ -31,7 +31,7 @@ public final class InputStatement extends Statement {
     public void accept(AbstractSyntaxTreeVisitor visitor) {
         identifiers.forEach(i -> i.accept(visitor));
 
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }

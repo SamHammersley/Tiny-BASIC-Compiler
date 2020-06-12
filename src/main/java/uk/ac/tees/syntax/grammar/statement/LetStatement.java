@@ -40,7 +40,7 @@ public final class LetStatement extends Statement {
         identifier.accept(visitor);
         value.accept(visitor);
 
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }

@@ -22,7 +22,7 @@ public final class ArithmeticBinaryExpression extends BinaryExpression<Arithmeti
         right.accept(visitor);
 
         // Then visit this node.
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
     @Override

@@ -28,7 +28,7 @@ public final class GoToStatement extends Statement {
     public void accept(AbstractSyntaxTreeVisitor visitor) {
         lineNumber.accept(visitor);
 
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }

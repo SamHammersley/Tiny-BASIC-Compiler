@@ -52,7 +52,7 @@ public final class Program implements AbstractSyntaxTreeNode {
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
         // Visit this node.
-        visitor.visit(this);
+        visitor.visitNode(this);
 
         // Accept each of the lines of code.
         lines.forEach(l -> l.accept(visitor));

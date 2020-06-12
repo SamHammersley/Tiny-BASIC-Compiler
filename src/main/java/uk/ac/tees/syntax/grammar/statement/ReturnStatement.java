@@ -15,7 +15,7 @@ public final class ReturnStatement extends Statement {
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }

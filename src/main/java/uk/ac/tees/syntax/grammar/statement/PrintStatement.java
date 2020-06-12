@@ -28,7 +28,7 @@ public class PrintStatement extends Statement {
     public void accept(AbstractSyntaxTreeVisitor visitor) {
         expression.accept(visitor);
 
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }

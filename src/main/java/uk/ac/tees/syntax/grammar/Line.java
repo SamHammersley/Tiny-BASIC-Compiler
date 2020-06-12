@@ -52,7 +52,7 @@ public final class Line implements AbstractSyntaxTreeNode {
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
 
         statement.accept(visitor);
     }

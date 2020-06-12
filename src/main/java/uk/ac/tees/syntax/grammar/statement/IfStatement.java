@@ -40,7 +40,7 @@ public final class IfStatement extends Statement {
         // Accept (visit) the expression first.
         expression.accept(visitor);
 
-        visitor.visit(this);
+        visitor.visitNode(this);
 
         statement.accept(visitor);
     }

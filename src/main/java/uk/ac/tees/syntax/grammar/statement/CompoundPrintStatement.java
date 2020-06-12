@@ -47,6 +47,6 @@ public final class CompoundPrintStatement extends Statement {
     public void accept(AbstractSyntaxTreeVisitor visitor) {
         statements.forEach(statement -> statement.accept(visitor));
 
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 }

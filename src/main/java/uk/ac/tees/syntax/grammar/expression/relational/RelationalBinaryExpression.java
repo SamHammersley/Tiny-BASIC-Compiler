@@ -22,7 +22,7 @@ public final class RelationalBinaryExpression  extends BinaryExpression<Relation
         right.accept(visitor);
 
         // Then visit this node.
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
     @Override

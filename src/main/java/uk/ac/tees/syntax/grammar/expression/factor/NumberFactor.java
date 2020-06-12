@@ -27,7 +27,7 @@ public final class NumberFactor implements AbstractSyntaxTreeNode {
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }

@@ -23,6 +23,6 @@ public final class UnassignedIdentifier extends Identifier {
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 }

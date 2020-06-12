@@ -37,7 +37,7 @@ public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeN
      *
      * @param node the node to visit.
      */
-    public void visit(AbstractSyntaxTreeNode node) {
+    public void visitNode(AbstractSyntaxTreeNode node) {
         Optional<Method> visitor = Arrays
                 .stream(getClass().getDeclaredMethods())
                 .filter(m -> isAppropriateVisitor(node, m))

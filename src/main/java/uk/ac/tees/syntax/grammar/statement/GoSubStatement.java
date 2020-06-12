@@ -31,7 +31,7 @@ public final class GoSubStatement extends Statement {
         // Accept the expression first.
         lineNumber.accept(visitor);
 
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }

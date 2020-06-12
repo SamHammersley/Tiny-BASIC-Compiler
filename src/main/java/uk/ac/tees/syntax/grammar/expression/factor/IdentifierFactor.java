@@ -20,7 +20,7 @@ public final class IdentifierFactor extends Identifier {
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        visitor.visit(this);
+        visitor.visitNode(this);
     }
 
 }
