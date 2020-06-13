@@ -221,7 +221,7 @@ public final class RecursiveDescentParser extends Parser {
         int lineNumber = supplier.getValue(Integer::parseInt);
 
         supplier.nextToken();
-        return new GoToStatement(new NumberFactor(lineNumber));
+        return new GoToStatement(lineNumber);
     }
 
     /**
@@ -237,7 +237,7 @@ public final class RecursiveDescentParser extends Parser {
         int lineNumber = supplier.getValue(Integer::parseInt);
 
         supplier.nextToken();
-        return new GoSubStatement(new NumberFactor(lineNumber));
+        return new GoSubStatement(lineNumber);
     }
 
     /**

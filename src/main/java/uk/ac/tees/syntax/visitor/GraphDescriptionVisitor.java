@@ -177,13 +177,21 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
     @Visitor
     private void visit(GoSubStatement node) {
         create(node);
-        associate(node, node.getLineNumber());
+
+        NumberFactor temp = new NumberFactor(node.getLineNumber());
+        visit(temp);
+
+        associate(node, temp);
     }
 
     @Visitor
     private void visit(GoToStatement node) {
         create(node);
-        associate(node, node.getLineNumber());
+
+        NumberFactor temp = new NumberFactor(node.getLineNumber());
+        visit(temp);
+
+        associate(node, temp);
     }
 
     @Visitor

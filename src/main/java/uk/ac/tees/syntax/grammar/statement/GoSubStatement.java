@@ -1,6 +1,5 @@
 package uk.ac.tees.syntax.grammar.statement;
 
-import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
@@ -15,22 +14,19 @@ public final class GoSubStatement extends Statement {
     /**
      * The numerical value of the line to go to.
      */
-    private final NumberFactor lineNumber;
+    private final int lineNumber;
 
-    public GoSubStatement(NumberFactor lineNumber) {
+    public GoSubStatement(int lineNumber) {
         super("GOSUB");
         this.lineNumber = lineNumber;
     }
 
-    public NumberFactor getLineNumber() {
+    public int getLineNumber() {
         return lineNumber;
     }
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        // Accept the expression first.
-        lineNumber.accept(visitor);
-
         visitor.visitNode(this);
     }
 

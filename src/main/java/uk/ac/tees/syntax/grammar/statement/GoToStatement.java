@@ -1,6 +1,5 @@
 package uk.ac.tees.syntax.grammar.statement;
 
-import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
@@ -13,21 +12,19 @@ public final class GoToStatement extends Statement {
     /**
      * The numerical value of the line to go to.
      */
-    private final NumberFactor lineNumber;
+    private final int lineNumber;
 
-    public GoToStatement(NumberFactor lineNumber) {
+    public GoToStatement(int lineNumber) {
         super("GOTO");
         this.lineNumber = lineNumber;
     }
 
-    public NumberFactor getLineNumber() {
+    public int getLineNumber() {
         return lineNumber;
     }
 
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
-        lineNumber.accept(visitor);
-
         visitor.visitNode(this);
     }
 

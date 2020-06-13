@@ -103,12 +103,12 @@ public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Pr
     private void visit(GoSubStatement node) {
         requiresReturn = true;
 
-        branchStatementTargets.add(node.getLineNumber().getValue());
+        branchStatementTargets.add(node.getLineNumber());
     }
 
     @Visitor
     private void visit(GoToStatement node) {
-        branchStatementTargets.add(node.getLineNumber().getValue());
+        branchStatementTargets.add(node.getLineNumber());
     }
 
     @Visitor
