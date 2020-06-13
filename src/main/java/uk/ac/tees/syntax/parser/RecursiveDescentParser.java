@@ -203,6 +203,8 @@ public final class RecursiveDescentParser extends Parser {
             supplier.nextToken(IDENTIFIER);
 
             identifiers.add(supplier.getValue(UnassignedIdentifier::new));
+
+            supplier.nextToken(COMMA, NEW_LINE);
         }
 
         return new InputStatement(identifiers);
