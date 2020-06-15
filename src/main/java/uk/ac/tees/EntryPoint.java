@@ -44,8 +44,14 @@ public final class EntryPoint implements Runnable {
     private Path graphStructure;
 
     @Option(names = {"-o", "--output-file"},
-            description = "The output file to write compiled code (x86-64 NASM assembly) to.")
+            description = "The output path, this may be a path to a particular file or a directory in which to create" +
+                    " a file. In the case of the latter, the name of the file is that of the input file.")
     private Path outputPath;
+
+    @Option(names = {"-r", "--regex-file"},
+            description = "Specify a text file containing token types with corresponding regular expressions. " +
+                    "The format is as follows: TOKEN_TYPE_NAME: REGEX")
+    private URL regexPath = EntryPoint.class.getClassLoader().getResource("regex");
 
     @Parameters(description = "The input file, containing Tiny BASIC source code.")
     private Path inputPath;
@@ -120,9 +126,7 @@ public final class EntryPoint implements Runnable {
      * {@link Token.Type}s.
      */
     private TokenizerPatternsCache getRegexCache() {
-        URL regexFile = EntryPoint.class.getClassLoader().getResource("regex");
-
-        return new FromFileProvider(regexFile).newCache();
+        return new FromFileProvider(regexPath).newCache();
     }
 
     /**
@@ -155,6 +159,10 @@ public final class EntryPoint implements Runnable {
         String output = compiler.visitTree(program);
 
         Path path = Optional.ofNullable(outputPath).orElse(Path.of(program.getName() + ".asm"));
+
+        if (Files.isDirectory(path)) {
+            path = path.resolve(program.getName() + ".asm");
+        }
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(output);
