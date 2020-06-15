@@ -1,4 +1,4 @@
-package uk.ac.tees.syntax.compiler.x86_64;
+package uk.ac.tees.compiler.x86_64;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
@@ -16,7 +16,7 @@ import uk.ac.tees.syntax.visitor.Visitor;
 import java.util.HashMap;
 import java.util.Map;
 
-import static uk.ac.tees.syntax.compiler.x86_64.X86_64CompilerConstants.*;
+import static uk.ac.tees.compiler.x86_64.X86_64CompilerConstants.*;
 
 /**
  * A {@link AbstractSyntaxTreeVisitor} that compiles an {@link AbstractSyntaxTreeNode} to x86-64 Netwide Assembler

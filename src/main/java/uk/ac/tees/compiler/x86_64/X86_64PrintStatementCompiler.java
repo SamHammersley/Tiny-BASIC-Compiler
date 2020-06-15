@@ -1,4 +1,4 @@
-package uk.ac.tees.syntax.compiler.x86_64;
+package uk.ac.tees.compiler.x86_64;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
@@ -9,8 +9,8 @@ import uk.ac.tees.syntax.grammar.statement.PrintStatement;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 import uk.ac.tees.syntax.visitor.Visitor;
 
-import static uk.ac.tees.syntax.compiler.x86_64.X86_64CompilerConstants.*;
-import static uk.ac.tees.syntax.compiler.x86_64.X86_64CompilerConstants.STD_OUT_FILE_DESCRIPTOR;
+import static uk.ac.tees.compiler.x86_64.X86_64CompilerConstants.*;
+import static uk.ac.tees.compiler.x86_64.X86_64CompilerConstants.STD_OUT_FILE_DESCRIPTOR;
 
 /**
  * An {@link AbstractSyntaxTreeVisitor} for compiling {@link PrintStatement}s,

@@ -1,4 +1,4 @@
-package uk.ac.tees.syntax.compiler.x86_64;
+package uk.ac.tees.compiler.x86_64;
 
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 

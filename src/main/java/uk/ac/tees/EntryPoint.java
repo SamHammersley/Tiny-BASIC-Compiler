@@ -2,7 +2,7 @@ package uk.ac.tees;
 
 import picocli.CommandLine;
 import uk.ac.tees.semantics.ProgramSemanticsAnalyzer;
-import uk.ac.tees.syntax.compiler.x86_64.X86_64NetwideAssemblyCompiler;
+import uk.ac.tees.compiler.x86_64.X86_64NetwideAssemblyCompiler;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.parser.Parser;
 import uk.ac.tees.syntax.parser.RecursiveDescentParser;

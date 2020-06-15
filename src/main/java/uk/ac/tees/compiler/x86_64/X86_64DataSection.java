@@ -1,8 +1,8 @@
-package uk.ac.tees.syntax.compiler.x86_64;
+package uk.ac.tees.compiler.x86_64;
 
 import java.util.*;
 
-import static uk.ac.tees.syntax.compiler.x86_64.X86_64CompilerConstants.INDENTATION;
+import static uk.ac.tees.compiler.x86_64.X86_64CompilerConstants.INDENTATION;
 
 /**
  * Represents a data section of an x86-64 Netwide Assembler program.
@@ -12,7 +12,7 @@ import static uk.ac.tees.syntax.compiler.x86_64.X86_64CompilerConstants.INDENTAT
 public final class X86_64DataSection {
 
     /**
-     * The {@link uk.ac.tees.syntax.compiler.x86_64.X86_64CompilerConstants.DataSectionType} of this section.
+     * The {@link X86_64CompilerConstants.DataSectionType} of this section.
      */
     private final X86_64CompilerConstants.DataSectionType type;
 
