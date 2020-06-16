@@ -81,9 +81,9 @@ public final class TokenSupplier {
      * Assert that the current token should satisfy the given predicate, if not an exception is thrown.
      *
      * @param predicate {@link #currentToken} should satisfy this predicate.
-     * @throws ParseException when the given predicate is not satisfied by the current token.
+     * @throws UnexpectedTokenException when the given predicate is not satisfied by the current token.
      */
-    private void expect(Predicate<Token> predicate) throws ParseException {
+    private void expect(Predicate<Token> predicate) throws UnexpectedTokenException {
         if (!predicate.test(currentToken)) {
             throw new UnexpectedTokenException(currentToken);
         }
@@ -93,9 +93,9 @@ public final class TokenSupplier {
      * Assert that the current token should be one of the given types.
      *
      * @param types the collection of acceptable types.
-     * @throws ParseException if {@link #currentToken} is not one of the given types.
+     * @throws UnexpectedTokenException if {@link #currentToken} is not one of the given types.
      */
-    void expectType(Token.Type... types) throws ParseException {
+    void expectType(Token.Type... types) throws UnexpectedTokenException {
         expect(t -> Arrays.asList(types).contains(t.getType()));
     }
 
@@ -103,9 +103,9 @@ public final class TokenSupplier {
      * Assert that the value of the current token should satisfy the given token.
      *
      * @param valuePredicate {@link #currentToken#getValue()} should satisfy this predicate.
-     * @throws ParseException if {@link #currentToken#getValue()} does not satisfy the given predicate.
+     * @throws UnexpectedTokenException if {@link #currentToken#getValue()} does not satisfy the given predicate.
      */
-    void expectValue(Predicate<String> valuePredicate) throws ParseException {
+    void expectValue(Predicate<String> valuePredicate) throws UnexpectedTokenException {
         expect(t -> valuePredicate.test(t.getValue()));
     }
 
