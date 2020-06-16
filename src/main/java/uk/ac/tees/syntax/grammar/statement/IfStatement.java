@@ -3,6 +3,8 @@ package uk.ac.tees.syntax.grammar.statement;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Objects;
+
 /**
  * Represents a one-armed if statement.
  *
@@ -45,4 +47,22 @@ public final class IfStatement extends Statement {
         statement.accept(visitor);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof IfStatement)) {
+            return false;
+        }
+
+        IfStatement other = (IfStatement) object;
+
+        return expression.equals(other.expression) && statement.equals(other.statement);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(expression, statement);
+    }
 }

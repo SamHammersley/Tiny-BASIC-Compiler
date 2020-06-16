@@ -4,6 +4,7 @@ import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Signifies that there should be n numbers input from the user, one for each identifier.
@@ -34,4 +35,22 @@ public final class InputStatement extends Statement {
         visitor.visitNode(this);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof InputStatement)) {
+            return false;
+        }
+
+        InputStatement other = (InputStatement) object;
+
+        return identifiers.equals(other.identifiers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifiers);
+    }
 }

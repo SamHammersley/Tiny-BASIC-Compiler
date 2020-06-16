@@ -18,4 +18,12 @@ public final class EndStatement extends Statement {
         visitor.visitNode(this);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        return object instanceof EndStatement;
+    }
 }

@@ -3,6 +3,8 @@ package uk.ac.tees.syntax.grammar;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Objects;
+
 /**
  * An {@link AbstractSyntaxTreeNode} representing an identifier for a variable that is to be assigned a value. The
  * distinction between this class and {@link IdentifierFactor} is that {@link IdentifierFactor} is part of an
@@ -24,5 +26,23 @@ public final class UnassignedIdentifier extends Identifier {
     @Override
     public void accept(AbstractSyntaxTreeVisitor visitor) {
         visitor.visitNode(this);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (!(object instanceof UnassignedIdentifier)) {
+            return false;
+        }
+
+        return name == ((UnassignedIdentifier) object).name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

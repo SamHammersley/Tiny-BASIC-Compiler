@@ -6,6 +6,7 @@ import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A print statement that has multiple expressions. A {@link PrintStatement} is created for each of the expressions
@@ -48,5 +49,22 @@ public final class CompoundPrintStatement extends Statement {
         statements.forEach(statement -> statement.accept(visitor));
 
         visitor.visitNode(this);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof CompoundPrintStatement)) {
+            return false;
+        }
+
+        return statements.equals(((CompoundPrintStatement) object).statements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(statements);
     }
 }

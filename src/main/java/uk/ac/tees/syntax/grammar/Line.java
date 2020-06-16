@@ -3,6 +3,8 @@ package uk.ac.tees.syntax.grammar;
 import uk.ac.tees.syntax.grammar.statement.Statement;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Objects;
+
 /**
  * Represents a line of Tiny BASIC source code, the structure of which is defined by the following:
  *
@@ -55,5 +57,24 @@ public final class Line implements AbstractSyntaxTreeNode {
         visitor.visitNode(this);
 
         statement.accept(visitor);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (!(object instanceof Line)) {
+            return false;
+        }
+        Line other = (Line) object;
+
+        return lineNumber == other.lineNumber && statement.equals(other.statement);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lineNumber, statement);
     }
 }

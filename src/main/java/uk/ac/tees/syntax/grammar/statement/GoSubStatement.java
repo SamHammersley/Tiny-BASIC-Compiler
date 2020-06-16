@@ -2,6 +2,8 @@ package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Objects;
+
 /**
  * GOSUB statement, similar to {@link GoToStatement} branch statement however previous instruction pointer is
  * tracked and therefore upon calling RETURN from the GOSUB subroutine, the current instruction pointer will return
@@ -30,4 +32,20 @@ public final class GoSubStatement extends Statement {
         visitor.visitNode(this);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof GoSubStatement)) {
+            return false;
+        }
+
+        return lineNumber == ((GoSubStatement) object).lineNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lineNumber);
+    }
 }

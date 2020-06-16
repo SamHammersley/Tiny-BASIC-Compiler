@@ -3,6 +3,8 @@ package uk.ac.tees.syntax.grammar.expression.factor;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Objects;
+
 /**
  * Represents a string literal factor, a string of characters surrounded by "".
  *
@@ -30,4 +32,20 @@ public final class StringLiteral implements AbstractSyntaxTreeNode {
         visitor.visitNode(this);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof StringLiteral)) {
+            return false;
+        }
+
+        return value.equals(((StringLiteral) object).value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 }

@@ -2,7 +2,9 @@ package uk.ac.tees.syntax.grammar;
 
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a named sequence of lines of Tiny BASIC source code that is referred to as a program.
@@ -58,4 +60,22 @@ public final class Program implements AbstractSyntaxTreeNode {
         lines.forEach(l -> l.accept(visitor));
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (!(object instanceof Program)) {
+            return false;
+        }
+
+        Program other = (Program) object;
+        return name.equals(other.name) && lines.equals(other.lines);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, lines);
+    }
 }

@@ -2,6 +2,8 @@ package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Objects;
+
 /**
  * GOTO jumps to the given target line.
  *
@@ -28,4 +30,20 @@ public final class GoToStatement extends Statement {
         visitor.visitNode(this);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof GoToStatement)) {
+            return false;
+        }
+
+        return lineNumber == ((GoToStatement) object).lineNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lineNumber);
+    }
 }

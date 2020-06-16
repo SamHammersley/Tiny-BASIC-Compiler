@@ -3,6 +3,8 @@ package uk.ac.tees.syntax.grammar.expression.factor;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Objects;
+
 /**
  * A factor that has a numeric value.
  *
@@ -30,4 +32,20 @@ public final class NumberFactor implements AbstractSyntaxTreeNode {
         visitor.visitNode(this);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof NumberFactor)) {
+            return false;
+        }
+
+        return value == ((NumberFactor) object).value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 }
