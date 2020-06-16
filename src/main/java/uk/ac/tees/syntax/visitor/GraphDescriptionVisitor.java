@@ -48,10 +48,15 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
     private final StringBuilder graphBuilder;
 
     /**
-     * Maps parent node ids to a set of child node ids, whereby the parent node is associated, downward, to each of the
-     * child nodes.
+     * Maps parent node ids to a set of child node ids, whereby the parent node is associated, downward, to each of
+     * the child nodes.
      */
-    private final Map<AbstractSyntaxTreeNode, Set<AbstractSyntaxTreeNode>> associations = new LinkedHashMap<>();
+    private final Map<Integer, Set<Integer>> associations = new LinkedHashMap<>();
+
+    /**
+     * Maps node ids to corresponding graph labels.
+     */
+    private final Map<Integer, String> labels = new LinkedHashMap<>();
 
     /**
      * Constructs a {@link GraphDescriptionVisitor} with a given outputFile and graphName. If no outputFile is given,
@@ -71,10 +76,12 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * @param child the child node.
      */
     private void associate(AbstractSyntaxTreeNode parent, AbstractSyntaxTreeNode child) {
-        Set<AbstractSyntaxTreeNode> children = associations.get(parent);
-        children.add(child);
+        int parentId = System.identityHashCode(parent);
 
-        associations.put(parent, children);
+        Set<Integer> children = associations.get(parentId);
+        children.add(System.identityHashCode(child));
+
+        associations.put(parentId, children);
     }
 
     /**
@@ -83,7 +90,10 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * @param node the node to remove.
      */
     private void remove(AbstractSyntaxTreeNode node) {
-        associations.remove(node);
+        int id = System.identityHashCode(node);
+
+        labels.remove(id);
+        associations.remove(id);
     }
 
     /**
@@ -92,16 +102,20 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * @param node the node to add to the graph description.
      */
     private void create(AbstractSyntaxTreeNode node) {
-        associations.put(node, new HashSet<>());
+        int id = System.identityHashCode(node);
+
+        labels.put(id, node.toString());
+        associations.put(id, new HashSet<>());
     }
 
     /**
-     * Adds a graph node to the graph description, nodes are identifiable by their {@link Object#hashCode()}.
+     * Adds a graph node with the given id and label to the graph description. Nodes are identifiable by their
+     * identity hashCode, {@link System#identityHashCode(Object)}.
      *
-     * @param node the node to add to the graph description.
+     * @param id the node to add to the graph description.
      */
-    private void addNode(AbstractSyntaxTreeNode node) {
-        graphBuilder.append("\t").append(node.hashCode()).append(" [label=\"").append(node.toString()).append("\"]\n");
+    private void addNode(int id, String label) {
+        graphBuilder.append("\t").append(id).append(" [label=\"").append(label).append("\"]\n");
     }
 
     /**
@@ -109,7 +123,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      *
      * <pre>{@code parent_node_id -> child_node_id}</pre>
      *
-     * In this case, {@link Object#hashCode()} is used to identify node objects.
+     * In this case, {@link System#identityHashCode(Object)} is used to identify node objects.
      *
      * @param parentId the id of the parent node to connect the edge to.
      * @param childId  the id of the child node to connect the edge to.
@@ -122,9 +136,9 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
     public String visitTree(AbstractSyntaxTreeNode root) {
         root.accept(this);
 
-        associations.keySet().forEach(this::addNode);
+        labels.forEach(this::addNode);
         associations.forEach((parent, children) ->
-                children.forEach(child -> addAssociation(parent.hashCode(), child.hashCode())));
+                children.forEach(child -> addAssociation(parent, child)));
 
         return graphBuilder.append(DOT_FILE_FOOTER).toString();
     }
