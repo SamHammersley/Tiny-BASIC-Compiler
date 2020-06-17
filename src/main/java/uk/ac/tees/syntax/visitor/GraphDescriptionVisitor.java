@@ -20,7 +20,7 @@ import java.util.*;
  * A graph description can be generated for any Abstract Syntax Tree or sub-tree of an Abstract Syntax Tree.
  *
  * <p>
- * {@see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>}
+ * @see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>
  * <p>
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
@@ -112,7 +112,8 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * Adds a graph node with the given id and label to the graph description. Nodes are identifiable by their
      * identity hashCode, {@link System#identityHashCode(Object)}.
      *
-     * @param id the node to add to the graph description.
+     * @param id the id of node to add to the graph description.
+     * @param label the label for the node to add.
      */
     private void addNode(int id, String label) {
         graphBuilder.append("\t").append(id).append(" [label=\"").append(label).append("\"]\n");

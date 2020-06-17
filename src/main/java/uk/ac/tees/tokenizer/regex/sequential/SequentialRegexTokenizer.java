@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 /**
  * Tokenizes some string input given a set of regular expressions that are mapped to {@link Token.Type}s.
- * <br />
+ * <br>
  * This tokenizer iterates over the supported regex patterns and repeatedly checks the beginning of the input string,
  * for matches with these patterns. If all no patterns match with the start of the remaining string, there is an
  * unexpected character(s).

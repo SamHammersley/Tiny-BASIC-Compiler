@@ -91,14 +91,13 @@ public final class X86_64DataSection {
      * Each entry has a value, label and pseudo-instruction.
      *
      * Pseudo-instructions for data entries are listed in the NASM manual, some are listed below:
-     * <l>
+     * <ul>
      *     <li>db - define bytes</li>
      *     <li>dw - define word (16-bits)</li>
      *     <li>dd - define double (32-bits)</li>
      *     <li>dq - define quad (64-bits)</li>
      *     <li>equ - define symbol with constant value</li>
-     * </l>
-     *
+     * </ul>
      * @see <a href="https://www.nasm.us/doc/nasmdoc3.html#section-3.2">NASM Manual</a>
      */
     private final class DataEntry {

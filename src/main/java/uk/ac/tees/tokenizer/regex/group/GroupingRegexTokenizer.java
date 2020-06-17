@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 
 /**
  * Tokenizes some string input given a set of regular expressions that are mapped to {@link Token.Type}s.
- * <br />
+ * <br>
  * This tokenizer finds all matches of each regex pattern and flattens them into a single list. The flattened
  * list is then sorted by the starting index (of each match) and then checks if there are any unexpected characters.
- * <br />
- * Those unexpected characters are detected by checking the remains of the input string. If there are parts that were
- * not matched then they are surely unexpected.
+ * <br>
+ * Those unexpected characters are detected by retroactively checking the remains of the input string. If there are
+ * parts that were not matched then they are surely unexpected.
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */

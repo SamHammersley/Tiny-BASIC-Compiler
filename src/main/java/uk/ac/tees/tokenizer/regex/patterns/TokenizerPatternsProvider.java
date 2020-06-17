@@ -16,6 +16,8 @@ public abstract class TokenizerPatternsProvider {
 
     /**
      * Creates a {@link Map} of {@link Token.Type}s mapped to their corresponding {@link Pattern}.
+     *
+     * @return a {@link Map} of the available patterns for each token type.
      */
     protected abstract Map<Token.Type, Pattern> getPatterns();
 

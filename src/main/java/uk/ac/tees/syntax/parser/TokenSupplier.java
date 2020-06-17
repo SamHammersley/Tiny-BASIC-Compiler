@@ -71,7 +71,7 @@ public final class TokenSupplier {
     /**
      * Gets the type of the current token.
      *
-     * @return {@link #currentToken#getType()}
+     * @return the type of the current token.
      */
     Token.Type getType() {
         return currentToken.getType();
@@ -102,16 +102,16 @@ public final class TokenSupplier {
     /**
      * Assert that the value of the current token should satisfy the given token.
      *
-     * @param valuePredicate {@link #currentToken#getValue()} should satisfy this predicate.
-     * @throws UnexpectedTokenException if {@link #currentToken#getValue()} does not satisfy the given predicate.
+     * @param valuePredicate the predicate that should be satisfied for the current token.
+     * @throws UnexpectedTokenException if the current token does not satisfy the given predicate.
      */
     void expectValue(Predicate<String> valuePredicate) throws UnexpectedTokenException {
         expect(t -> valuePredicate.test(t.getValue()));
     }
 
     /**
-     * Polls the token queue, providing it's not empty, and asserts that the current token, as a result of
-     * {@link #tokens#poll}, satisfies the given predicate.
+     * Polls the token queue, providing it's not empty, and asserts that the current token, as a result of polling
+     * {@link #tokens}, satisfies the given predicate.
      *
      * @param predicate {@link #currentToken} should satisfy this predicate.
      * @throws ParseException if the token does not satisfy the predicate.

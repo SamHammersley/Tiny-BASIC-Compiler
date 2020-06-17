@@ -88,6 +88,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return a {@link Line} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private Line parseLine() throws ParseException {
         supplier.nextToken(NUMBER);
@@ -117,6 +118,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return a {@link Line} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private Statement parseStatement() throws ParseException {
         supplier.nextToken(KEYWORD);
@@ -141,6 +143,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return an {@link IfStatement} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private IfStatement parseIfStatement() throws ParseException {
         AbstractSyntaxTreeNode left = parseExpression();
@@ -163,6 +166,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return a {@link PrintStatement} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private Statement parsePrintStatement() throws ParseException {
         AbstractSyntaxTreeNode expression = parseExpression();
@@ -190,6 +194,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return a {@link LetStatement} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private LetStatement parseLetStatement() throws ParseException {
         supplier.expectType(IDENTIFIER);
@@ -208,6 +213,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return an {@link InputStatement} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private InputStatement parseInputStatement() throws ParseException {
         List<UnassignedIdentifier> identifiers = new ArrayList<>();
@@ -234,6 +240,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return a {@link GoToStatement} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private GoToStatement parseGotoStatement() throws ParseException {
         supplier.expectType(NUMBER);
@@ -250,6 +257,7 @@ public final class RecursiveDescentParser extends Parser {
      * </pre>
      *
      * @return a {@link GoToStatement} object.
+     * @throws ParseException if the expected token criteria is not matched.
      */
     private GoSubStatement parseGoSubStatement() throws ParseException {
         supplier.expectType(NUMBER);
@@ -334,7 +342,7 @@ public final class RecursiveDescentParser extends Parser {
     /**
      * Parses a factor node as an {@link AbstractSyntaxTreeNode}. These nodes are terminal
      *
-     * @return
+     * @return an {@link AbstractSyntaxTreeNode} representing a factor in an expression.
      * @throws ParseException where the given token sequence is syntactically incorrect.
      */
     private AbstractSyntaxTreeNode parseFactor() throws ParseException {
