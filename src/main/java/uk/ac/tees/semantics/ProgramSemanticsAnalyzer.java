@@ -1,5 +1,7 @@
 package uk.ac.tees.semantics;
 
+import uk.ac.tees.semantics.exception.InvalidLineNumberException;
+import uk.ac.tees.semantics.exception.SemanticException;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
@@ -28,15 +30,45 @@ import java.util.*;
  */
 public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Program, Program> {
 
+    /**
+     * Stack of line numbers, to verify that lines are numbered properly.
+     */
     private final Deque<Integer> lineNumbers = new ArrayDeque<>();
 
+    /**
+     * Line numbers that branch statements target.
+     */
     private final List<Integer> branchStatementTargets = new ArrayList<>();
 
+    /**
+     * {@link Set} of characters that are declared in the input.
+     */
     private final Set<Character> identifiers = new HashSet<>();
 
+    /**
+     * Denotes that there is an end statement.
+     */
     private boolean ends;
 
+    /**
+     * Denotes that a return statement is required.
+     */
     private boolean requiresReturn;
+
+    /**
+     * Checks that GoSub has corresponding return statement and all branch statements target valid line numbers.
+     */
+    private void verifyBranchStatements() throws SemanticException {
+        if (requiresReturn) {
+            throw new SemanticException("GoSub statement without return!");
+        }
+
+        for (int targetLine : branchStatementTargets) {
+            if (!lineNumbers.contains(targetLine)) {
+                throw new InvalidLineNumberException("Branch statement directs to non-existent line!");
+            }
+        }
+    }
 
     @Override
     public Program visitTree(Program root) {
@@ -45,38 +77,26 @@ public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Pr
         verifyBranchStatements();
 
         if (!ends) {
-            throw new RuntimeException("No end statement!");
+            throw new SemanticException("Missing end statement!");
         }
 
         return root;
     }
 
-    private void verifyBranchStatements() {
-        if (requiresReturn) {
-            throw new RuntimeException("GoSub statement without return!");
-        }
-
-        for (int targetLine : branchStatementTargets) {
-            if (!lineNumbers.contains(targetLine)) {
-                throw new RuntimeException("Branch statement directs to non-existent line!");
-            }
-        }
-    }
-
     @Visitor
     private void visit(Line node) {
         if (lineNumbers.contains(node.getLineNumber())) {
-            throw new RuntimeException("Duplicate line numbers!");
+            throw new InvalidLineNumberException("Duplicate line numbers!");
         }
 
         int previousLine = lineNumbers.isEmpty() ? node.getLineNumber() : lineNumbers.peek();
 
         if (previousLine > node.getLineNumber()) {
-            throw new RuntimeException("Disordered line numbers!");
+            throw new InvalidLineNumberException("Disordered line numbers!");
         }
 
         if (node.getLineNumber() % 10 != 0) {
-            throw new RuntimeException("Line number is not a multiple of 10!");
+            throw new InvalidLineNumberException("Line number is not a multiple of 10!");
         }
 
         lineNumbers.push(node.getLineNumber());
@@ -85,7 +105,7 @@ public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Pr
     @Visitor
     private void visit(IdentifierFactor node) {
         if (!identifiers.contains(node.getName())) {
-            throw new RuntimeException("Variable referenced without INPUT or LET statement!");
+            throw new SemanticException("Variable referenced without INPUT or LET statement!");
         }
     }
 
@@ -120,5 +140,4 @@ public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Pr
     private void visit(InputStatement node) {
         node.getIdentifiers().forEach(i -> identifiers.add(i.getName()));
     }
-
 }
