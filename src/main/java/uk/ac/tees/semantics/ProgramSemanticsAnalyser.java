@@ -28,7 +28,7 @@ import java.util.*;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Program, Program> {
+public final class ProgramSemanticsAnalyser extends AbstractSyntaxTreeVisitor<Program, Program> {
 
     /**
      * Stack of line numbers, to verify that lines are numbered properly.
@@ -65,7 +65,7 @@ public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Pr
 
         for (int targetLine : branchStatementTargets) {
             if (!lineNumbers.contains(targetLine)) {
-                throw new InvalidLineNumberException("Branch statement directs to non-existent line!");
+                throw new InvalidLineNumberException("Branch statement directs to non-existent line! " + targetLine);
             }
         }
     }
@@ -86,17 +86,19 @@ public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Pr
     @Visitor
     private void visit(Line node) {
         if (lineNumbers.contains(node.getLineNumber())) {
-            throw new InvalidLineNumberException("Duplicate line numbers!");
+            throw new InvalidLineNumberException("Duplicate line numbers! " + node.getLineNumber());
         }
 
         int previousLine = lineNumbers.isEmpty() ? node.getLineNumber() : lineNumbers.peek();
 
         if (previousLine > node.getLineNumber()) {
-            throw new InvalidLineNumberException("Disordered line numbers!");
+            String message = "Disordered line numbers! The previous line, %d, is larger than the current, %d";
+
+            throw new InvalidLineNumberException(String.format(message, previousLine, node.getLineNumber()));
         }
 
         if (node.getLineNumber() % 10 != 0) {
-            throw new InvalidLineNumberException("Line number is not a multiple of 10!");
+            throw new InvalidLineNumberException("Line number is not a multiple of 10! " + node.getLineNumber());
         }
 
         lineNumbers.push(node.getLineNumber());
@@ -105,7 +107,7 @@ public final class ProgramSemanticsAnalyzer extends AbstractSyntaxTreeVisitor<Pr
     @Visitor
     private void visit(IdentifierFactor node) {
         if (!identifiers.contains(node.getName())) {
-            throw new SemanticException("Variable referenced without INPUT or LET statement!");
+            throw new SemanticException("Variable " + node.getName() + " referenced without assignment!");
         }
     }
 

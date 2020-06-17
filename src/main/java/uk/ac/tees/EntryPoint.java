@@ -1,7 +1,7 @@
 package uk.ac.tees;
 
 import picocli.CommandLine;
-import uk.ac.tees.semantics.ProgramSemanticsAnalyzer;
+import uk.ac.tees.semantics.ProgramSemanticsAnalyser;
 import uk.ac.tees.compiler.x86_64.X86_64NetwideAssemblyCompiler;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.parser.Parser;
@@ -68,7 +68,7 @@ public final class EntryPoint implements Runnable {
             String name = fileName.substring(0, fileName.lastIndexOf('.'));
 
             Parser parser = new RecursiveDescentParser(supplier);
-            Program abstractSyntaxTree = new ProgramSemanticsAnalyzer().visitTree(parser.parse(name));
+            Program abstractSyntaxTree = new ProgramSemanticsAnalyser().visitTree(parser.parse(name));
 
             Optional.ofNullable(graphStructure).ifPresent(path -> graphAbstractSyntaxTree(abstractSyntaxTree, path));
 
