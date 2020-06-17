@@ -56,7 +56,11 @@ public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeN
         try {
             visitor.setAccessible(true);
             visitor.invoke(this, node);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+
+        } catch (InvocationTargetException e) {
+            throw (RuntimeException) e.getCause();
+
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
