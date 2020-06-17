@@ -6,19 +6,18 @@ import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticOperator;
-import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
-import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
+import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
 import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static uk.ac.tees.tokenizer.Token.Type.*;
 
@@ -37,6 +36,36 @@ import static uk.ac.tees.tokenizer.Token.Type.*;
  */
 public final class RecursiveDescentParser extends Parser {
 
+    /**
+     * Represents a function that parses and returns a {@link Statement}.
+     *
+     * @author Sam Hammersley - Gonsalves (q5315908)
+     */
+    private interface StatementParser {
+
+        /**
+         * Parses a {@link Statement}, using tokens from {@link RecursiveDescentParser#supplier}.
+         *
+         * @return the parsed {@link Statement}.
+         * @throws ParseException when input is syntactically incorrect.
+         */
+        Statement parse() throws ParseException;
+
+    }
+
+    /**
+     * Maps keyword values to statement parsing functions.
+     */
+    private final Map<String, StatementParser> statementParsers = Map.of(
+            "if", this::parseIfStatement,
+            "print", this::parsePrintStatement,
+            "let", this::parseLetStatement,
+            "input", this::parseInputStatement,
+            "goto", this::parseGotoStatement,
+            "gosub", this::parseGoSubStatement,
+            "return", this::parseReturnStatement,
+            "end", this::parseEndStatement);
+
     public RecursiveDescentParser(TokenSupplier supplier) {
         super(supplier);
     }
@@ -48,8 +77,6 @@ public final class RecursiveDescentParser extends Parser {
         while (supplier.hasNext()) {
             lines.add(parseLine());
         }
-
-        //supplier.expectValue("END"::equals);
 
         return new Program(name, lines);
     }
@@ -94,27 +121,17 @@ public final class RecursiveDescentParser extends Parser {
     private Statement parseStatement() throws ParseException {
         supplier.nextToken(KEYWORD);
 
-        String keyword = supplier.getValue(s -> s.charAt(0) + s.toLowerCase().substring(1));
+        String keyword = supplier.getValue(String::toLowerCase);
 
         if (supplier.hasNext()) {
             supplier.nextToken();
         }
 
-        try {
-            Method method = getClass().getDeclaredMethod("parse" + keyword + "Statement");
-            method.setAccessible(true);
-
-            return (Statement) method.invoke(this);
-
-        } catch (NoSuchMethodException e) {
+        if (!statementParsers.containsKey(keyword)) {
             throw new UnrecognisedCommand(supplier.getCurrentToken());
-
-        } catch (InvocationTargetException e) {
-            throw (ParseException) e.getCause();
-
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException();
         }
+
+        return statementParsers.get(keyword).parse();
     }
 
     /**
@@ -234,7 +251,7 @@ public final class RecursiveDescentParser extends Parser {
      *
      * @return a {@link GoToStatement} object.
      */
-    private GoSubStatement parseGosubStatement() throws ParseException {
+    private GoSubStatement parseGoSubStatement() throws ParseException {
         supplier.expectType(NUMBER);
         int lineNumber = supplier.getValue(Integer::parseInt);
 
