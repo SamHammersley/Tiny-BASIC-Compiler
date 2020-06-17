@@ -92,7 +92,7 @@ public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisit
     }
 
     @Visitor
-    public void visit(Program root) {
+    private void visit(Program root) {
         builder.append("section .text\n")
                 .append(INDENTATION).append("global _start\n")
                 .append("_start:\n")
@@ -106,7 +106,7 @@ public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisit
     }
 
     @Visitor
-    public void visit(EndStatement node) {
+    private void visit(EndStatement node) {
         // clear the rax register.
         builder.append(INDENTATION).append("mov rax, 0\n")
                 // change the stack pointers back to original values.
@@ -118,24 +118,24 @@ public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisit
     }
 
     @Visitor
-    public void visit(IdentifierFactor node) {
+    private void visit(IdentifierFactor node) {
         char identifier = node.getName();
         builder.append(INDENTATION).append("mov rax, [rbp - ").append(localVariableAddress.get(identifier)).append("]\n")
                 .append(INDENTATION).append("push rax\n");
     }
 
     @Visitor
-    public void visit(NumberFactor node) {
+    private void visit(NumberFactor node) {
         builder.append(INDENTATION).append("push ").append(node.getValue()).append('\n');
     }
 
     @Visitor
-    public void visit(StringLiteral node) {
+    private void visit(StringLiteral node) {
         dataSection.addEntry(node.getValue(), "db");
     }
 
     @Visitor
-    public void visit(ArithmeticBinaryExpression node) {
+    private void visit(ArithmeticBinaryExpression node) {
         builder.append(INDENTATION).append("pop rbx\n")
                 .append(INDENTATION).append("pop rax\n");
 
@@ -157,14 +157,14 @@ public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisit
     }
 
     @Visitor
-    public void visit(Line node) {
+    private void visit(Line node) {
         builder.append("_line_").append(node.getLineNumber()).append(":\n");
 
         currentLine = node.getLineNumber();
     }
 
     @Visitor
-    public void visit(LetStatement node) {
+    private void visit(LetStatement node) {
         if (localVariableAddress.size() > MAX_LOCAL_VARIABLE_COUNT) {
             throw new RuntimeException("Too many variables");
         }
@@ -178,41 +178,41 @@ public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisit
     }
 
     @Visitor
-    public void visit(PrintStatement node) {
+    private void visit(PrintStatement node) {
         builder.append(new X86_64PrintStatementCompiler(dataSection).visitTree(node));
     }
 
     @Visitor
-    public void visit(RelationalBinaryExpression node) {
+    private void visit(RelationalBinaryExpression node) {
         builder.append(INDENTATION).append("pop rax\n")
                 .append(INDENTATION).append("pop rbx\n")
                 .append(INDENTATION).append("cmp rbx, rax\n");
     }
 
     @Visitor
-    public void visit(IfStatement node) {
+    private void visit(IfStatement node) {
         String operation = getJumpOperation(node.getExpression().getOperator().negate());
 
         builder.append(INDENTATION).append(operation).append(" _line_").append(currentLine + 10).append('\n');
     }
 
     @Visitor
-    public void visit(GoToStatement node) {
+    private void visit(GoToStatement node) {
         builder.append(INDENTATION).append("jmp _line_").append(node.getLineNumber()).append('\n');
     }
 
     @Visitor
-    public void visit(GoSubStatement node) {
+    private void visit(GoSubStatement node) {
         builder.append(INDENTATION).append("call _line_").append(node.getLineNumber()).append('\n');
     }
 
     @Visitor
-    public void visit(ReturnStatement node) {
+    private void visit(ReturnStatement node) {
         builder.append(INDENTATION).append("ret\n");
     }
 
     @Visitor
-    public void visit(InputStatement node) {
+    private void visit(InputStatement node) {
         for (UnassignedIdentifier identifier : node.getIdentifiers()) {
             int addressOffset = getLocalVariableAddressOffset(identifier.getName());
 
