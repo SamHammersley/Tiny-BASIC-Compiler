@@ -172,14 +172,8 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
         create(root);
 
         for (Line line : root.lines()) {
-            associate(root, line);
+            associate(root, line.getStatement());
         }
-    }
-
-    @Visitor
-    private void visit(Line node) {
-        create(node);
-        associate(node, node.getStatement());
     }
 
     @Visitor
