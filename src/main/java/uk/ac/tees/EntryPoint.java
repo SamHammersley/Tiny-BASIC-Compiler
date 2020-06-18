@@ -158,7 +158,7 @@ public final class EntryPoint implements Runnable {
         X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
         String output = compiler.visitTree(program);
 
-        Path path = Optional.ofNullable(outputPath).orElse(Path.of(program.getName() + ".asm"));
+        Path path = Optional.ofNullable(outputPath).orElse(inputPath.getParent().resolve(program.getName() + ".asm"));
 
         if (Files.isDirectory(path)) {
             path = path.resolve(program.getName() + ".asm");
