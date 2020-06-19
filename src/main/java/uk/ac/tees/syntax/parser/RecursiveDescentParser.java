@@ -125,12 +125,12 @@ public final class RecursiveDescentParser extends Parser {
 
         String keyword = supplier.getValue(String::toLowerCase);
 
-        if (supplier.hasNext()) {
-            supplier.nextToken();
-        }
-
         if (!statementParsers.containsKey(keyword)) {
             throw new UnrecognisedCommand(supplier.getCurrentToken());
+        }
+
+        if (supplier.hasNext()) {
+            supplier.nextToken();
         }
 
         return statementParsers.get(keyword).parse();
