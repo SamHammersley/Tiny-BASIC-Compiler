@@ -13,7 +13,7 @@ import uk.ac.tees.tokenizer.TinyBasicTokenizer;
 import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.TokenizationException;
 import uk.ac.tees.tokenizer.flag.FlagTokenizer;
-import uk.ac.tees.tokenizer.regex.patterns.FromFileProvider;
+import uk.ac.tees.tokenizer.regex.patterns.FromURLProvider;
 import uk.ac.tees.tokenizer.regex.patterns.TokenizerPatternsCache;
 
 import java.io.BufferedWriter;
@@ -126,7 +126,7 @@ public final class EntryPoint implements Runnable {
      * {@link Token.Type}s.
      */
     private TokenizerPatternsCache getRegexCache() {
-        return new FromFileProvider(regexPath).newCache();
+        return new FromURLProvider(regexPath).newCache();
     }
 
     /**

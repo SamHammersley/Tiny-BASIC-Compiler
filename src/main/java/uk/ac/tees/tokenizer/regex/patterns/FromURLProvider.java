@@ -2,10 +2,8 @@ package uk.ac.tees.tokenizer.regex.patterns;
 
 import uk.ac.tees.tokenizer.Token;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
@@ -13,12 +11,12 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Gets {@link Pattern}s for {@link Token.Type}s from a file. The expected syntax is as follows:
+ * Gets {@link Pattern}s for {@link Token.Type}s from a URL. The expected syntax is as follows:
  * <pre>{@code TOKEN_NAME: Regex pattern}</pre>
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class FromFileProvider extends TokenizerPatternsProvider {
+public final class FromURLProvider extends TokenizerPatternsProvider {
 
     /**
      * The name of the file containing the regex patterns.
@@ -26,22 +24,22 @@ public final class FromFileProvider extends TokenizerPatternsProvider {
     private final URL file;
 
     /**
-     * Constructs new {@link FromFileProvider} with the given file name.
+     * Constructs new {@link FromURLProvider} with the given file name.
      *
      * @param file the name of the file containing the patterns.
      */
-    public FromFileProvider(URL file) {
+    public FromURLProvider(URL file) {
         this.file = file;
     }
 
     @Override
     protected Map<Token.Type, Pattern> getPatterns() {
-        Path path = Paths.get(file.getPath());
         Map<Token.Type, Pattern> map = new LinkedHashMap<>();
 
         try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(file.openStream()));
 
-            Files.lines(path).forEach(l -> {
+            reader.lines().forEach(l -> {
                 String[] parts = l.split(": ");
 
                 if (parts.length != 2) {
