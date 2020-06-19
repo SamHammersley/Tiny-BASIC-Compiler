@@ -7,7 +7,7 @@ MINUS: -
 L_PARENTHESES: \(
 R_PARENTHESES: \)
 NEW_LINE: \n
-KEYWORD: [a-zA-Z]{2,}
+KEYWORD: [A-Z]{2,}
 IDENTIFIER: \b[A-Z]\b
 COMMA: ,
 REL_OP: (<[=>]?|>[=<]?|=)
