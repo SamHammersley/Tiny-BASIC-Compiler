@@ -172,6 +172,8 @@ public final class EntryPoint implements Runnable {
 
             throw new UncheckedIOException(e);
         }
+
+        System.out.println(path.toAbsolutePath());
     }
 
     public static void main(String[] args) {
