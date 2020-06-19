@@ -39,20 +39,19 @@ public final class GroupingRegexTokenizer extends RegexTokenizer {
         for (Token.Type type : patterns.supportedTypes()) {
             Matcher matcher = patterns.getPattern(type).matcher(remainingInput);
 
-            int previousIndex = -1;
-            int row = 1;
+            int previousEndIndex = -1;
 
             while (matcher.find()) {
-                if (type.equals(Token.Type.NEW_LINE)) {
-                    row++;
-                }
                 String tokenText = matcher.group();
-                previousIndex = input.indexOf(tokenText, previousIndex + 1);
-                int column = input.substring(0, matcher.start()).lastIndexOf('\n') + 1;
+                previousEndIndex = input.indexOf(tokenText, previousEndIndex) + tokenText.length();
+                int startIndex = previousEndIndex - tokenText.length();
 
+                int row = countLines(input, startIndex);
+                int lastNewLineIndex = input.substring(0, startIndex).lastIndexOf('\n');
+                int column = startIndex - (lastNewLineIndex == -1 ? 0 : 1 + lastNewLineIndex) + 1;
                 Token token = new Token(type, tokenText, row, column);
-                int endIndex = previousIndex + tokenText.length();
-                tokenMatches.add(new TokenMatchResult(previousIndex, endIndex, token));
+
+                tokenMatches.add(new TokenMatchResult(startIndex, previousEndIndex, token));
             }
 
             remainingInput = matcher.replaceAll("");
