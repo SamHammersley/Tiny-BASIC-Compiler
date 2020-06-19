@@ -57,13 +57,12 @@ public final class SequentialRegexTokenizer extends RegexTokenizer {
 
                 // Check if the start of remaining input matches one of the regex rules.
                 if (matcher.lookingAt()) {
-                    cursor.advance(matcher.group());
+                    matchedToken = Optional.of(new Token(type, matcher.group(), cursor.row(), cursor.column()));
 
+                    cursor.advance(matcher.group());
                     if (type.equals(Token.Type.NEW_LINE)) {
                         cursor.nextLine();
                     }
-
-                    matchedToken = Optional.of(new Token(type, matcher.group(), cursor.row(), cursor.column()));
                     break;
                 }
             }
