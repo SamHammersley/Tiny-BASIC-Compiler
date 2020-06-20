@@ -9,14 +9,14 @@ import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpressio
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticOperator;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
+import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
-import uk.ac.tees.syntax.grammar.statement.EndStatement;
-import uk.ac.tees.syntax.grammar.statement.IfStatement;
-import uk.ac.tees.syntax.grammar.statement.LetStatement;
-import uk.ac.tees.syntax.grammar.statement.PrintStatement;
+import uk.ac.tees.syntax.grammar.statement.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -143,10 +143,99 @@ final class X86_64NetwideAssemblyCompilerTest {
     @Test
     void testCompile() {
         X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
-
         String assembly = compiler.visitTree(manualAbstractSyntaxTree());
 
         assertEquals(assembly, ASSEMBLY_OUTPUT);
     }
 
+    @Test
+    void testInputStatement() {
+        final String expectedOutput =
+                "    lea r8, [rbp - 8]\n" +
+                "    mov rax, 0\n" +
+                "    mov rdi, 0\n" +
+                "    mov rsi, r8\n" +
+                "    mov rdx, 8\n" +
+                "    syscall\n" +
+                "    lea r8, [rbp - 16]\n" +
+                "    mov rax, 0\n" +
+                "    mov rdi, 0\n" +
+                "    mov rsi, r8\n" +
+                "    mov rdx, 8\n" +
+                "    syscall\n";
+
+        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+        List<UnassignedIdentifier> ids = List.of(
+                new UnassignedIdentifier('N'), new UnassignedIdentifier('O'));
+
+        new InputStatement(ids).accept(compiler);
+
+        assertEquals(expectedOutput, compiler.toString());
+    }
+
+    @Test
+    void testCompoundPrintStatement() {
+        final String expectedOutput =
+                "    push 5\n" +
+                "    call ascii_conversion\n" +
+                "    mov rax, 1\n" +
+                "    mov rdi, 1\n" +
+                "    mov rsi, rsp\n" +
+                "    mov rdx, 8\n" +
+                "    syscall\n" +
+                "    mov rax, 1\n" +
+                "    mov rdi, 1\n" +
+                "    mov rsi, new_line_char\n" +
+                "    mov rdx, 1\n" +
+                "    syscall\n" +
+                "    pop rax\n" +
+                "    mov rax, [rbp - null]\n" +
+                "    push rax\n" +
+                "    call ascii_conversion\n" +
+                "    mov rax, 1\n" +
+                "    mov rdi, 1\n" +
+                "    mov rsi, rsp\n" +
+                "    mov rdx, 8\n" +
+                "    syscall\n" +
+                "    mov rax, 1\n" +
+                "    mov rdi, 1\n" +
+                "    mov rsi, new_line_char\n" +
+                "    mov rdx, 1\n" +
+                "    syscall\n" +
+                "    pop rax\n" +
+                "    mov rax, 1\n" +
+                "    mov rdi, 1\n" +
+                "    mov rsi, rodata0\n" +
+                "    mov rdx, 7\n" +
+                "    syscall\n" +
+                "    mov rax, 1\n" +
+                "    mov rdi, 1\n" +
+                "    mov rsi, new_line_char\n" +
+                "    mov rdx, 1\n" +
+                "    syscall\n";
+
+        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+
+        CompoundPrintStatement statement = new CompoundPrintStatement();
+        statement.addExpression(new NumberFactor(5));
+        statement.addExpression(new IdentifierFactor('X'));
+        statement.addExpression(new StringLiteral("Test Test"));
+        statement.accept(compiler);
+
+        assertEquals(expectedOutput, compiler.toString());
+    }
+
+    @Test
+    void testGoSubStatement() {
+        final String expectedOutput = "    call _line_20\n    ret\n";
+
+        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+        GoSubStatement gosubStatement = new GoSubStatement(20);
+        ReturnStatement returnStatement = new ReturnStatement();
+
+        gosubStatement.accept(compiler);
+        returnStatement.accept(compiler);
+
+        assertEquals(expectedOutput, compiler.toString());
+    }
 }

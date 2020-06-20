@@ -260,4 +260,9 @@ public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisit
                 .append(INDENTATION).append("push r8\n")
                 .append(INDENTATION).append("ret");
     }
+
+    @Override
+    public String toString() {
+        return builder.toString();
+    }
 }
