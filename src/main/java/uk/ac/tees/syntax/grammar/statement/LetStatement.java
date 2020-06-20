@@ -38,7 +38,7 @@ public final class LetStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeVisitor visitor) {
+    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
         identifier.accept(visitor);
         value.accept(visitor);
 

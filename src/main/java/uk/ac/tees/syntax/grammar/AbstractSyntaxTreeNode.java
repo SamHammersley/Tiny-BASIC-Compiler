@@ -23,6 +23,6 @@ public interface AbstractSyntaxTreeNode {
      *
      * @param visitor defines the actions to be executed upon visiting a node.
      */
-    void accept(AbstractSyntaxTreeVisitor visitor);
+    <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor);
 
 }

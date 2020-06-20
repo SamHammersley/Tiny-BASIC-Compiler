@@ -1,5 +1,6 @@
 package uk.ac.tees.syntax.grammar.expression.factor;
 
+import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Identifier;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
@@ -21,7 +22,7 @@ public final class IdentifierFactor extends Identifier {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeVisitor visitor) {
+    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
         visitor.visitNode(this);
     }
 

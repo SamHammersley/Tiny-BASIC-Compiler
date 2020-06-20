@@ -18,7 +18,7 @@ public final class ArithmeticBinaryExpression extends BinaryExpression<Arithmeti
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeVisitor visitor) {
+    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
         // Need to accept both sides/child nodes of the expression first.
         left.accept(visitor);
         right.accept(visitor);

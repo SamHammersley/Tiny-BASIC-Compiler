@@ -28,7 +28,7 @@ public final class StringLiteral implements AbstractSyntaxTreeNode {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeVisitor visitor) {
+    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
         visitor.visitNode(this);
     }
 

@@ -45,7 +45,7 @@ public final class CompoundPrintStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeVisitor visitor) {
+    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
         statements.forEach(statement -> statement.accept(visitor));
 
         visitor.visitNode(this);

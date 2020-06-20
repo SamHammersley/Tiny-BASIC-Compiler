@@ -27,7 +27,7 @@ public class PrintStatement extends Statement {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeVisitor visitor) {
+    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
         expression.accept(visitor);
 
         visitor.visitNode(this);

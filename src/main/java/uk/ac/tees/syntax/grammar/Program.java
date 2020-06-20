@@ -52,7 +52,7 @@ public final class Program implements AbstractSyntaxTreeNode {
     }
 
     @Override
-    public void accept(AbstractSyntaxTreeVisitor visitor) {
+    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
         // Visit this node.
         visitor.visitNode(this);
 
