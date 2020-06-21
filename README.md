@@ -25,28 +25,29 @@ Compiles Tiny BASIC source code to x86-64 Netwide Assembler assembly code
 ## Syntax
 The following (backus-naur form) rewriting rules outline the supported grammar, these define the syntax of the implemented "flavour" of Tiny BASIC. Note that pre-processing directives are not supported however may possibly be implemented in the future.
 ```ebnf
-<line> ::= <number> <statement> LF
+<line> ::= <number> "0 " <statement> "\n"
 
-<statement> ::= PRINT <expression-list>
-              IF <expression> <relational-op> <expression> THEN <statement>
-              INPUT <identifier-list>
-              LET <identifier = expression>
-              GOTO <expression>
-              GOSUB <expression>
-              RETURN
-              END
+<statement> ::= "PRINT " <expression_list> |
+              "IF " <expression> <relational_op> <expression> " THEN " <statement> |
+              "INPUT " <identifier_list> |
+              "LET " <identifier> "=" <expression> |
+              "GOTO " <expression> |
+              "GOSUB " <expression> |
+              "RETURN " |
+              "END "
 
-<digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-<letter> ::= A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y
-<factor> ::= <identifier> | <number> | (<expression>)
-<term> ::= <factor> [(* | /) <factor>]*
-<expression> ::= [+ | -] <term> [(+ | -) <term>]*
-<expression-list> ::= <expression> [, <expression>]*
-<identifier> ::= <letter>
-<identifier-list> ::= <identifier> [, <identifier>]*
+<digit> ::= [0-9]
+<uppercase> ::= [A-Z]
+<lowercase> ::= [a-z]
+<factor> ::= <identifier> | <number> | "(" <expression> ")"
+<term> ::= <factor> (("*" | "/") <factor>)*
+<expression> ::= <term> (("+" | "-") <term>)*
+<expression_list> ::= (<string> | <expression>) ("," (<string> | <expression>))*
+<identifier> ::= <uppercase>
+<identifier_list> ::= <identifier> ("," <identifier>)*
 <number> ::= <digit> <digit>*
-<relational-op> ::= < [> | =] | > [< | =] | =
-<string> ::= "[<letter> | <digit>]*"
+<relational_op> ::= "<" (">" | "=") | ">" ("<" | "=") | "="
+<string> ::= "'" (<uppercase> | <lowercase> | <digit>)+ "'"
 ```
 ## Tokenization
 There are three different strategies used to tokenize Tiny BASIC source code input. As seen above, there is an option to specify which of these is used to tokenize source code input. This option expects a fully qualified java class name, the available tokenizer types are:
