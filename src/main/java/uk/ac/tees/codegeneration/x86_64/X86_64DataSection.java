@@ -1,8 +1,8 @@
-package uk.ac.tees.compiler.x86_64;
+package uk.ac.tees.codegeneration.x86_64;
 
 import java.util.*;
 
-import static uk.ac.tees.compiler.x86_64.X86_64CompilerConstants.INDENTATION;
+import static uk.ac.tees.codegeneration.x86_64.X86_64CompilerConstants.INDENTATION;
 
 /**
  * Represents a data section of an x86-64 Netwide Assembler program.

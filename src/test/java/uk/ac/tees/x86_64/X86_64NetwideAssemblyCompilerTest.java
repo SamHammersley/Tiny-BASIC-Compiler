@@ -1,7 +1,7 @@
 package uk.ac.tees.x86_64;
 
 import org.junit.jupiter.api.Test;
-import uk.ac.tees.compiler.x86_64.X86_64NetwideAssemblyCompiler;
+import uk.ac.tees.codegeneration.x86_64.X86_64NetwideAssemblyCompiler;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
@@ -14,9 +14,7 @@ import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpressio
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 import uk.ac.tees.syntax.grammar.statement.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
