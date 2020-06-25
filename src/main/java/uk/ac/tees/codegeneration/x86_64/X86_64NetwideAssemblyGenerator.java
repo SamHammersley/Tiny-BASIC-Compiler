@@ -40,7 +40,7 @@ import static uk.ac.tees.codegeneration.x86_64.X86_64CompilerConstants.*;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisitor<String, Program> {
+public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisitor<String, Program> {
 
     /**
      * The read-only data section holding string data, with generated labels.
@@ -108,7 +108,7 @@ public final class X86_64NetwideAssemblyCompiler extends AbstractSyntaxTreeVisit
     @Visitor
     private void visit(EndStatement node) {
         // clear the rax register.
-        builder.append(INDENTATION).append("mov rax, 0\n")
+        builder.append(INDENTATION).append("xor rax, rax\n")
                 // change the stack pointers back to original values.
                 .append(INDENTATION).append("mov rsp, rbp\n")
                 .append(INDENTATION).append("pop rbp\n");

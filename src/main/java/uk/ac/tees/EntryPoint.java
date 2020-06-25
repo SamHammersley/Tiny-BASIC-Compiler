@@ -2,7 +2,7 @@ package uk.ac.tees;
 
 import picocli.CommandLine;
 import uk.ac.tees.semantics.ProgramSemanticsAnalyser;
-import uk.ac.tees.codegeneration.x86_64.X86_64NetwideAssemblyCompiler;
+import uk.ac.tees.codegeneration.x86_64.X86_64NetwideAssemblyGenerator;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.parser.Parser;
 import uk.ac.tees.syntax.parser.RecursiveDescentParser;
@@ -155,7 +155,7 @@ public final class EntryPoint implements Runnable {
      * @param program the program to compile.
      */
     private void compile(Program program) {
-        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+        X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
         String output = compiler.visitTree(program);
 
         Path path = Optional.ofNullable(outputPath).orElse(inputPath.getParent().resolve(program.getName() + ".asm"));

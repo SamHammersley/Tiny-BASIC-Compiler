@@ -1,7 +1,7 @@
 package uk.ac.tees.x86_64;
 
 import org.junit.jupiter.api.Test;
-import uk.ac.tees.codegeneration.x86_64.X86_64NetwideAssemblyCompiler;
+import uk.ac.tees.codegeneration.x86_64.X86_64NetwideAssemblyGenerator;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-final class X86_64NetwideAssemblyCompilerTest {
+final class X86_64NetwideAssemblyGeneratorTest {
 
     private Program manualAbstractSyntaxTree() {
         // B * B (6 * 6)
@@ -108,14 +108,14 @@ final class X86_64NetwideAssemblyCompilerTest {
                 "    pop rbx\n" +
                 "    cmp rbx, rax\n" +
                 "    jle _line_40\n" +
-                "    mov rax, 0\n" +
+                "    xor rax, rax\n" +
                 "    mov rsp, rbp\n" +
                 "    pop rbp\n" +
                 "    mov rax, 60\n" +
                 "    mov rdi, 0\n" +
                 "    syscall\n" +
                 "_line_40:\n" +
-                "    mov rax, 0\n" +
+                "    xor rax, rax\n" +
                 "    mov rsp, rbp\n" +
                 "    pop rbp\n" +
                 "    mov rax, 60\n" +
@@ -140,7 +140,7 @@ final class X86_64NetwideAssemblyCompilerTest {
 
     @Test
     void testCompile() {
-        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+        X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
         String assembly = compiler.visitTree(manualAbstractSyntaxTree());
 
         assertEquals(assembly, ASSEMBLY_OUTPUT);
@@ -162,7 +162,7 @@ final class X86_64NetwideAssemblyCompilerTest {
                 "    mov rdx, 8\n" +
                 "    syscall\n";
 
-        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+        X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
         List<UnassignedIdentifier> ids = List.of(
                 new UnassignedIdentifier('N'), new UnassignedIdentifier('O'));
 
@@ -212,7 +212,7 @@ final class X86_64NetwideAssemblyCompilerTest {
                 "    mov rdx, 1\n" +
                 "    syscall\n";
 
-        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+        X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
 
         CompoundPrintStatement statement = new CompoundPrintStatement();
         statement.addExpression(new NumberFactor(5));
@@ -227,7 +227,7 @@ final class X86_64NetwideAssemblyCompilerTest {
     void testGoSubStatement() {
         final String expectedOutput = "    call _line_20\n    ret\n";
 
-        X86_64NetwideAssemblyCompiler compiler = new X86_64NetwideAssemblyCompiler();
+        X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
         GoSubStatement gosubStatement = new GoSubStatement(20);
         ReturnStatement returnStatement = new ReturnStatement();
 
