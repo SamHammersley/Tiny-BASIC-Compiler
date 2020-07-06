@@ -4,6 +4,8 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
+import uk.ac.tees.syntax.grammar.expression.UnaryExpression;
+import uk.ac.tees.syntax.grammar.expression.UnaryOperator;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticOperator;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
@@ -169,7 +171,7 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException if the expected token criteria is not matched.
      */
     private Statement parsePrintStatement() throws ParseException {
-        AbstractSyntaxTreeNode expression = parseExpression();
+        AbstractSyntaxTreeNode expression = parsePrintExpression();
 
         if (!supplier.currentTypeIs(COMMA)) {
             return new PrintStatement(expression);
@@ -181,10 +183,30 @@ public final class RecursiveDescentParser extends Parser {
         while (supplier.currentTypeIs(COMMA)) {
             supplier.nextToken();
 
-            statement.addExpression(parseExpression());
+            statement.addExpression(parsePrintExpression());
         }
 
         return statement;
+    }
+
+    /**
+     * Parses arguments for a print statement, these may be string literals or expressions as defined in the grammar.
+     *
+     * @return {@link AbstractSyntaxTreeNode} representing an argument of a {@link PrintStatement}.
+     * @throws ParseException thrown if the {@link #supplier} runs out of tokens.
+     */
+    private AbstractSyntaxTreeNode parsePrintExpression() throws ParseException {
+        AbstractSyntaxTreeNode expression;
+
+        if (supplier.currentTypeIs(STRING_EXPRESSION)) {
+            expression = supplier.getValue(StringLiteral::new);
+            supplier.nextToken();
+
+        } else {
+            expression = parseExpression();
+        }
+
+        return expression;
     }
 
     /**
@@ -346,13 +368,10 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException where the given token sequence is syntactically incorrect.
      */
     private AbstractSyntaxTreeNode parseFactor() throws ParseException {
-        supplier.expectType(STRING_EXPRESSION, L_PARENTHESES, NUMBER, IDENTIFIER);
+        supplier.expectType(L_PARENTHESES, NUMBER, IDENTIFIER);
 
         try {
             switch (supplier.getType()) {
-                case STRING_EXPRESSION:
-                    // Technically not a factor but cleaner code.
-                    return new StringLiteral(supplier.getValue());
 
                 case L_PARENTHESES:
                     supplier.nextToken();
