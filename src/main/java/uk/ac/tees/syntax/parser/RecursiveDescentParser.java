@@ -16,7 +16,6 @@ import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
 import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
-import uk.ac.tees.tokenizer.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -318,7 +317,7 @@ public final class RecursiveDescentParser extends Parser {
      * Parses an expression as an abstract syntax tree. An expression is defined by the following context-free grammar
      * production rule:
      * <pre>
-     * {@code <expression> ::= [+ | -] <term> [(+ | -) <term>]*}
+     * {@code <expression> ::= <term> [(+ | -) <term>]*}
      * </pre>
      * The tree produced as a result of calling this function may be a sub-tree of a larger parent abstract syntax tree.
      *
@@ -339,10 +338,10 @@ public final class RecursiveDescentParser extends Parser {
     }
 
     /**
-     * Parses a, non-terminal {@link AbstractSyntaxTreeNode}, term. An expression is defined by the following
+     * Parses a, non-terminal {@link AbstractSyntaxTreeNode}, term. A term is defined by the following
      * context-free grammar production rule:
      * <pre>
-     * {@code <factor> [(* | /) <factor>]*}
+     * {@code <term> ::= <factor> (("*" | "/") <factor>)*}
      * </pre>
      *
      * @return {@link AbstractSyntaxTreeNode} representing a, non-terminal, interior node of the residing abstract syntax
@@ -363,7 +362,11 @@ public final class RecursiveDescentParser extends Parser {
     }
 
     /**
-     * Parses a factor node as an {@link AbstractSyntaxTreeNode}. These nodes are terminal
+     * Parses a factor node as an {@link AbstractSyntaxTreeNode}. These nodes are terminal and defined by the following
+     * rule:
+     * <pre>
+     * {@code <factor> ::= ("+" | "-") factor | <identifier> | <number> | "(" <expression> ")"}
+     * </pre>
      *
      * @return an {@link AbstractSyntaxTreeNode} representing a factor in an expression.
      * @throws ParseException where the given token sequence is syntactically incorrect.
