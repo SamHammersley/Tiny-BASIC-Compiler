@@ -4,6 +4,7 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
+import uk.ac.tees.syntax.grammar.expression.UnaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
@@ -151,6 +152,12 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
     })
     private void visit(AbstractSyntaxTreeNode node) {
         create(node);
+    }
+
+    @Visitor
+    private void visit(UnaryExpression node) {
+        create(node);
+        associate(node, node.getExpression());
     }
 
     @Visitor

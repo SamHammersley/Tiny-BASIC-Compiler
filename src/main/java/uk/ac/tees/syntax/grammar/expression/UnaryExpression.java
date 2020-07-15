@@ -34,7 +34,7 @@ public final class UnaryExpression implements AbstractSyntaxTreeNode {
 
     @Override
     public String toString() {
-        return operator.toString();
+        return "Unary(" + operator.toString() + ")";
     }
 
     public UnaryOperator getOperator() {
