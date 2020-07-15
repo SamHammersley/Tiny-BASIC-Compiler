@@ -4,6 +4,8 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
+import uk.ac.tees.syntax.grammar.expression.UnaryExpression;
+import uk.ac.tees.syntax.grammar.expression.UnaryOperator;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
@@ -132,6 +134,16 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
     @Visitor
     private void visit(StringLiteral node) {
         dataSection.addEntry(node.getValue(), "db");
+    }
+
+    @Visitor
+    private void visit(UnaryExpression node) {
+        if (node.getOperator().equals(UnaryOperator.SUB)) {
+            builder.append(INDENTATION).append("pop rbx\n")
+                    .append(INDENTATION).append("mov rax, 0\n")
+                    .append(INDENTATION).append(node.getOperator().name().toLowerCase()).append(" rax, rbx\n")
+                    .append(INDENTATION).append("push rax\n");
+        }
     }
 
     @Visitor
