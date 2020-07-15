@@ -4,6 +4,8 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
+import uk.ac.tees.syntax.grammar.expression.BinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.BinaryOperator;
 import uk.ac.tees.syntax.grammar.expression.UnaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
@@ -160,15 +162,8 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
         associate(node, node.getExpression());
     }
 
-    @Visitor
-    private void visit(ArithmeticBinaryExpression node) {
-        create(node);
-        associate(node, node.getLeft());
-        associate(node, node.getRight());
-    }
-
-    @Visitor
-    private void visit(RelationalBinaryExpression node) {
+    @Visitor(types={ArithmeticBinaryExpression.class, RelationalBinaryExpression.class})
+    private <T extends BinaryOperator> void visit(BinaryExpression<T> node) {
         create(node);
         associate(node, node.getLeft());
         associate(node, node.getRight());
