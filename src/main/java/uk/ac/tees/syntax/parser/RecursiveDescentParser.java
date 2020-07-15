@@ -16,6 +16,7 @@ import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
 import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
+import uk.ac.tees.tokenizer.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,7 +224,7 @@ public final class RecursiveDescentParser extends Parser {
         UnassignedIdentifier identifier = supplier.getValue(UnassignedIdentifier::new);
 
         supplier.nextToken("="::equals);
-        supplier.nextToken(NUMBER, IDENTIFIER);
+        supplier.nextToken();
 
         return new LetStatement(identifier, parseExpression());
     }
@@ -368,31 +369,45 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException where the given token sequence is syntactically incorrect.
      */
     private AbstractSyntaxTreeNode parseFactor() throws ParseException {
-        supplier.expectType(L_PARENTHESES, NUMBER, IDENTIFIER);
+        supplier.expectType(PLUS, MINUS, L_PARENTHESES, NUMBER, IDENTIFIER);
 
-        try {
-            switch (supplier.getType()) {
+        AbstractSyntaxTreeNode factor;
 
-                case L_PARENTHESES:
-                    supplier.nextToken();
-                    AbstractSyntaxTreeNode expression = parseExpression();
-                    supplier.expectType(R_PARENTHESES);
+        switch (supplier.getType()) {
 
-                    return expression;
+            case PLUS:
+            case MINUS:
+                UnaryOperator operator = supplier.getValue(UnaryOperator::fromSymbol);
+                supplier.nextToken();
 
-                case NUMBER:
-                    return new NumberFactor(supplier.getValue(Integer::parseInt));
+                factor = new UnaryExpression(operator, parseFactor());
+                break;
 
-                case IDENTIFIER:
-                    return new IdentifierFactor(supplier.getValue());
+            case L_PARENTHESES:
+                supplier.nextToken();
+                AbstractSyntaxTreeNode expression = parseExpression();
+                supplier.expectType(R_PARENTHESES);
 
-                default:
-                    // This should never happen.
-                    return null;
-            }
-        } finally {
-            supplier.nextToken();
+                factor = expression;
+                supplier.nextToken();
+                break;
+
+            case NUMBER:
+                factor = new NumberFactor(supplier.getValue(Integer::parseInt));
+                supplier.nextToken();
+                break;
+
+            case IDENTIFIER:
+                factor = new IdentifierFactor(supplier.getValue());
+                supplier.nextToken();
+                break;
+
+            default:
+                // This should never happen.
+                return null;
         }
+
+        return factor;
     }
 
 }
