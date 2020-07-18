@@ -12,7 +12,7 @@
 <digit> ::= [0-9]
 <uppercase> ::= [A-Z]
 <lowercase> ::= [a-z]
-<factor> ::= <identifier> | <number> | "(" <expression> ")"
+<factor> ::= ("+" | "-") factor | <identifier> | <number> | "(" <expression> ")"
 <term> ::= <factor> (("*" | "/") <factor>)*
 <expression> ::= <term> (("+" | "-") <term>)*
 <expression_list> ::= (<string> | <expression>) ("," (<string> | <expression>))*
