@@ -1,6 +1,6 @@
 package uk.ac.tees.syntax.grammar;
 
-import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
+import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 import java.util.Objects;

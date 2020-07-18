@@ -1,4 +1,4 @@
-package uk.ac.tees.syntax.grammar.expression.factor;
+package uk.ac.tees.syntax.grammar.factor;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;

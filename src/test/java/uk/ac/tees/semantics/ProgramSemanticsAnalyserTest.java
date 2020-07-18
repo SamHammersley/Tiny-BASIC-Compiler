@@ -8,8 +8,8 @@ import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticOperator;
-import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
-import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
+import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
+import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.statement.*;
 
 import java.util.List;

@@ -4,7 +4,7 @@ import uk.ac.tees.semantics.exception.InvalidLineNumberException;
 import uk.ac.tees.semantics.exception.SemanticException;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
-import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
+import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 import uk.ac.tees.syntax.visitor.Visitor;

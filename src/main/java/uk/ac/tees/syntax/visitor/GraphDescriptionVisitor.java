@@ -9,9 +9,9 @@ import uk.ac.tees.syntax.grammar.expression.BinaryOperator;
 import uk.ac.tees.syntax.grammar.expression.UnaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
-import uk.ac.tees.syntax.grammar.expression.factor.IdentifierFactor;
-import uk.ac.tees.syntax.grammar.expression.factor.NumberFactor;
-import uk.ac.tees.syntax.grammar.expression.factor.StringLiteral;
+import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
+import uk.ac.tees.syntax.grammar.factor.NumberFactor;
+import uk.ac.tees.syntax.grammar.factor.StringLiteral;
 import uk.ac.tees.syntax.grammar.statement.*;
 
 import java.util.*;

@@ -1,24 +1,30 @@
-package uk.ac.tees.syntax.grammar.expression.factor;
+package uk.ac.tees.syntax.grammar.factor;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
-import uk.ac.tees.syntax.grammar.Identifier;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 import java.util.Objects;
 
 /**
- * An {@link Identifier} that is a factor of an expression; this means objects of this type must be assigned a value.
+ * Represents a string literal factor, a string of characters surrounded by "".
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class IdentifierFactor extends Identifier {
+public final class StringLiteral implements AbstractSyntaxTreeNode {
 
-    public IdentifierFactor(char name) {
-        super(name);
+    private final String value;
+
+    public StringLiteral(String value) {
+        this.value = value;
     }
 
-    public IdentifierFactor(String name) {
-        super(name.charAt(0));
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "String(" + value + ")";
     }
 
     @Override
@@ -31,15 +37,15 @@ public final class IdentifierFactor extends Identifier {
         if (this == object) {
             return true;
         }
-        if (!(object instanceof IdentifierFactor)) {
+        if (!(object instanceof StringLiteral)) {
             return false;
         }
 
-        return name == ((IdentifierFactor) object).name;
+        return value.equals(((StringLiteral) object).value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(value);
     }
 }
