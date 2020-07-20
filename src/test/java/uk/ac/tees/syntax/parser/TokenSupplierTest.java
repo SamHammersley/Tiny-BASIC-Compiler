@@ -56,4 +56,13 @@ final class TokenSupplierTest {
         assertEquals(Token.Type.NUMBER, supplier.getType());
     }
 
+    @Test
+    void testHasNext() throws ParseException {
+        TokenSupplier supplier = testSupplier();
+
+        assertTrue(supplier.hasNext());
+        supplier.nextToken();
+        assertFalse(supplier.hasNext());
+    }
+
 }
