@@ -15,8 +15,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static uk.ac.tees.tokenizer.Token.Type.*;
 
 final class GroupingRegexTokenizerTest {
@@ -26,6 +25,12 @@ final class GroupingRegexTokenizerTest {
 
         List<Token.Type> l = Arrays.asList(types);
         return when(mock.supportedTypes()).thenReturn(new LinkedHashSet<>(l)).getMock();
+    }
+
+    private void verifyInvocations(TokenizerPatternsCache mock) {
+        verify(mock).supportedTypes();
+        // getPattern should be called exactly once for each of the supported patterns.
+        mock.supportedTypes().forEach(t -> verify(mock).getPattern(t));
     }
 
     @Test
@@ -46,6 +51,8 @@ final class GroupingRegexTokenizerTest {
         assertEquals(3, e.getLine());
 
         assertEquals("Unexpected character on line 3, character 8)", e.getMessage());
+
+        verifyInvocations(mock);
     }
 
     @Test
@@ -72,6 +79,8 @@ final class GroupingRegexTokenizerTest {
         assertEquals(new Token(NUMBER, "20", 2, 1), tokens.poll());
         assertEquals(new Token(KEYWORD, "PRINT", 2, 4), tokens.poll());
         assertEquals(new Token(IDENTIFIER, "N", 2, 10), tokens.poll());
+
+        verifyInvocations(mock);
     }
 
     @Test
@@ -90,6 +99,8 @@ final class GroupingRegexTokenizerTest {
         assertEquals(new Token(NUMBER, "10", 1, 1), tokens.poll());
         assertEquals(new Token(KEYWORD, "PRINT", 1, 4), tokens.poll());
         assertEquals(new Token(STRING_EXPRESSION, "\"Hello, World!\"", 1, 10), tokens.poll());
+
+        verifyInvocations(mock);
     }
 
     @Test
@@ -113,6 +124,8 @@ final class GroupingRegexTokenizerTest {
         assertEquals(new Token(IDENTIFIER, "Y", 1, 13), tokens.poll());
         assertEquals(new Token(COMMA, ",", 1, 14), tokens.poll());
         assertEquals(new Token(IDENTIFIER, "Z", 1, 16), tokens.poll());
+
+        verifyInvocations(mock);
     }
 
     @Test
@@ -143,6 +156,8 @@ final class GroupingRegexTokenizerTest {
         assertEquals(new Token(R_PARENTHESES, ")", 1, 15), tokens.poll());
         assertEquals(new Token(DIV, "/", 1, 17), tokens.poll());
         assertEquals(new Token(NUMBER, "5", 1, 19), tokens.poll());
+
+        verifyInvocations(mock);
     }
 
     @Test
@@ -164,6 +179,8 @@ final class GroupingRegexTokenizerTest {
         assertEquals(new Token(REL_OP, "<>", 1, 11), tokens.poll());
         assertEquals(new Token(REL_OP, "><", 1, 14), tokens.poll());
         assertEquals(new Token(REL_OP, "=", 1, 17), tokens.poll());
+
+        verifyInvocations(mock);
     }
 
 }
