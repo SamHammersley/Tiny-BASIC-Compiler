@@ -122,7 +122,7 @@ public final class RecursiveDescentParser extends Parser {
      * @return a {@link Line} object.
      * @throws ParseException if the expected token criteria is not matched.
      */
-    private Statement parseStatement() throws ParseException {
+    public Statement parseStatement() throws ParseException {
         supplier.nextToken(KEYWORD);
 
         String keyword = supplier.getValue(String::toLowerCase);

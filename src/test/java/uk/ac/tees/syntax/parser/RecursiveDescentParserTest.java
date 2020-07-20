@@ -10,10 +10,7 @@ import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
-import uk.ac.tees.syntax.grammar.statement.EndStatement;
-import uk.ac.tees.syntax.grammar.statement.IfStatement;
-import uk.ac.tees.syntax.grammar.statement.LetStatement;
-import uk.ac.tees.syntax.grammar.statement.PrintStatement;
+import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
 import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
 import uk.ac.tees.tokenizer.Token;
@@ -132,11 +129,11 @@ class RecursiveDescentParserTest {
         when(mockSupplier.getValue(any())).thenCallRealMethod().thenCallRealMethod().thenCallRealMethod().thenReturn(10);
 
         when(mockSupplier.getCurrentToken())
-                .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1))
-                .thenReturn(new Token(Token.Type.KEYWORD, "LET", 1, 4))
-                .thenReturn(new Token(IDENTIFIER, "X", 1, 8))
-                .thenReturn(new Token(REL_OP, "=", 1, 10))
-                .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1));
+            .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1))
+            .thenReturn(new Token(Token.Type.KEYWORD, "LET", 1, 4))
+            .thenReturn(new Token(IDENTIFIER, "X", 1, 8))
+            .thenReturn(new Token(REL_OP, "=", 1, 10))
+            .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1));
 
         RecursiveDescentParser parser = new RecursiveDescentParser(mockSupplier);
         Line actual = parser.parseLine();
@@ -149,6 +146,36 @@ class RecursiveDescentParserTest {
         verify(mockSupplier, times(2)).nextToken(any(Token.Type.class));
         verify(mockSupplier).expectType(IDENTIFIER);
         verify(mockSupplier, times(4)).getValue(any());
+    }
+
+    @Test
+    void testParseStatement() throws ParseException {
+        TokenSupplier mockSupplier = mock(TokenSupplier.class);
+        when(mockSupplier.getValue(any())).thenReturn("print").thenReturn(10).thenReturn(ArithmeticOperator.MUL).thenReturn(10);
+
+        when(mockSupplier.getType()).thenReturn(NUMBER).thenReturn(NUMBER).thenReturn(IDENTIFIER); // parsing factors
+        when(mockSupplier.getValue()).thenReturn("X"); // parsing identifier factor
+
+        when(mockSupplier.currentTypeIs(same(MULTIPLY), same(DIV))).thenReturn(true).thenReturn(false);
+        when(mockSupplier.currentTypeIs(same(COMMA))).thenReturn(true).thenReturn(true).thenReturn(false);
+
+        RecursiveDescentParser parser = new RecursiveDescentParser(mockSupplier);
+        Statement actual = parser.parseStatement();
+
+        CompoundPrintStatement expected = new CompoundPrintStatement();
+        expected.addExpression(new ArithmeticBinaryExpression(
+                new NumberFactor(10),
+                new NumberFactor(10),
+                ArithmeticOperator.MUL));
+        expected.addExpression(new IdentifierFactor('X'));
+
+        assertEquals(expected, actual);
+
+        verify(mockSupplier, times(3)).getType();
+        verify(mockSupplier, times(3)).expectType(any());
+
+        verify(mockSupplier, times(1)).nextToken(any(Token.Type.class));
+        verify(mockSupplier, times(5)).nextToken();
     }
 
 }
