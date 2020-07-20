@@ -24,6 +24,8 @@ import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static uk.ac.tees.tokenizer.Token.Type.*;
 
 class RecursiveDescentParserTest {
@@ -98,8 +100,10 @@ class RecursiveDescentParserTest {
     }
 
     @Test
-    void test() throws ParseException {
-        RecursiveDescentParser parser = new RecursiveDescentParser(new TokenSupplier(testProgramTokens()));
+    void testParseProgram() throws ParseException {
+        // mock this
+        TokenSupplier supplier = new TokenSupplier(testProgramTokens());
+        RecursiveDescentParser parser = new RecursiveDescentParser(supplier);
 
         Program expected = manualAbstractSyntaxTree();
         Program actual = parser.parse("test");
@@ -112,11 +116,39 @@ class RecursiveDescentParserTest {
         Queue<Token> tokens = new LinkedList<>();
         tokens.add(new Token(Token.Type.NUMBER, "10", 1, 1));
         tokens.add(new Token(Token.Type.KEYWORD, "UNRECOGNISED", 1, 4));
+        tokens.add(new Token(Token.Type.KEYWORD, "COMMAND", 1, 17));
 
         TokenSupplier supplier = new TokenSupplier(tokens);
         RecursiveDescentParser parser = new RecursiveDescentParser(supplier);
 
         assertThrows(UnrecognisedCommand.class, () -> parser.parse("throws unrecognised command"));
+    }
+
+    @Test
+    void testParseLine() throws ParseException {
+        TokenSupplier mockSupplier = mock(TokenSupplier.class);
+
+        when(mockSupplier.getType()).thenReturn(NUMBER);
+        when(mockSupplier.getValue(any())).thenCallRealMethod().thenCallRealMethod().thenCallRealMethod().thenReturn(10);
+
+        when(mockSupplier.getCurrentToken())
+                .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1))
+                .thenReturn(new Token(Token.Type.KEYWORD, "LET", 1, 4))
+                .thenReturn(new Token(IDENTIFIER, "X", 1, 8))
+                .thenReturn(new Token(REL_OP, "=", 1, 10))
+                .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1));
+
+        RecursiveDescentParser parser = new RecursiveDescentParser(mockSupplier);
+        Line actual = parser.parseLine();
+
+        Line expected = new Line(10, new LetStatement(new UnassignedIdentifier('X'), new NumberFactor(10)));
+
+        assertEquals(expected, actual);
+
+        verify(mockSupplier).getType();
+        verify(mockSupplier, times(2)).nextToken(any(Token.Type.class));
+        verify(mockSupplier).expectType(IDENTIFIER);
+        verify(mockSupplier, times(4)).getValue(any());
     }
 
 }

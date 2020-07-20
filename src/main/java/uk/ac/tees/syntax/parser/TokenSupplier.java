@@ -54,7 +54,7 @@ public final class TokenSupplier {
      * @return string value of the current token.
      */
     String getValue() {
-        return currentToken.getValue();
+        return getCurrentToken().getValue();
     }
 
     /**
@@ -65,7 +65,7 @@ public final class TokenSupplier {
      * @return an object of type T.
      */
     <T> T getValue(Function<String, T> transformer) {
-        return transformer.apply(currentToken.getValue());
+        return transformer.apply(getCurrentToken().getValue());
     }
 
     /**
@@ -74,7 +74,7 @@ public final class TokenSupplier {
      * @return the type of the current token.
      */
     Token.Type getType() {
-        return currentToken.getType();
+        return getCurrentToken().getType();
     }
 
     /**

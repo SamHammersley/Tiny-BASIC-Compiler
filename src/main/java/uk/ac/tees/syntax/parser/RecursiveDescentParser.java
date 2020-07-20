@@ -92,7 +92,7 @@ public final class RecursiveDescentParser extends Parser {
      * @return a {@link Line} object.
      * @throws ParseException if the expected token criteria is not matched.
      */
-    private Line parseLine() throws ParseException {
+    public Line parseLine() throws ParseException {
         supplier.nextToken(NUMBER);
 
         int lineNumber = supplier.getValue(Integer::parseInt);
