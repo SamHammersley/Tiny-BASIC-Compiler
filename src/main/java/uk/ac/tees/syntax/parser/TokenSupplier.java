@@ -1,13 +1,13 @@
 package uk.ac.tees.syntax.parser;
 
 import uk.ac.tees.syntax.parser.exception.ParseException;
-import uk.ac.tees.syntax.parser.exception.UnexpectedTokenException;
+import uk.ac.tees.syntax.parser.exception.UnexpectedTokenTypeException;
+import uk.ac.tees.syntax.parser.exception.UnexpectedTokenValueException;
 import uk.ac.tees.tokenizer.Token;
 
 import java.util.Arrays;
 import java.util.Queue;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Represents a sequence of tokens, supplying tokens as requested.
@@ -78,71 +78,73 @@ public final class TokenSupplier {
     }
 
     /**
-     * Assert that the current token should satisfy the given predicate, if not an exception is thrown.
-     *
-     * @param predicate {@link #currentToken} should satisfy this predicate.
-     * @throws UnexpectedTokenException when the given predicate is not satisfied by the current token.
-     */
-    private void predict(Predicate<Token> predicate) throws UnexpectedTokenException {
-        if (!predicate.test(currentToken)) {
-            throw new UnexpectedTokenException(currentToken);
-        }
-    }
-
-    /**
      * Assert that the current token should be one of the given types.
      *
      * @param types the collection of acceptable types.
-     * @throws UnexpectedTokenException if {@link #currentToken} is not one of the given types.
+     * @throws UnexpectedTokenTypeException if {@link #currentToken} is not one of the given types.
      */
-    void predictType(Token.Type... types) throws UnexpectedTokenException {
-        predict(t -> Arrays.asList(types).contains(t.getType()));
+    void predictType(Token.Type... types) throws UnexpectedTokenTypeException {
+        if (!Arrays.asList(types).contains(currentToken.getType())) {
+            throw new UnexpectedTokenTypeException(currentToken, types);
+        }
     }
 
     /**
      * Assert that the value of the current token should satisfy the given token.
      *
-     * @param valuePredicate the predicate that should be satisfied for the current token.
-     * @throws UnexpectedTokenException if the current token does not satisfy the given predicate.
+     * @param value the value that is expected to match the {@link #currentToken}'s value.
+     * @throws UnexpectedTokenValueException if the current token's value does not match the given expected value.
      */
-    void predictValue(Predicate<String> valuePredicate) throws UnexpectedTokenException {
-        predict(t -> valuePredicate.test(t.getValue()));
+    void predictValue(String value) throws UnexpectedTokenValueException {
+        if (!getValue().equals(value)) {
+            throw new UnexpectedTokenValueException(currentToken, value);
+        }
     }
 
     /**
-     * Polls the token queue, providing it's not empty, and asserts that the current token, as a result of polling
-     * {@link #tokens}, satisfies the given predicate.
+     * Requires that there are more tokens in the queue and throws an exception otherwise.
      *
-     * @param predicate {@link #currentToken} should satisfy this predicate.
-     * @throws ParseException if the token does not satisfy the predicate.
+     * @throws ParseException if there are no more tokens.
      */
-    private void scanConditional(Predicate<Token> predicate) throws ParseException {
+    private void requireNotEnd() throws ParseException {
         if (tokens.isEmpty()) {
             throw new ParseException("Unexpected end of tokens");
         }
-
-        currentToken = tokens.poll();
-
-        if (predicate != null) {
-            predict(predicate);
-        }
     }
 
     /**
-     * Gets the next token regardless of conditions.
+     * Gets the next token.
      *
      * @throws ParseException if there are no more tokens.
      */
     void scan() throws ParseException {
-        scanConditional(t -> true);
+        requireNotEnd();
+
+        currentToken = tokens.poll();
     }
 
-    void scan(Predicate<String> valuePredicate) throws ParseException {
-        scanConditional(t -> valuePredicate.test(t.getValue()));
+    /**
+     * Gets the next token providing that the given value matches the next tokens value.
+     *
+     * @param value the expected value.
+     * @throws ParseException if there are no more tokens or when the given value does not match the next token's value.
+     */
+    void scan(String value) throws ParseException {
+        scan();
+
+        predictValue(value);
     }
 
+    /**
+     * Gets the next token providing that the next token's type is one of the given types.
+     *
+     * @param types the list of types that are permitted.
+     * @throws ParseException if there are no more tokens or when the given type does not match the next token's type.
+     */
     void scan(Token.Type... types) throws ParseException {
-        scanConditional(t -> Arrays.asList(types).contains(t.getType()));
+        scan();
+
+        predictType(types);
     }
 
     boolean currentTypeIs(Token.Type... expectedTypes) {

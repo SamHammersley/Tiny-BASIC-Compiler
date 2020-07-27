@@ -156,7 +156,7 @@ public final class RecursiveDescentParser extends Parser {
 
         RelationalBinaryExpression expression = new RelationalBinaryExpression(left, parseExpression(), operator);
 
-        supplier.predictValue("THEN"::equals);
+        supplier.predictValue("THEN");
 
         return new IfStatement(expression, parseStatement());
     }
@@ -222,7 +222,7 @@ public final class RecursiveDescentParser extends Parser {
         supplier.predictType(IDENTIFIER);
         UnassignedIdentifier identifier = supplier.getValue(UnassignedIdentifier::new);
 
-        supplier.scan("="::equals);
+        supplier.scan("=");
         supplier.scan();
 
         return new LetStatement(identifier, parseExpression());

@@ -2,7 +2,8 @@ package uk.ac.tees.syntax.parser;
 
 import org.junit.jupiter.api.Test;
 import uk.ac.tees.syntax.parser.exception.ParseException;
-import uk.ac.tees.syntax.parser.exception.UnexpectedTokenException;
+import uk.ac.tees.syntax.parser.exception.UnexpectedTokenTypeException;
+import uk.ac.tees.syntax.parser.exception.UnexpectedTokenValueException;
 import uk.ac.tees.tokenizer.Token;
 
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ final class TokenSupplierTest {
         supplier.scan();
 
         assertDoesNotThrow(() -> supplier.predictType(Token.Type.NUMBER));
-        assertThrows(UnexpectedTokenException.class, ()-> supplier.predictType(Token.Type.STRING_EXPRESSION));
+        assertThrows(UnexpectedTokenTypeException.class, () -> supplier.predictType(Token.Type.STRING_EXPRESSION));
     }
 
     @Test
@@ -33,8 +34,8 @@ final class TokenSupplierTest {
         TokenSupplier supplier = testSupplier();
         supplier.scan();
 
-        assertDoesNotThrow(() -> supplier.predictValue(s -> Integer.parseInt(s) == 10));
-        assertThrows(UnexpectedTokenException.class, ()-> supplier.predictType(Token.Type.STRING_EXPRESSION));
+        assertDoesNotThrow(() -> supplier.predictValue("10"));
+        assertThrows(UnexpectedTokenValueException.class, () -> supplier.predictValue("wrong_value"));
     }
 
     @Test
@@ -49,7 +50,7 @@ final class TokenSupplierTest {
     void testNextTokenOfValue() throws ParseException {
         TokenSupplier supplier = testSupplier();
 
-        supplier.scan(s -> Integer.parseInt(s) == 10);
+        supplier.scan("10");
 
         int value = supplier.getValue(Integer::parseInt);
         assertEquals(10, value);
