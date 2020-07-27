@@ -83,7 +83,7 @@ public final class TokenSupplier {
      * @param predicate {@link #currentToken} should satisfy this predicate.
      * @throws UnexpectedTokenException when the given predicate is not satisfied by the current token.
      */
-    private void expect(Predicate<Token> predicate) throws UnexpectedTokenException {
+    private void predict(Predicate<Token> predicate) throws UnexpectedTokenException {
         if (!predicate.test(currentToken)) {
             throw new UnexpectedTokenException(currentToken);
         }
@@ -95,8 +95,8 @@ public final class TokenSupplier {
      * @param types the collection of acceptable types.
      * @throws UnexpectedTokenException if {@link #currentToken} is not one of the given types.
      */
-    void expectType(Token.Type... types) throws UnexpectedTokenException {
-        expect(t -> Arrays.asList(types).contains(t.getType()));
+    void predictType(Token.Type... types) throws UnexpectedTokenException {
+        predict(t -> Arrays.asList(types).contains(t.getType()));
     }
 
     /**
@@ -105,8 +105,8 @@ public final class TokenSupplier {
      * @param valuePredicate the predicate that should be satisfied for the current token.
      * @throws UnexpectedTokenException if the current token does not satisfy the given predicate.
      */
-    void expectValue(Predicate<String> valuePredicate) throws UnexpectedTokenException {
-        expect(t -> valuePredicate.test(t.getValue()));
+    void predictValue(Predicate<String> valuePredicate) throws UnexpectedTokenException {
+        predict(t -> valuePredicate.test(t.getValue()));
     }
 
     /**
@@ -116,7 +116,7 @@ public final class TokenSupplier {
      * @param predicate {@link #currentToken} should satisfy this predicate.
      * @throws ParseException if the token does not satisfy the predicate.
      */
-    private void nextTokenConditional(Predicate<Token> predicate) throws ParseException {
+    private void scanConditional(Predicate<Token> predicate) throws ParseException {
         if (tokens.isEmpty()) {
             throw new ParseException("Unexpected end of tokens");
         }
@@ -124,7 +124,7 @@ public final class TokenSupplier {
         currentToken = tokens.poll();
 
         if (predicate != null) {
-            expect(predicate);
+            predict(predicate);
         }
     }
 
@@ -133,16 +133,16 @@ public final class TokenSupplier {
      *
      * @throws ParseException if there are no more tokens.
      */
-    void nextToken() throws ParseException {
-        nextTokenConditional(t -> true);
+    void scan() throws ParseException {
+        scanConditional(t -> true);
     }
 
-    void nextToken(Predicate<String> valuePredicate) throws ParseException {
-        nextTokenConditional(t -> valuePredicate.test(t.getValue()));
+    void scan(Predicate<String> valuePredicate) throws ParseException {
+        scanConditional(t -> valuePredicate.test(t.getValue()));
     }
 
-    void nextToken(Token.Type... types) throws ParseException {
-        nextTokenConditional(t -> Arrays.asList(types).contains(t.getType()));
+    void scan(Token.Type... types) throws ParseException {
+        scanConditional(t -> Arrays.asList(types).contains(t.getType()));
     }
 
     boolean currentTypeIs(Token.Type... expectedTypes) {

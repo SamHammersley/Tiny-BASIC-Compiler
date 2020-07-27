@@ -143,8 +143,8 @@ class RecursiveDescentParserTest {
         assertEquals(expected, actual);
 
         verify(mockSupplier).getType();
-        verify(mockSupplier, times(2)).nextToken(any(Token.Type.class));
-        verify(mockSupplier).expectType(IDENTIFIER);
+        verify(mockSupplier, times(2)).scan(any(Token.Type.class));
+        verify(mockSupplier).predictType(IDENTIFIER);
         verify(mockSupplier, times(4)).getValue(any());
     }
 
@@ -172,10 +172,10 @@ class RecursiveDescentParserTest {
         assertEquals(expected, actual);
 
         verify(mockSupplier, times(3)).getType();
-        verify(mockSupplier, times(3)).expectType(any());
+        verify(mockSupplier, times(3)).predictType(any());
 
-        verify(mockSupplier, times(1)).nextToken(any(Token.Type.class));
-        verify(mockSupplier, times(5)).nextToken();
+        verify(mockSupplier, times(1)).scan(any(Token.Type.class));
+        verify(mockSupplier, times(5)).scan();
     }
 
 }

@@ -93,13 +93,13 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException if the expected token criteria is not matched.
      */
     public Line parseLine() throws ParseException {
-        supplier.nextToken(NUMBER);
+        supplier.scan(NUMBER);
 
         int lineNumber = supplier.getValue(Integer::parseInt);
         Statement statement = parseStatement();
 
         if (supplier.hasNext()) {
-            supplier.expectType(NEW_LINE);
+            supplier.predictType(NEW_LINE);
         }
 
         return new Line(lineNumber, statement);
@@ -123,7 +123,7 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException if the expected token criteria is not matched.
      */
     public Statement parseStatement() throws ParseException {
-        supplier.nextToken(KEYWORD);
+        supplier.scan(KEYWORD);
 
         String keyword = supplier.getValue(String::toLowerCase);
 
@@ -132,7 +132,7 @@ public final class RecursiveDescentParser extends Parser {
         }
 
         if (supplier.hasNext()) {
-            supplier.nextToken();
+            supplier.scan();
         }
 
         return statementParsers.get(keyword).parse();
@@ -150,13 +150,13 @@ public final class RecursiveDescentParser extends Parser {
     private IfStatement parseIfStatement() throws ParseException {
         AbstractSyntaxTreeNode left = parseExpression();
 
-        supplier.expectType(REL_OP);
+        supplier.predictType(REL_OP);
         RelationalOperator operator = supplier.getValue(RelationalOperator::fromSymbol);
-        supplier.nextToken();
+        supplier.scan();
 
         RelationalBinaryExpression expression = new RelationalBinaryExpression(left, parseExpression(), operator);
 
-        supplier.expectValue("THEN"::equals);
+        supplier.predictValue("THEN"::equals);
 
         return new IfStatement(expression, parseStatement());
     }
@@ -181,7 +181,7 @@ public final class RecursiveDescentParser extends Parser {
         statement.addExpression(expression);
 
         while (supplier.currentTypeIs(COMMA)) {
-            supplier.nextToken();
+            supplier.scan();
 
             statement.addExpression(parsePrintExpression());
         }
@@ -200,7 +200,7 @@ public final class RecursiveDescentParser extends Parser {
 
         if (supplier.currentTypeIs(STRING_EXPRESSION)) {
             expression = supplier.getValue(StringLiteral::new);
-            supplier.nextToken();
+            supplier.scan();
 
         } else {
             expression = parseExpression();
@@ -219,11 +219,11 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException if the expected token criteria is not matched.
      */
     private LetStatement parseLetStatement() throws ParseException {
-        supplier.expectType(IDENTIFIER);
+        supplier.predictType(IDENTIFIER);
         UnassignedIdentifier identifier = supplier.getValue(UnassignedIdentifier::new);
 
-        supplier.nextToken("="::equals);
-        supplier.nextToken();
+        supplier.scan("="::equals);
+        supplier.scan();
 
         return new LetStatement(identifier, parseExpression());
     }
@@ -240,16 +240,16 @@ public final class RecursiveDescentParser extends Parser {
     private InputStatement parseInputStatement() throws ParseException {
         List<UnassignedIdentifier> identifiers = new ArrayList<>();
 
-        supplier.expectType(IDENTIFIER);
+        supplier.predictType(IDENTIFIER);
         identifiers.add(supplier.getValue(UnassignedIdentifier::new));
-        supplier.nextToken();
+        supplier.scan();
 
         while (supplier.currentTypeIs(COMMA)) {
-            supplier.nextToken(IDENTIFIER);
+            supplier.scan(IDENTIFIER);
 
             identifiers.add(supplier.getValue(UnassignedIdentifier::new));
 
-            supplier.nextToken(COMMA, NEW_LINE);
+            supplier.scan(COMMA, NEW_LINE);
         }
 
         return new InputStatement(identifiers);
@@ -265,10 +265,10 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException if the expected token criteria is not matched.
      */
     private GoToStatement parseGotoStatement() throws ParseException {
-        supplier.expectType(NUMBER);
+        supplier.predictType(NUMBER);
         int lineNumber = supplier.getValue(Integer::parseInt);
 
-        supplier.nextToken();
+        supplier.scan();
         return new GoToStatement(lineNumber);
     }
 
@@ -282,10 +282,10 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException if the expected token criteria is not matched.
      */
     private GoSubStatement parseGoSubStatement() throws ParseException {
-        supplier.expectType(NUMBER);
+        supplier.predictType(NUMBER);
         int lineNumber = supplier.getValue(Integer::parseInt);
 
-        supplier.nextToken();
+        supplier.scan();
         return new GoSubStatement(lineNumber);
     }
 
@@ -329,7 +329,7 @@ public final class RecursiveDescentParser extends Parser {
 
         while (supplier.currentTypeIs(PLUS, MINUS)) {
             ArithmeticOperator operator = supplier.getValue(ArithmeticOperator::fromSymbol);
-            supplier.nextToken();
+            supplier.scan();
 
             expression = new ArithmeticBinaryExpression(expression, parseTerm(), operator);
         }
@@ -353,7 +353,7 @@ public final class RecursiveDescentParser extends Parser {
 
         while (supplier.currentTypeIs(MULTIPLY, DIV)) {
             ArithmeticOperator operator = supplier.getValue(ArithmeticOperator::fromSymbol);
-            supplier.nextToken();
+            supplier.scan();
 
             term = new ArithmeticBinaryExpression(term, parseFactor(), operator);
         }
@@ -372,7 +372,7 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException where the given token sequence is syntactically incorrect.
      */
     private AbstractSyntaxTreeNode parseFactor() throws ParseException {
-        supplier.expectType(PLUS, MINUS, L_PARENTHESES, NUMBER, IDENTIFIER);
+        supplier.predictType(PLUS, MINUS, L_PARENTHESES, NUMBER, IDENTIFIER);
 
         AbstractSyntaxTreeNode factor;
 
@@ -381,28 +381,28 @@ public final class RecursiveDescentParser extends Parser {
             case PLUS:
             case MINUS:
                 UnaryOperator operator = supplier.getValue(UnaryOperator::fromSymbol);
-                supplier.nextToken();
+                supplier.scan();
 
                 factor = new UnaryExpression(operator, parseFactor());
                 break;
 
             case L_PARENTHESES:
-                supplier.nextToken();
+                supplier.scan();
                 AbstractSyntaxTreeNode expression = parseExpression();
-                supplier.expectType(R_PARENTHESES);
+                supplier.predictType(R_PARENTHESES);
 
                 factor = expression;
-                supplier.nextToken();
+                supplier.scan();
                 break;
 
             case NUMBER:
                 factor = new NumberFactor(supplier.getValue(Integer::parseInt));
-                supplier.nextToken();
+                supplier.scan();
                 break;
 
             case IDENTIFIER:
                 factor = new IdentifierFactor(supplier.getValue());
-                supplier.nextToken();
+                supplier.scan();
                 break;
 
             default:

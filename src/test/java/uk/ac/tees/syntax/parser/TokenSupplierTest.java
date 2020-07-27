@@ -22,26 +22,26 @@ final class TokenSupplierTest {
     @Test
     void testExpectType() throws ParseException {
         TokenSupplier supplier = testSupplier();
-        supplier.nextToken();
+        supplier.scan();
 
-        assertDoesNotThrow(() -> supplier.expectType(Token.Type.NUMBER));
-        assertThrows(UnexpectedTokenException.class, ()-> supplier.expectType(Token.Type.STRING_EXPRESSION));
+        assertDoesNotThrow(() -> supplier.predictType(Token.Type.NUMBER));
+        assertThrows(UnexpectedTokenException.class, ()-> supplier.predictType(Token.Type.STRING_EXPRESSION));
     }
 
     @Test
     void testExpectValue() throws ParseException {
         TokenSupplier supplier = testSupplier();
-        supplier.nextToken();
+        supplier.scan();
 
-        assertDoesNotThrow(() -> supplier.expectValue(s -> Integer.parseInt(s) == 10));
-        assertThrows(UnexpectedTokenException.class, ()-> supplier.expectType(Token.Type.STRING_EXPRESSION));
+        assertDoesNotThrow(() -> supplier.predictValue(s -> Integer.parseInt(s) == 10));
+        assertThrows(UnexpectedTokenException.class, ()-> supplier.predictType(Token.Type.STRING_EXPRESSION));
     }
 
     @Test
     void testNextTokenOfType() throws ParseException {
         TokenSupplier supplier = testSupplier();
 
-        supplier.nextToken(Token.Type.NUMBER);
+        supplier.scan(Token.Type.NUMBER);
         assertEquals(Token.Type.NUMBER, supplier.getType());
     }
 
@@ -49,7 +49,7 @@ final class TokenSupplierTest {
     void testNextTokenOfValue() throws ParseException {
         TokenSupplier supplier = testSupplier();
 
-        supplier.nextToken(s -> Integer.parseInt(s) == 10);
+        supplier.scan(s -> Integer.parseInt(s) == 10);
 
         int value = supplier.getValue(Integer::parseInt);
         assertEquals(10, value);
@@ -61,7 +61,7 @@ final class TokenSupplierTest {
         TokenSupplier supplier = testSupplier();
 
         assertTrue(supplier.hasNext());
-        supplier.nextToken();
+        supplier.scan();
         assertFalse(supplier.hasNext());
     }
 
