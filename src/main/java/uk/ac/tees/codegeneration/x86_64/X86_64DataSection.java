@@ -1,6 +1,8 @@
 package uk.ac.tees.codegeneration.x86_64;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static uk.ac.tees.codegeneration.x86_64.X86_64CompilerConstants.INDENTATION;
 
@@ -28,9 +30,9 @@ public final class X86_64DataSection {
     /**
      * Associates the given label with value (and it's pseudo-instruction).
      *
-     * @param label the label associated with the value.
+     * @param label             the label associated with the value.
      * @param pseudoInstruction the pseudo-instruction for the value.
-     * @param value the value associated with the label.
+     * @param value             the value associated with the label.
      */
     void addPredefinedEntry(String label, String pseudoInstruction, String value) {
         data.put(value, new DataEntry(value, label, pseudoInstruction));
@@ -39,7 +41,7 @@ public final class X86_64DataSection {
     /**
      * Associates the given value, and pseudo-instruction, with a generated label.
      *
-     * @param value the value of the entry.
+     * @param value             the value of the entry.
      * @param pseudoInstruction the pseudo-instruction for the value.
      */
     void addEntry(String value, String pseudoInstruction) {
@@ -87,17 +89,18 @@ public final class X86_64DataSection {
 
     /**
      * Represents an entry in a data section.
-     *
+     * <p>
      * Each entry has a value, label and pseudo-instruction.
-     *
+     * <p>
      * Pseudo-instructions for data entries are listed in the NASM manual, some are listed below:
      * <ul>
-     *     <li>db - define bytes</li>
-     *     <li>dw - define word (16-bits)</li>
-     *     <li>dd - define double (32-bits)</li>
-     *     <li>dq - define quad (64-bits)</li>
-     *     <li>equ - define symbol with constant value</li>
+     * <li>db - define bytes</li>
+     * <li>dw - define word (16-bits)</li>
+     * <li>dd - define double (32-bits)</li>
+     * <li>dq - define quad (64-bits)</li>
+     * <li>equ - define symbol with constant value</li>
      * </ul>
+     *
      * @see <a href="https://www.nasm.us/doc/nasmdoc3.html#section-3.2">NASM Manual</a>
      */
     private final class DataEntry {

@@ -32,9 +32,9 @@ public final class Token {
     /**
      * Constructs a new {@link Token} with a given {@link #type} and value;
      *
-     * @param type  the type of token represented.
-     * @param value the value held within this token.
-     * @param row the row at which this token starts.
+     * @param type   the type of token represented.
+     * @param value  the value held within this token.
+     * @param row    the row at which this token starts.
      * @param column the column this token is on.
      */
     public Token(Type type, String value, int row, int column) {

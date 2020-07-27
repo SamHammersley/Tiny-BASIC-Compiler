@@ -2,7 +2,6 @@ package uk.ac.tees.syntax.grammar;
 
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 

@@ -31,7 +31,7 @@ final class ProgramSemanticsAnalyserTest {
                 new IdentifierFactor('B'), new NumberFactor(1), ArithmeticOperator.SUB);
 
         // e2Left * 10
-        ArithmeticBinaryExpression e1Right = new ArithmeticBinaryExpression(e2Left,  new NumberFactor(10), ArithmeticOperator.MUL);
+        ArithmeticBinaryExpression e1Right = new ArithmeticBinaryExpression(e2Left, new NumberFactor(10), ArithmeticOperator.MUL);
 
         // e1Left + e1Right
         ArithmeticBinaryExpression printExpression = new ArithmeticBinaryExpression(e1Left, e1Right, ArithmeticOperator.ADD);

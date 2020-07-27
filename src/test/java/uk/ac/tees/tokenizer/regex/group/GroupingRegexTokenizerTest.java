@@ -20,7 +20,7 @@ import static uk.ac.tees.tokenizer.Token.Type.*;
 
 final class GroupingRegexTokenizerTest {
 
-    private TokenizerPatternsCache supporting(Token.Type...types) {
+    private TokenizerPatternsCache supporting(Token.Type... types) {
         TokenizerPatternsCache mock = mock(TokenizerPatternsCache.class);
 
         List<Token.Type> l = Arrays.asList(types);

@@ -1,8 +1,11 @@
 package uk.ac.tees;
 
 import picocli.CommandLine;
-import uk.ac.tees.semantics.ProgramSemanticsAnalyser;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 import uk.ac.tees.codegeneration.x86_64.X86_64NetwideAssemblyGenerator;
+import uk.ac.tees.semantics.ProgramSemanticsAnalyser;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.parser.Parser;
 import uk.ac.tees.syntax.parser.RecursiveDescentParser;
@@ -25,8 +28,6 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import picocli.CommandLine.*;
 
 @Command(name = "Tiny BASIC Compiler",
         mixinStandardHelpOptions = true,
@@ -55,6 +56,10 @@ public final class EntryPoint implements Runnable {
 
     @Parameters(description = "The input file, containing Tiny BASIC source code.")
     private Path inputPath;
+
+    public static void main(String[] args) {
+        System.exit(new CommandLine(new EntryPoint()).execute(args));
+    }
 
     @Override
     public void run() {
@@ -112,7 +117,7 @@ public final class EntryPoint implements Runnable {
 
             return tokenizerType.getConstructor(TokenizerPatternsCache.class).newInstance(getRegexCache());
 
-        } catch(ReflectiveOperationException e) {
+        } catch (ReflectiveOperationException e) {
             LOGGER.log(Level.SEVERE, "Error instantiating tokenizer: " + tokenizerType, e);
 
             throw new RuntimeException("Failed to instantiate tokenizer!", e);
@@ -133,7 +138,7 @@ public final class EntryPoint implements Runnable {
      * Generates a DOT graph description for the given {@link Program} as the root node of the abstract syntax tree.
      *
      * @param program the program to create a graph description of.
-     * @param path the {@link Path} to write the DOT graph description to.
+     * @param path    the {@link Path} to write the DOT graph description to.
      */
     private void graphAbstractSyntaxTree(Program program, Path path) {
         GraphDescriptionVisitor visitor = new GraphDescriptionVisitor(program.getName());
@@ -174,10 +179,6 @@ public final class EntryPoint implements Runnable {
         }
 
         System.out.println(path.toAbsolutePath());
-    }
-
-    public static void main(String[] args) {
-        System.exit(new CommandLine(new EntryPoint()).execute(args));
     }
 
 }

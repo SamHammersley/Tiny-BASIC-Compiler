@@ -15,14 +15,14 @@ import java.util.*;
  * Traverses an Abstract Syntax Tree starting, invariably, at a {@link Program} node as the root node. The purpose
  * of this class is to further analyse the source input, in the form of an abstract syntax tree intermediate
  * representation, after it has been parsed.
- *
+ * <p>
  * This includes the following verifications:
  * <ul>
- *    <li>That line numbers are consecutive multiples of 10.</li>
- *    <li>That branch statements point to existing lines.</li>
- *    <li>That a gosub statement has a corresponding return statement.</li>
- *    <li>That referenced variables have been declared.</li>
- *    <li>That a program ends.</li>
+ * <li>That line numbers are consecutive multiples of 10.</li>
+ * <li>That branch statements point to existing lines.</li>
+ * <li>That a gosub statement has a corresponding return statement.</li>
+ * <li>That referenced variables have been declared.</li>
+ * <li>That a program ends.</li>
  * </ul>
  *
  * @author Sam Hammersley - Gonsalves (q5315908)

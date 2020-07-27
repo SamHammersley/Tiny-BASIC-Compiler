@@ -8,11 +8,11 @@ import uk.ac.tees.syntax.grammar.expression.UnaryExpression;
 import uk.ac.tees.syntax.grammar.expression.UnaryOperator;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticOperator;
+import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.factor.StringLiteral;
-import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
-import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
 import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
@@ -37,23 +37,6 @@ import static uk.ac.tees.tokenizer.Token.Type.*;
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class RecursiveDescentParser extends Parser {
-
-    /**
-     * Represents a function that parses and returns a {@link Statement}.
-     *
-     * @author Sam Hammersley - Gonsalves (q5315908)
-     */
-    private interface StatementParser {
-
-        /**
-         * Parses a {@link Statement}, using tokens from {@link RecursiveDescentParser#supplier}.
-         *
-         * @return the parsed {@link Statement}.
-         * @throws ParseException when input is syntactically incorrect.
-         */
-        Statement parse() throws ParseException;
-
-    }
 
     /**
      * Maps keyword values to statement parsing functions.
@@ -411,6 +394,23 @@ public final class RecursiveDescentParser extends Parser {
         }
 
         return factor;
+    }
+
+    /**
+     * Represents a function that parses and returns a {@link Statement}.
+     *
+     * @author Sam Hammersley - Gonsalves (q5315908)
+     */
+    private interface StatementParser {
+
+        /**
+         * Parses a {@link Statement}, using tokens from {@link RecursiveDescentParser#supplier}.
+         *
+         * @return the parsed {@link Statement}.
+         * @throws ParseException when input is syntactically incorrect.
+         */
+        Statement parse() throws ParseException;
+
     }
 
 }

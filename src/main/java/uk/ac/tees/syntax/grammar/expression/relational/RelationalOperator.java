@@ -33,22 +33,6 @@ public enum RelationalOperator implements BinaryOperator {
         this.symbol = symbol;
     }
 
-    public RelationalOperator negate() {
-        switch(this) {
-            case LESS: return GREATER_EQUAL;
-            case LESS_EQUAL: return GREATER;
-
-            case GREATER: return LESS_EQUAL;
-            case GREATER_EQUAL: return LESS;
-
-            case EQUAL: return NOT_EQUAL;
-            case NOT_EQUAL: return EQUAL;
-
-            default:
-                throw new RuntimeException();
-        }
-    }
-
     /**
      * Gets the {@link RelationalOperator} associated with the specified symbol.
      *
@@ -61,6 +45,28 @@ public enum RelationalOperator implements BinaryOperator {
                 .filter(o -> o.symbol.equals(symbol))
                 .findAny()
                 .orElseThrow(NoSuchElementException::new);
+    }
+
+    public RelationalOperator negate() {
+        switch (this) {
+            case LESS:
+                return GREATER_EQUAL;
+            case LESS_EQUAL:
+                return GREATER;
+
+            case GREATER:
+                return LESS_EQUAL;
+            case GREATER_EQUAL:
+                return LESS;
+
+            case EQUAL:
+                return NOT_EQUAL;
+            case NOT_EQUAL:
+                return EQUAL;
+
+            default:
+                throw new RuntimeException();
+        }
     }
 
     @Override

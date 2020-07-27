@@ -6,10 +6,10 @@ import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticOperator;
-import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
-import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalBinaryExpression;
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
+import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
+import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
 import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
@@ -78,7 +78,7 @@ class RecursiveDescentParserTest {
                 new IdentifierFactor('B'), new NumberFactor(1), ArithmeticOperator.SUB);
 
         // e2Left * 10 (5 * 10)
-        ArithmeticBinaryExpression e1Right = new ArithmeticBinaryExpression(e2Left,  new NumberFactor(10), ArithmeticOperator.MUL);
+        ArithmeticBinaryExpression e1Right = new ArithmeticBinaryExpression(e2Left, new NumberFactor(10), ArithmeticOperator.MUL);
 
         // e1Left + e1Right (36 + 50)
         ArithmeticBinaryExpression printExpression = new ArithmeticBinaryExpression(e1Left, e1Right, ArithmeticOperator.ADD);
@@ -129,11 +129,11 @@ class RecursiveDescentParserTest {
         when(mockSupplier.getValue(any())).thenCallRealMethod().thenCallRealMethod().thenCallRealMethod().thenReturn(10);
 
         when(mockSupplier.getCurrentToken())
-            .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1))
-            .thenReturn(new Token(Token.Type.KEYWORD, "LET", 1, 4))
-            .thenReturn(new Token(IDENTIFIER, "X", 1, 8))
-            .thenReturn(new Token(REL_OP, "=", 1, 10))
-            .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1));
+                .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1))
+                .thenReturn(new Token(Token.Type.KEYWORD, "LET", 1, 4))
+                .thenReturn(new Token(IDENTIFIER, "X", 1, 8))
+                .thenReturn(new Token(REL_OP, "=", 1, 10))
+                .thenReturn(new Token(Token.Type.NUMBER, "10", 1, 1));
 
         RecursiveDescentParser parser = new RecursiveDescentParser(mockSupplier);
         Line actual = parser.parseLine();

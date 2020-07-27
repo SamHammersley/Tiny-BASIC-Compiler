@@ -14,19 +14,22 @@ import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.factor.StringLiteral;
 import uk.ac.tees.syntax.grammar.statement.*;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An {@link AbstractSyntaxTreeVisitor} that creates a DOT graph description for a given Abstract Syntax Tree. DOT
  * is a graph description language whereby described graphs can be visualised using Graphviz software.
- *
+ * <p>
  * A graph description can be generated for any Abstract Syntax Tree or sub-tree of an Abstract Syntax Tree.
  *
  * <p>
- * @see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>
- * <p>
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
+ * @see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>
+ * <p>
  */
 public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<String, AbstractSyntaxTreeNode> {
 
@@ -65,7 +68,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * Constructs a {@link GraphDescriptionVisitor} with a given outputFile and graphName. If no outputFile is given,
      * the graph description produced will not be persisted in a file.
      *
-     * @param graphName  the name of the graph (typically the name of the program).
+     * @param graphName the name of the graph (typically the name of the program).
      */
     public GraphDescriptionVisitor(String graphName) {
         this.graphBuilder = new StringBuilder(String.format(DOT_FILE_HEADER_FORMAT, graphName));
@@ -76,7 +79,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * arrow going down.
      *
      * @param parent the parent node.
-     * @param child the child node.
+     * @param child  the child node.
      */
     private void associate(AbstractSyntaxTreeNode parent, AbstractSyntaxTreeNode child) {
         int parentId = System.identityHashCode(parent);
@@ -115,7 +118,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * Adds a graph node with the given id and label to the graph description. Nodes are identifiable by their
      * identity hashCode, {@link System#identityHashCode(Object)}.
      *
-     * @param id the id of node to add to the graph description.
+     * @param id    the id of node to add to the graph description.
      * @param label the label for the node to add.
      */
     private void addNode(int id, String label) {
@@ -126,7 +129,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
      * Adds an association/edge between a parent node and a child node. Using the following syntax:
      *
      * <pre>{@code parent_node_id -> child_node_id}</pre>
-     *
+     * <p>
      * In this case, {@link System#identityHashCode(Object)} is used to identify node objects.
      *
      * @param parentId the id of the parent node to connect the edge to.
@@ -147,7 +150,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
         return graphBuilder.append(DOT_FILE_FOOTER).toString();
     }
 
-    @Visitor(types={
+    @Visitor(types = {
             UnassignedIdentifier.class, IdentifierFactor.class,
             NumberFactor.class, StringLiteral.class,
             ReturnStatement.class, EndStatement.class
@@ -162,7 +165,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
         associate(node, node.getExpression());
     }
 
-    @Visitor(types={ArithmeticBinaryExpression.class, RelationalBinaryExpression.class})
+    @Visitor(types = {ArithmeticBinaryExpression.class, RelationalBinaryExpression.class})
     private <T extends BinaryOperator> void visit(BinaryExpression<T> node) {
         create(node);
         associate(node, node.getLeft());

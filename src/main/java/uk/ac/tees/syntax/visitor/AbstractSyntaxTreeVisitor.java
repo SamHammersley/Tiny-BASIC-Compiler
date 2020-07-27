@@ -10,16 +10,15 @@ import java.util.Optional;
 /**
  * A method is an appropriate visitor where the method is annotated with the {@link Visitor} annotation and the
  * the given node's type either matches that of the parameter or is listed in the annotation as an accepted type.
- *
+ * <p>
  * If there is no appropriate visitor method for a type of node, then there is no implemented behaviour for nodes of
  * that type in this implementation.
- *
+ * <p>
  * This class is an implementation of the Visitor pattern, a behavioural design pattern. It allows the tree to be
  * visited and evaluated in a certain way without adding behaviour to the nodes themselves.
  *
  * @param <T> the expected output type from visiting an Abstract Syntax Tree.
  * @param <K> the expected input type of the root node of the visited Abstract Syntax Tree.
- *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeNode> {
@@ -50,7 +49,7 @@ public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeN
      * Invokes a method with the given {@link AbstractSyntaxTreeNode} as a parameter.
      *
      * @param visitor the method to invoke.
-     * @param node the node to be given as a parameter to the visitor method.
+     * @param node    the node to be given as a parameter to the visitor method.
      */
     private void invokeVisitor(Method visitor, AbstractSyntaxTreeNode node) {
         try {
@@ -68,7 +67,7 @@ public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeN
     /**
      * This function determines whether a given method is appropriate for the given node.
      *
-     * @param node the node that is to be visited.
+     * @param node   the node that is to be visited.
      * @param method the method that is being checked.
      * @return {@code true} if the given method is appropriate for the given node.
      */

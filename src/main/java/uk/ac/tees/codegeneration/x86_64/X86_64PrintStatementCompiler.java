@@ -10,7 +10,6 @@ import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 import uk.ac.tees.syntax.visitor.Visitor;
 
 import static uk.ac.tees.codegeneration.x86_64.X86_64CompilerConstants.*;
-import static uk.ac.tees.codegeneration.x86_64.X86_64CompilerConstants.STD_OUT_FILE_DESCRIPTOR;
 
 /**
  * An {@link AbstractSyntaxTreeVisitor} for compiling {@link PrintStatement}s,
@@ -59,7 +58,7 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
     /**
      * Calls {@link X86_64CompilerConstants#systemCall} with parameters for writing to standard out,
      *
-     * @param address the address of the bytes to write.
+     * @param address     the address of the bytes to write.
      * @param operandSize the amount of bytes to print.
      */
     private void print(String address, int operandSize) {

@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class RelationalBinaryExpression  extends BinaryExpression<RelationalOperator> {
+public final class RelationalBinaryExpression extends BinaryExpression<RelationalOperator> {
 
     public RelationalBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, RelationalOperator operator) {
         super(left, right, operator);

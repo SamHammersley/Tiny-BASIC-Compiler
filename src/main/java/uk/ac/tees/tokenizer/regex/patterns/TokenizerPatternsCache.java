@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * Represents a temporary dictionary of {@link Token.Type}s and corresponding {@link Pattern}s.
- *
+ * <p>
  * This class encapsulates the associations between Token types and regular expression patterns. Supported
  * {@link Token.Type}s are associated with {@link Pattern}s as key-value pairs.
  *

@@ -2,10 +2,11 @@ package uk.ac.tees.tokenizer.regex.patterns;
 
 import uk.ac.tees.tokenizer.Token;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -49,7 +50,7 @@ public final class FromURLProvider extends TokenizerPatternsProvider {
                 map.put(Token.Type.valueOf(parts[0]), Pattern.compile(parts[1]));
             });
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
 
