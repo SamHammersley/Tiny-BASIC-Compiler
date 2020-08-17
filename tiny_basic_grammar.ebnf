@@ -1,6 +1,7 @@
+<program> ::= <line>+
 <line> ::= <number> "0 " <statement> "\n"
 
-<statement> ::= "PRINT " <expression_list> |
+<statement> ::= "PRINT " (<string> | <expression>) ("," (<string> | <expression>))* |
               "IF " <expression> <relational_op> <expression> " THEN " <statement> |
               "INPUT " <identifier_list> |
               "LET " <identifier> "=" <expression> |
@@ -15,7 +16,6 @@
 <factor> ::= ("+" | "-") factor | <identifier> | <number> | "(" <expression> ")"
 <term> ::= <factor> (("*" | "/") <factor>)*
 <expression> ::= <term> (("+" | "-") <term>)*
-<expression_list> ::= (<string> | <expression>) ("," (<string> | <expression>))*
 <identifier> ::= <uppercase>
 <identifier_list> ::= <identifier> ("," <identifier>)*
 <number> ::= <digit> <digit>*
