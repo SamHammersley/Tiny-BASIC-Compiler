@@ -4,6 +4,7 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
+import uk.ac.tees.syntax.grammar.expression.Expression;
 import uk.ac.tees.syntax.grammar.expression.UnaryExpression;
 import uk.ac.tees.syntax.grammar.expression.UnaryOperator;
 import uk.ac.tees.syntax.grammar.expression.arithmetic.ArithmeticBinaryExpression;
@@ -307,8 +308,8 @@ public final class RecursiveDescentParser extends Parser {
      * @return {@link AbstractSyntaxTreeNode} representing the root node of an expression abstract syntax tree.
      * @throws ParseException where the given token sequence is syntactically incorrect.
      */
-    private AbstractSyntaxTreeNode parseExpression() throws ParseException {
-        AbstractSyntaxTreeNode expression = parseTerm();
+    private Expression parseExpression() throws ParseException {
+        Expression expression = parseTerm();
 
         while (supplier.currentTypeIs(PLUS, MINUS)) {
             ArithmeticOperator operator = supplier.getValue(ArithmeticOperator::fromSymbol);
@@ -331,8 +332,8 @@ public final class RecursiveDescentParser extends Parser {
      * tree.
      * @throws ParseException where the given token sequence is syntactically incorrect.
      */
-    private AbstractSyntaxTreeNode parseTerm() throws ParseException {
-        AbstractSyntaxTreeNode term = parseFactor();
+    private Expression parseTerm() throws ParseException {
+        Expression term = parseFactor();
 
         while (supplier.currentTypeIs(MULTIPLY, DIV)) {
             ArithmeticOperator operator = supplier.getValue(ArithmeticOperator::fromSymbol);
@@ -354,10 +355,10 @@ public final class RecursiveDescentParser extends Parser {
      * @return an {@link AbstractSyntaxTreeNode} representing a factor in an expression.
      * @throws ParseException where the given token sequence is syntactically incorrect.
      */
-    private AbstractSyntaxTreeNode parseFactor() throws ParseException {
+    private Expression parseFactor() throws ParseException {
         supplier.predictType(PLUS, MINUS, L_PARENTHESES, NUMBER, IDENTIFIER);
 
-        AbstractSyntaxTreeNode factor;
+        Expression factor;
 
         switch (supplier.getType()) {
 
@@ -371,7 +372,7 @@ public final class RecursiveDescentParser extends Parser {
 
             case L_PARENTHESES:
                 supplier.scan();
-                AbstractSyntaxTreeNode expression = parseExpression();
+                Expression expression = parseExpression();
                 supplier.predictType(R_PARENTHESES);
 
                 factor = expression;

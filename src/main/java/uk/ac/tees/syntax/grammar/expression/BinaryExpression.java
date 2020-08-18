@@ -10,7 +10,7 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
  * @param <T> the binary operator type.
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public abstract class BinaryExpression<T extends BinaryOperator> implements AbstractSyntaxTreeNode {
+public abstract class BinaryExpression<T extends BinaryOperator> implements Expression {
 
     /**
      * The left hand side of the expression, this is a node of the tree and may itself be an expression.

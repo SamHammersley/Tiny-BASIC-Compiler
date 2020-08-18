@@ -2,6 +2,7 @@ package uk.ac.tees.syntax.grammar.factor;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Identifier;
+import uk.ac.tees.syntax.grammar.expression.Expression;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class IdentifierFactor extends Identifier {
+public final class IdentifierFactor extends Identifier implements Expression {
 
     public IdentifierFactor(char name) {
         super(name);

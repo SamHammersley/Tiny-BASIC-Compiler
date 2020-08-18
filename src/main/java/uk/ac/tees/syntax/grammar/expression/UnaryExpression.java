@@ -8,7 +8,7 @@ import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-public final class UnaryExpression implements AbstractSyntaxTreeNode {
+public final class UnaryExpression implements Expression {
 
     /**
      * The operator prefixing {@link #expression}.
