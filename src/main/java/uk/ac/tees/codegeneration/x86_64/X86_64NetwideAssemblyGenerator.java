@@ -65,6 +65,11 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
     private int currentLine;
 
     /**
+     * Denotes whether the ascii conversion function is required.
+     */
+    private boolean addAsciiConvert;
+
+    /**
      * Gets the offset from stack frame base pointer for the given identifier.
      *
      * @param identifier the identifier to get the offset for.
@@ -79,8 +84,6 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
     public String visitTree(Program root) {
         root.accept(this);
 
-        addDecimalToAsciiFunction();
-
         // this is inserted since data section is not ready before hand.
         builder.insert(0, dataSection);
 
@@ -89,6 +92,10 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
         // stack grows down so we sub to reserve enough space on the stack for local variables.
         String reserved = INDENTATION + "sub rsp, " + localVariableAddress.size() * Long.BYTES + "\n";
         builder.replace(index, index + LOCAL_VAR_RESERVE_PLACE_HOLDER.length(), reserved);
+
+        if (addAsciiConvert) {
+            addDecimalToAsciiFunction();
+        }
 
         return builder.toString();
     }
@@ -191,7 +198,10 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
 
     @Visitor
     private void visit(PrintStatement node) {
-        builder.append(new X86_64PrintStatementCompiler(dataSection).visitTree(node));
+        X86_64PrintStatementCompiler printer = new X86_64PrintStatementCompiler(dataSection);
+
+        builder.append(printer.visitTree(node));
+        addAsciiConvert |= printer.shouldConvert();
     }
 
     @Visitor

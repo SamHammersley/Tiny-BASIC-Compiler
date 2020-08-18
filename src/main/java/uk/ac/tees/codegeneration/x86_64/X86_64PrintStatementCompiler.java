@@ -28,6 +28,11 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
      */
     private final StringBuilder builder = new StringBuilder();
 
+    /**
+     * Denotes whether the ascii conversion function is required.
+     */
+    private boolean addAsciiConvert;
+
     X86_64PrintStatementCompiler(X86_64DataSection dataSection) {
         this.dataSection = dataSection;
     }
@@ -39,9 +44,14 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
         return builder.toString();
     }
 
+    public boolean shouldConvert() {
+        return addAsciiConvert;
+    }
+
     @Visitor(types = {NumberFactor.class, IdentifierFactor.class, ArithmeticBinaryExpression.class})
     private void visit(AbstractSyntaxTreeNode node) {
-        builder.append(INDENTATION).append("call ascii_conversion\n");
+        addAsciiConvert = true;
+        builder.append(INDENTATION).append(CALL_ASCII_CONVERSION).append('\n');
         print("rsp", 8);
         builder.append(INDENTATION).append("pop rax\n");
     }
