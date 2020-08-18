@@ -5,7 +5,10 @@ import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * A method is an appropriate visitor where the method is annotated with the {@link Visitor} annotation and the
@@ -32,17 +35,24 @@ public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeN
     public abstract T visitTree(K rootNode);
 
     /**
+     * Maps {@link AbstractSyntaxTreeNode} types to visitors.
+     */
+    private final Map<Class<? extends AbstractSyntaxTreeNode>, Method> visitors = new HashMap<>();
+
+    /**
      * Visits the given node by finding the appropriate visitor method and invoking that method.
      *
      * @param node the node to visit.
      */
     public void visitNode(AbstractSyntaxTreeNode node) {
-        Optional<Method> visitor = Arrays
+        Optional<Method> visitor = Optional.ofNullable(visitors.get(node.getClass()));
+
+        Supplier<Optional<Method>> search = Arrays
                 .stream(getClass().getDeclaredMethods())
                 .filter(m -> isAppropriateVisitor(node, m))
-                .findAny();
+                ::findAny;
 
-        visitor.ifPresent(m -> invokeVisitor(m, node));
+        visitor.or(search).ifPresent(m -> invokeVisitor(m, node));
     }
 
     /**
@@ -52,6 +62,8 @@ public abstract class AbstractSyntaxTreeVisitor<T, K extends AbstractSyntaxTreeN
      * @param node    the node to be given as a parameter to the visitor method.
      */
     private void invokeVisitor(Method visitor, AbstractSyntaxTreeNode node) {
+        visitors.putIfAbsent(node.getClass(), visitor);
+
         try {
             visitor.setAccessible(true);
             visitor.invoke(this, node);
