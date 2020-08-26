@@ -1,6 +1,7 @@
 package uk.ac.tees.syntax.grammar.expression;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
+import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 /**
  * An expression with two operands and an operator. This class is a composite {@link AbstractSyntaxTreeNode} and can be
@@ -31,6 +32,16 @@ public abstract class BinaryExpression<T extends BinaryOperator> implements Expr
         this.left = left;
         this.right = right;
         this.operator = operator;
+    }
+
+    @Override
+    public <S, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<S, K> visitor) {
+        // Need to accept both sides/child nodes of the expression first.
+        left.accept(visitor);
+        right.accept(visitor);
+
+        // Then visit this node.
+        visitor.visitNode(this);
     }
 
     /**

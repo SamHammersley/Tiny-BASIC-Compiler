@@ -2,7 +2,6 @@ package uk.ac.tees.syntax.grammar.expression.arithmetic;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.expression.BinaryExpression;
-import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 import java.util.Objects;
 
@@ -15,16 +14,6 @@ public final class ArithmeticBinaryExpression extends BinaryExpression<Arithmeti
 
     public ArithmeticBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, ArithmeticOperator operator) {
         super(left, right, operator);
-    }
-
-    @Override
-    public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
-        // Need to accept both sides/child nodes of the expression first.
-        left.accept(visitor);
-        right.accept(visitor);
-
-        // Then visit this node.
-        visitor.visitNode(this);
     }
 
     @Override
