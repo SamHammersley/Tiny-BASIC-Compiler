@@ -140,7 +140,9 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
 
     @Visitor
     private void visit(StringLiteral node) {
-        dataSection.addEntry(node.getValue(), "db");
+        String value = node.getValue().replace("\\n", "\",0xA,\"");
+
+        dataSection.addEntry(value, "db");
     }
 
     @Visitor

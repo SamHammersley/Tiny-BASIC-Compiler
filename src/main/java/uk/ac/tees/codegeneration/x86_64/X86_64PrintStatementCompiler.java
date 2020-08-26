@@ -58,7 +58,7 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
 
     @Visitor
     private void visit(StringLiteral node) {
-        String operand = node.getValue();
+        String operand = node.getValue().replace("\\n", "\",0xA,\"");
         String label = dataSection.getLabel(operand);
         // -2 for the quotation marks
         int operandSize = operand.length() - 2;
