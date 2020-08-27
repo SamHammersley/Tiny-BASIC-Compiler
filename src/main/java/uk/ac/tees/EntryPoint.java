@@ -75,9 +75,9 @@ public final class EntryPoint implements Runnable {
             Parser parser = new RecursiveDescentParser(supplier);
             Program abstractSyntaxTree = new ProgramSemanticsAnalyser().visitTree(parser.parse(name));
 
-            Optional.ofNullable(graphStructure).ifPresent(path -> graphAbstractSyntaxTree(abstractSyntaxTree, path));
-
             compile(abstractSyntaxTree);
+
+            Optional.ofNullable(graphStructure).ifPresent(path -> graphAbstractSyntaxTree(abstractSyntaxTree, path));
 
         } catch (TokenizationException e) {
             LOGGER.log(Level.SEVERE, "Error tokenizing: " + input, e);
@@ -143,6 +143,10 @@ public final class EntryPoint implements Runnable {
     private void graphAbstractSyntaxTree(Program program, Path path) {
         GraphDescriptionVisitor visitor = new GraphDescriptionVisitor(program.getName());
         String graphDescription = visitor.visitTree(program);
+
+        if (Files.isDirectory(path)) {
+            path = path.resolve(program.getName() + ".gv");
+        }
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(graphDescription);
