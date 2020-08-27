@@ -70,6 +70,11 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
     private boolean addAsciiConvert;
 
     /**
+     * Denotes whether the ascii deconversion function is required.
+     */
+    private boolean addAsciiDeconvert;
+
+    /**
      * Gets the offset from stack frame base pointer for the given identifier.
      *
      * @param identifier the identifier to get the offset for.
@@ -95,6 +100,10 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
 
         if (addAsciiConvert) {
             addDecimalToAsciiFunction();
+        }
+
+        if (addAsciiDeconvert) {
+            addAsciiToDecimalFunction();
         }
 
         return builder.toString();
@@ -244,7 +253,13 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
 
             builder.append(INDENTATION).append("lea r8, [rbp - ").append(addressOffset).append("]\n");
             systemCall(builder, SYS_READ_ID, STD_IN_FILE_DESCRIPTOR, "r8", 8);
+            builder.append(INDENTATION).append("mov rax, [rbp - ").append(addressOffset).append("]\n");
+            builder.append(INDENTATION).append("push rax").append('\n');
+            builder.append(INDENTATION).append(CALL_ASCII_DECONVERSION).append('\n');
+            builder.append(INDENTATION).append("pop rax").append('\n');
+            builder.append(INDENTATION).append("mov [rbp - ").append(addressOffset).append("], rax").append('\n');
         }
+        addAsciiDeconvert = true;
     }
 
     /**
@@ -265,7 +280,7 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
 
         // declare loop label, this location will be returned to for each byte.
         builder.append("add_ascii_offset_loop:\n")
-                // clear the rdx register for the division.
+                // clear the rdx register for the division, remainder goes in rdx register.
                 .append(INDENTATION).append("xor rdx, rdx\n")
                 // divide the value by the ascii decimal divisor, to get the remainder as the next digit.
                 .append(INDENTATION).append("idiv r9\n")
@@ -282,7 +297,48 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
                 .append(INDENTATION).append("push r10\n")
                 // push return address back onto stack for ret.
                 .append(INDENTATION).append("push r8\n")
-                .append(INDENTATION).append("ret");
+                .append(INDENTATION).append("ret\n");
+    }
+
+    /**
+     * Writes the assembly code for a function that converts each ascii representation, in a string of bytes, to the
+     * corresponding decimal value. This function essentially removes an offset (48) from each 2-byte ascii value and
+     * then joins back together the new values, in a register, which is then pushed onto the stack.
+     */
+    private void addAsciiToDecimalFunction() {
+        builder.append("ascii_deconversion:\n")
+                // preserve return address in r8 register.
+                .append(INDENTATION).append("pop r8\n")
+                // pop the value to deconvert off the stack into r9.
+                .append(INDENTATION).append("pop r9\n")
+                // clear r10, this register will hold the converted value.
+                .append(INDENTATION).append("mov r10, 0\n");
+
+        // declare loop label, this location will be returned to for each byte.
+        builder.append("sub_ascii_offset_loop:\n")
+                // mov value to deconvert into r9
+                .append(INDENTATION).append("mov rax, r9\n")
+                // get 2 least significant bytes
+                .append(INDENTATION).append("and rax, 0xFF\n")
+                .append(INDENTATION).append("cmp rax, 48\n")
+                .append(INDENTATION).append("jl skip_digit\n")
+                // subtract offset
+                .append(INDENTATION).append("sub rax, 48\n")
+                // get digit
+                .append(INDENTATION).append("and rax, 0xF\n")
+                // or digit onto return value
+                .append(INDENTATION).append("or r10, rax\n")
+                // shift digit up 4 bits
+                .append(INDENTATION).append("shl r10, 4\n")
+                .append(INDENTATION).append("skip_digit:\n")
+                // shift value to deconvert up a byte
+                .append(INDENTATION).append("shr r9, 8\n")
+                .append(INDENTATION).append("cmp r9, 0\n")
+                .append(INDENTATION).append("jne sub_ascii_offset_loop\n")
+                .append(INDENTATION).append("shr r10, 4\n")
+                .append(INDENTATION).append("push r10\n")
+                .append(INDENTATION).append("push r8\n")
+                .append(INDENTATION).append("ret\n");
     }
 
     @Override

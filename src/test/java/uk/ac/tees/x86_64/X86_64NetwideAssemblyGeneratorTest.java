@@ -108,7 +108,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
                     "    jne add_ascii_offset_loop\n" +
                     "    push r10\n" +
                     "    push r8\n" +
-                    "    ret";
+                    "    ret\n";
 
     private Program manualAbstractSyntaxTree() {
         // B * B (6 * 6)
@@ -155,12 +155,24 @@ final class X86_64NetwideAssemblyGeneratorTest {
                         "    mov rsi, r8\n" +
                         "    mov rdx, 8\n" +
                         "    syscall\n" +
+
+                        "    mov rax, [rbp - 8]\n" +
+                        "    push rax\n" +
+                        "    call ascii_deconversion\n" +
+                        "    pop rax\n" +
+                        "    mov [rbp - 8], rax\n" +
+
                         "    lea r8, [rbp - 16]\n" +
                         "    mov rax, 0\n" +
                         "    mov rdi, 0\n" +
                         "    mov rsi, r8\n" +
                         "    mov rdx, 8\n" +
-                        "    syscall\n";
+                        "    syscall\n" +
+                        "    mov rax, [rbp - 16]\n" +
+                        "    push rax\n" +
+                        "    call ascii_deconversion\n" +
+                        "    pop rax\n" +
+                        "    mov [rbp - 16], rax\n";
 
         X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
         List<UnassignedIdentifier> ids = List.of(
