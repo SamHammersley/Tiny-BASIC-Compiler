@@ -1,4 +1,5 @@
 # Tiny BASIC compiler
+Targeted at x86-64 Linux machines, produces an elf64 executable file (requires Netwide Assembler and ld (GNU linker) to be installed). Also requires Java 11.
 ## Usage
 The application expects some program arguments, they are as follows:
 ```
