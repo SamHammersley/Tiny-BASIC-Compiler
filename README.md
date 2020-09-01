@@ -56,7 +56,11 @@ There are three different strategies used to tokenize Tiny BASIC source code inp
  * uk.ac.tees.tokenizer.regex.group.GroupingRegexTokenizer
  * uk.ac.tees.tokenizer.regex.sequential.SequentialRegexTokenizer
 
-Two of the tokenizers use regular expressions to find supported tokens in an input source. The tokenizers throw an exception where there are unsupported/undefined tokens in the input.
+The FlagTokenizer basically models a DFSA in the following form:
+
+![Tiny BASIC Tokenizer Deterministic Finite State Automata](https://github.com/SamHammersley/tiny_basic_compiler/blob/assets/images/TokenizerFSA.png)
+
+The other two tokenizers use regular expressions to find supported tokens in an input source. The tokenizers throw an exception where there are unsupported/undefined tokens in the input.
 
 ### Regex Tokenizers
 The difference between these two tokenization strategies is rooted in the order by which tokens are matched.
