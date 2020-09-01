@@ -11,7 +11,7 @@ import uk.ac.tees.syntax.parser.Parser;
 import uk.ac.tees.syntax.parser.RecursiveDescentParser;
 import uk.ac.tees.syntax.parser.TokenSupplier;
 import uk.ac.tees.syntax.parser.exception.ParseException;
-import uk.ac.tees.syntax.visitor.GraphDescriptionVisitor;
+import uk.ac.tees.syntax.graph.GraphDescriptionVisitor;
 import uk.ac.tees.tokenizer.TinyBasicTokenizer;
 import uk.ac.tees.tokenizer.Token;
 import uk.ac.tees.tokenizer.TokenizationException;
