@@ -26,7 +26,6 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
         column = row = 1;
 
         Queue<Token> tokens = new LinkedList<>();
-
         Queue<Character> chars = input.chars().mapToObj(i -> (char) i).collect(Collectors.toCollection(LinkedList::new));
 
         while (!chars.isEmpty()) {
@@ -40,14 +39,23 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
                 continue;
             }
 
-            UnexpectedCharacterException e = new UnexpectedCharacterException(row, column);
-            Token nextToken = nextToken(nextCharacter, chars).orElseThrow(() -> e);
+            Token nextToken = nextToken(nextCharacter, chars)
+                    .orElseThrow(this::createUnexpectedCharacterException);
 
             column += nextToken.getValue().length();
             tokens.add(nextToken);
         }
 
         return tokens;
+    }
+
+    /**
+     * Creates a new instance of {@link UnexpectedCharacterException} using the current column and row values.
+     *
+     * @return a new {@link UnexpectedCharacterException} using values {@link #row} and {@link #column}
+     */
+    private UnexpectedCharacterException createUnexpectedCharacterException() {
+        return new UnexpectedCharacterException(row, column);
     }
 
     /**
