@@ -13,28 +13,28 @@ public final class UnexpectedCharacterException extends TokenizationException {
     private static final String MESSAGE_FORMAT = "Unexpected character on line %d, character %d)";
 
     /**
-     * The line on which there exists an unexpected character.
+     * The row on which there exists an unexpected character.
      */
-    private final int line;
+    private final int row;
 
     /**
-     * The character index at which the unexpected character is placed.
+     * The character column at which the unexpected character is placed.
      */
-    private final int index;
+    private final int column;
 
-    public UnexpectedCharacterException(int line, int index) {
-        super(String.format(MESSAGE_FORMAT, line, index));
+    public UnexpectedCharacterException(int row, int column) {
+        super(String.format(MESSAGE_FORMAT, row, column));
 
-        this.line = line;
-        this.index = index;
+        this.row = row;
+        this.column = column;
     }
 
-    public int getLine() {
-        return line;
+    public int getRow() {
+        return row;
     }
 
-    public int getIndex() {
-        return index;
+    public int getColumn() {
+        return column;
     }
 
 }

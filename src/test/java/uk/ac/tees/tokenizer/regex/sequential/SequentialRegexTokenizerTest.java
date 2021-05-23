@@ -42,8 +42,8 @@ final class SequentialRegexTokenizerTest {
         UnexpectedCharacterException e = assertThrows(UnexpectedCharacterException.class,
                 () -> tokenizer.tokenize("10 LET N = 5\n20 PRINT N\n30 LET ]"));
 
-        assertEquals(8, e.getIndex());
-        assertEquals(3, e.getLine());
+        assertEquals(8, e.getColumn());
+        assertEquals(3, e.getRow());
 
         assertEquals("Unexpected character on line 3, character 8)", e.getMessage());
 
