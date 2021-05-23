@@ -20,14 +20,14 @@ public final class Token {
     private final String value;
 
     /**
-     * Encapsulates row and column positions of this token, bit-packed. First 16 bits represents the row, final 16 bits
-     * represents the column.
-     * <p>
-     * There are potentially many tokens in a piece of source code text therefore, in order to minimise the space each
-     * token occupies in memory, row and column data is packed with one integer. This allocates 16 bits for each piece
-     * of data.
+     * The line on which this token resides.
      */
-    private final int position;
+    private final int row;
+
+    /**
+     * The column at which this token starts.
+     */
+    private final int column;
 
     /**
      * Constructs a new {@link Token} with a given {@link #type} and value;
@@ -40,7 +40,8 @@ public final class Token {
     public Token(Type type, String value, int row, int column) {
         this.type = type;
         this.value = value;
-        this.position = row << 16 | (column & 0xFFFF);
+        this.row = row;
+        this.column = column;
     }
 
     /**
@@ -67,7 +68,7 @@ public final class Token {
      * @return the row/line this token is at in the source code.
      */
     public int getRow() {
-        return position >> 16;
+        return row;
     }
 
     /**
@@ -76,7 +77,7 @@ public final class Token {
      * @return the column this token starts at in the source code.
      */
     public int getColumn() {
-        return position & 0xFFFF;
+        return column;
     }
 
     @Override
