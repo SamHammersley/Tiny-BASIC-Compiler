@@ -1,6 +1,7 @@
-package uk.ac.tees.tokenizer.regex.sequential;
+package uk.ac.tees.tokenizer;
 
 import org.junit.jupiter.api.Test;
+import uk.ac.tees.tokenizer.TokenizerCursor;
 
 import static org.junit.jupiter.api.Assertions.*;
 

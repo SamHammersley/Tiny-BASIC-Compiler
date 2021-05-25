@@ -6,7 +6,7 @@ package uk.ac.tees.tokenizer.regex.sequential;
  *
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
-final class TokenizerCursor {
+public final class TokenizerCursor {
 
     /**
      * The current row (line).
@@ -28,14 +28,14 @@ final class TokenizerCursor {
      *
      * @param input the initial input.
      */
-    TokenizerCursor(String input) {
+    public TokenizerCursor(String input) {
         this.remainingInput = input;
     }
 
     /**
      * Progresses the cursor to the next line. {@link #row} is incremented and {@link #column} is reset to 1.
      */
-    void nextLine() {
+    public void nextLine() {
         row++;
         column = 1;
     }
@@ -45,7 +45,7 @@ final class TokenizerCursor {
      *
      * @return {@link #row}.
      */
-    int row() {
+    public int row() {
         return row;
     }
 
@@ -54,7 +54,7 @@ final class TokenizerCursor {
      *
      * @return {@link #column}.
      */
-    int column() {
+    public int column() {
         return column;
     }
 
@@ -63,7 +63,7 @@ final class TokenizerCursor {
      *
      * @param value the string value, to move the cursor for.
      */
-    void advance(String value) {
+    public void advance(String value) {
         if (!remainingInput.startsWith(value)) {
             throw new IllegalStateException("The remaining string does not contain " + value);
         }
@@ -78,7 +78,7 @@ final class TokenizerCursor {
      *
      * @return {@link #remainingInput}.
      */
-    String remaining() {
+    public String remaining() {
         return remainingInput;
     }
 
@@ -87,7 +87,7 @@ final class TokenizerCursor {
      *
      * @return {@code true} if there is remaining input, substring of input from the current position.
      */
-    boolean hasRemaining() {
+    public boolean hasRemaining() {
         return !remainingInput.isBlank();
     }
 
