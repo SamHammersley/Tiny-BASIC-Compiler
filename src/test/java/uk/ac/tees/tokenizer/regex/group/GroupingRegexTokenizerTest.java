@@ -50,7 +50,7 @@ final class GroupingRegexTokenizerTest {
         assertEquals(8, e.getColumn());
         assertEquals(3, e.getRow());
 
-        assertEquals("Unexpected character on line 3, character 8)", e.getMessage());
+        assertEquals("Unexpected character on line 3, character 8", e.getMessage());
 
         verifyInvocations(mock);
     }

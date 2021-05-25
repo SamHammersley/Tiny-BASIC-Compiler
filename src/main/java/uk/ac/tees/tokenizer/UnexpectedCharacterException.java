@@ -10,7 +10,7 @@ public final class UnexpectedCharacterException extends TokenizationException {
     /**
      * The format string for the exception message.
      */
-    private static final String MESSAGE_FORMAT = "Unexpected character on line %d, character %d)";
+    private static final String MESSAGE_FORMAT = "Unexpected character on line %d, character %d";
 
     /**
      * The row on which there exists an unexpected character.

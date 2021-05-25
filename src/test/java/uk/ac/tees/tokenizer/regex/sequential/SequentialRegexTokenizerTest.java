@@ -45,7 +45,7 @@ final class SequentialRegexTokenizerTest {
         assertEquals(8, e.getColumn());
         assertEquals(3, e.getRow());
 
-        assertEquals("Unexpected character on line 3, character 8)", e.getMessage());
+        assertEquals("Unexpected character on line 3, character 8", e.getMessage());
 
         verify(mock, times(13)).supportedTypes();
         // called every token
