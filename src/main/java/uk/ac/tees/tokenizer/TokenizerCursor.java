@@ -1,4 +1,4 @@
-package uk.ac.tees.tokenizer.regex.sequential;
+package uk.ac.tees.tokenizer;
 
 /**
  * Represents a position of a tokenizer, in an input string. The remaining input, substring from the current index,
@@ -37,7 +37,7 @@ public final class TokenizerCursor {
      */
     public void nextLine() {
         row++;
-        column = 1;
+        column = 0;
     }
 
     /**
@@ -71,6 +71,10 @@ public final class TokenizerCursor {
         remainingInput = remainingInput.substring(value.length());
 
         column += value.length();
+    }
+
+    public void advance(char value) {
+        advance(Character.toString(value));
     }
 
     /**
