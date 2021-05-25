@@ -17,12 +17,11 @@ final class FlagTokenizerTest {
         FlagTokenizer tokenizer = new FlagTokenizer();
 
         UnexpectedCharacterException e = assertThrows(UnexpectedCharacterException.class,
-                () -> tokenizer.tokenize("3 * (6 + 2 - 3) / 5\n10 LET N = 5\n20 PRINT N\n30 LET ]"));
+                () -> tokenizer.tokenize("10 LET S = \"hello\"\n20 LET N = 5\n30 PRINT N\n40 LET = ]"));
 
-        assertEquals(8, e.getColumn());
         assertEquals(4, e.getRow());
-
-        assertEquals("Unexpected character on line 4, character 8)", e.getMessage());
+        assertEquals(10, e.getColumn());
+        assertEquals("Unexpected character on line 4, character 10", e.getMessage());
     }
 
     @Test

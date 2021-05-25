@@ -1,15 +1,10 @@
 package uk.ac.tees.tokenizer.flag;
 
-import uk.ac.tees.tokenizer.TinyBasicTokenizer;
-import uk.ac.tees.tokenizer.Token;
-import uk.ac.tees.tokenizer.TokenizationException;
-import uk.ac.tees.tokenizer.UnexpectedCharacterException;
+import uk.ac.tees.tokenizer.*;
 
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Tokenizes input by sequentially checking various conditions/flags, in a particular order, using a process of
@@ -19,132 +14,86 @@ import java.util.stream.Collectors;
  */
 public final class FlagTokenizer implements TinyBasicTokenizer {
 
-    private int column, row;
-
     @Override
-    public Queue<Token> tokenize(String input) throws TokenizationException {
-        column = row = 1;
-
+    public Queue<Token> tokenize(String input) throws UnexpectedCharacterException {
+        TokenizerCursor cursor = new TokenizerCursor(input);
         Queue<Token> tokens = new LinkedList<>();
-        Queue<Character> chars = input.chars().mapToObj(i -> (char) i).collect(Collectors.toCollection(LinkedList::new));
 
-        while (!chars.isEmpty()) {
-            char nextCharacter = chars.poll();
+        while (cursor.hasRemaining()) {
+            char nextCharacter = cursor.remaining().charAt(0);
 
-            if (nextCharacter == '\n') {
-                column = 0;
-                row++;
-            } else if (Character.isWhitespace(nextCharacter)) {
-                column++;
-                continue;
+            if (Character.toString(nextCharacter).matches("\\h")) {
+                cursor.advance(nextCharacter);
+
+            } else {
+                Token token = nextToken(cursor);
+                cursor.advance(token.getValue());
+
+                tokens.add(token);
             }
-
-            Token nextToken = nextToken(nextCharacter, chars)
-                    .orElseThrow(this::createUnexpectedCharacterException);
-
-            column += nextToken.getValue().length();
-            tokens.add(nextToken);
         }
 
         return tokens;
     }
 
     /**
-     * Creates a new instance of {@link UnexpectedCharacterException} using the current column and row values.
-     *
-     * @return a new {@link UnexpectedCharacterException} using values {@link #row} and {@link #column}
-     */
-    private UnexpectedCharacterException createUnexpectedCharacterException() {
-        return new UnexpectedCharacterException(row, column);
-    }
-
-    /**
      * Gets the next token from the character queue.
      *
-     * @param firstChar the first character, polled, of the queue.
-     * @param chars     the character queue to take tokensIterator from.
-     * @return the next {@link Token} wrapped in an {@link Optional}
+     * @param cursor the cursor containing the remaining input and tracking the column and row of the read character.
+     * @return the next {@link Token} from the input encapsulated in the cursor.
+     * @throws UnexpectedCharacterException when the input doesn't match any defined token type.
      */
-    private Optional<Token> nextToken(char firstChar, Queue<Character> chars) {
-        Token nextToken = nextOneCharToken(firstChar);
+    private Token nextToken(TokenizerCursor cursor) throws UnexpectedCharacterException {
+        String remainingInput = cursor.remaining();
+        char character = remainingInput.charAt(0);
 
-        if (Character.isLetter(firstChar)) {
+        Token nextOneCharToken = nextOneCharToken(cursor);
 
-            if (chars.isEmpty() || !Character.isLetter(chars.peek())) {
-                nextToken = new Token(Token.Type.IDENTIFIER, Character.toString(firstChar), row, column);
+        if (nextOneCharToken != null) {
+            return nextOneCharToken;
+
+        } else if (Character.isLetter(character)) {
+
+            if (remainingInput.length() < 2 || !Character.isLetter(remainingInput.charAt(1))) {
+                return new Token(Token.Type.IDENTIFIER, Character.toString(character), cursor.row(), cursor.column());
 
             } else {
-
-                nextToken = nextKeywordToken(firstChar, chars);
+                return new Token(Token.Type.KEYWORD, nextCharSequence(cursor, Character::isLetter), cursor.row(), cursor.column());
             }
 
-        } else if (Character.isDigit(firstChar)) {
-            nextToken = nextNumberToken(firstChar, chars);
+        } else if (Character.isDigit(character)) {
+            return new Token(Token.Type.NUMBER, nextCharSequence(cursor, Character::isDigit), cursor.row(), cursor.column());
 
-        } else if (isRelationalOperator(firstChar)) {
-            nextToken = nextRelOpToken(firstChar, chars);
+        } else if (isRelationalOperator(character)) {
+            return new Token(Token.Type.REL_OP, nextCharSequence(cursor, this::isRelationalOperator), cursor.row(), cursor.column());
 
-        } else if (isQuotationMark(firstChar)) {
-            StringBuilder tokenBuilder = nextCharSequence(firstChar, chars, Predicate.not(this::isQuotationMark))
-                    .append(chars.poll());
+        } else if (isQuotationMark(character)) {
+            String tokenBuilder = nextCharSequence(cursor, Predicate.not(this::isQuotationMark)) + "\"";
 
-            nextToken = new Token(Token.Type.STRING_EXPRESSION, tokenBuilder.toString(), row, column);
+            return new Token(Token.Type.STRING_EXPRESSION, tokenBuilder, cursor.row(), cursor.column());
         }
 
-        return Optional.ofNullable(nextToken);
+        throw new UnexpectedCharacterException(cursor.row(), cursor.column());
     }
 
     /**
      * Gets sequence of characters from the character queue until the given loop predicate is no longer satisfied.
      *
-     * @param firstChar     the first character, polled, of the queue.
-     * @param chars         the character queue to take tokensIterator from.
+     * @param cursor the cursor containing the remaining input and tracking the column and row of the read character.
      * @param loopPredicate the predicate that is to be satisfied for each character from the queue.
      * @return a {@link StringBuilder} containing the sequence of characters.
      */
-    private StringBuilder nextCharSequence(char firstChar, Queue<Character> chars, Predicate<Character> loopPredicate) {
+    private String nextCharSequence(TokenizerCursor cursor, Predicate<Character> loopPredicate) {
         StringBuilder tokenBuilder = new StringBuilder();
+        tokenBuilder.append(cursor.remaining().charAt(0));
 
-        tokenBuilder.append(firstChar);
+        int index = 1;
 
-        while (!chars.isEmpty() && loopPredicate.test(chars.peek())) {
-            tokenBuilder.append(chars.poll());
+        while (index < cursor.remaining().length() && loopPredicate.test(cursor.remaining().charAt(index))) {
+            tokenBuilder.append(cursor.remaining().charAt(index++));
         }
 
-        return tokenBuilder;
-    }
-
-    /**
-     * Gets the next keyword token from the character queue.
-     *
-     * @param firstChar the first character, polled, of the queue.
-     * @param chars     the character queue to take tokensIterator from.
-     * @return a {@link Token.Type#KEYWORD} token with the char sequence from the character queue.
-     */
-    private Token nextKeywordToken(char firstChar, Queue<Character> chars) {
-        return new Token(Token.Type.KEYWORD, nextCharSequence(firstChar, chars, Character::isLetter).toString(), row, column);
-    }
-
-    /**
-     * Gets the next number token from the character queue.
-     *
-     * @param firstChar the first character, polled, of the queue.
-     * @param chars     the character queue to take tokensIterator from.
-     * @return a {@link Token.Type#NUMBER} token with the char sequence from the character queue.
-     */
-    private Token nextNumberToken(char firstChar, Queue<Character> chars) {
-        return new Token(Token.Type.NUMBER, nextCharSequence(firstChar, chars, Character::isDigit).toString(), row, column);
-    }
-
-    /**
-     * Gets the next keyword token from the character queue.
-     *
-     * @param firstChar the first character, polled, of the queue.
-     * @param chars     the character queue to take tokensIterator from.
-     * @return a {@link Token.Type#REL_OP} token with the char sequence from the character queue.
-     */
-    private Token nextRelOpToken(char firstChar, Queue<Character> chars) {
-        return new Token(Token.Type.REL_OP, nextCharSequence(firstChar, chars, this::isRelationalOperator).toString(), row, column);
+        return tokenBuilder.toString();
     }
 
     /**
@@ -178,28 +127,31 @@ public final class FlagTokenizer implements TinyBasicTokenizer {
      * </li>
      * </ul>
      *
-     * @param firstChar the first character, polled, of the queue.
+     * @param cursor the cursor containing the remaining input and tracking the column and row of the read character.
      * @return a {@link Token} that is one character in length.
      */
-    private Token nextOneCharToken(char firstChar) {
-        String asString = Character.toString(firstChar);
+    private Token nextOneCharToken(TokenizerCursor cursor) {
+        String asString = Character.toString(cursor.remaining().charAt(0));
 
-        switch (firstChar) {
-            case ',':
-                return new Token(Token.Type.COMMA, asString, row, column);
-            case '\n':
+        int row = cursor.row(), column = cursor.column();
+
+        switch (asString) {
+            case "\n":
+                cursor.nextLine();
                 return new Token(Token.Type.NEW_LINE, asString, row, column);
-            case '+':
+            case ",":
+                return new Token(Token.Type.COMMA, asString, row, column);
+            case "+":
                 return new Token(Token.Type.PLUS, asString, row, column);
-            case '-':
+            case "-":
                 return new Token(Token.Type.MINUS, asString, row, column);
-            case '/':
+            case "/":
                 return new Token(Token.Type.DIV, asString, row, column);
-            case '*':
+            case "*":
                 return new Token(Token.Type.MULTIPLY, asString, row, column);
-            case '(':
+            case "(":
                 return new Token(Token.Type.L_PARENTHESES, asString, row, column);
-            case ')':
+            case ")":
                 return new Token(Token.Type.R_PARENTHESES, asString, row, column);
         }
 

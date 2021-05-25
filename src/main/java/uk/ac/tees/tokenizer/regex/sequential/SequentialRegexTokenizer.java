@@ -1,6 +1,7 @@
 package uk.ac.tees.tokenizer.regex.sequential;
 
 import uk.ac.tees.tokenizer.Token;
+import uk.ac.tees.tokenizer.TokenizerCursor;
 import uk.ac.tees.tokenizer.UnexpectedCharacterException;
 import uk.ac.tees.tokenizer.regex.RegexTokenizer;
 import uk.ac.tees.tokenizer.regex.patterns.TokenizerPatternsCache;
@@ -59,10 +60,11 @@ public final class SequentialRegexTokenizer extends RegexTokenizer {
                 if (matcher.lookingAt()) {
                     matchedToken = Optional.of(new Token(type, matcher.group(), cursor.row(), cursor.column()));
 
-                    cursor.advance(matcher.group());
                     if (type.equals(Token.Type.NEW_LINE)) {
                         cursor.nextLine();
                     }
+
+                    cursor.advance(matcher.group());
                     break;
                 }
             }
