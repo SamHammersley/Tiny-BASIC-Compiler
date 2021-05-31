@@ -9,11 +9,11 @@ import uk.ac.tees.tokenizer.Token;
  * @author Sam Hammersley - Gonsalves (q5315908)
  * @see <a href="http://tinybasic.cyningstan.org.uk/page/12/tiny-basic-manual">Tiny BASIC Manual</a>
  */
-public final class UnrecognisedCommand extends ParseException {
+public final class UnrecognisedCommandException extends ParseException {
 
     private static final String MESSAGE_TEMPLATE = "Unrecognised command on line %d, column %d: %s";
 
-    public UnrecognisedCommand(Token token) {
+    public UnrecognisedCommandException(Token token) {
         super(String.format(MESSAGE_TEMPLATE, token.getRow(), token.getColumn(), token.toString()));
     }
 }

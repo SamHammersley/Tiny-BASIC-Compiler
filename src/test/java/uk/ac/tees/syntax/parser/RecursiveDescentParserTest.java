@@ -12,7 +12,7 @@ import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
-import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
+import uk.ac.tees.syntax.parser.exception.UnrecognisedCommandException;
 import uk.ac.tees.tokenizer.Token;
 
 import java.util.LinkedList;
@@ -118,7 +118,7 @@ class RecursiveDescentParserTest {
         TokenSupplier supplier = new TokenSupplier(tokens);
         RecursiveDescentParser parser = new RecursiveDescentParser(supplier);
 
-        assertThrows(UnrecognisedCommand.class, () -> parser.parse("throws unrecognised command"));
+        assertThrows(UnrecognisedCommandException.class, () -> parser.parse("throws unrecognised command"));
     }
 
     @Test

@@ -16,7 +16,7 @@ import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.factor.StringLiteral;
 import uk.ac.tees.syntax.grammar.statement.*;
 import uk.ac.tees.syntax.parser.exception.ParseException;
-import uk.ac.tees.syntax.parser.exception.UnrecognisedCommand;
+import uk.ac.tees.syntax.parser.exception.UnrecognisedCommandException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +112,7 @@ public final class RecursiveDescentParser extends Parser {
         String keyword = supplier.getValue(String::toLowerCase);
 
         if (!statementParsers.containsKey(keyword)) {
-            throw new UnrecognisedCommand(supplier.getCurrentToken());
+            throw new UnrecognisedCommandException(supplier.getCurrentToken());
         }
 
         if (supplier.hasNext()) {
