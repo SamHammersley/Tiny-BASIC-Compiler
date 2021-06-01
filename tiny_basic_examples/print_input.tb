@@ -1,3 +1,4 @@
-10 LET B = 6
-20 PRINT 5, B, "Hello, world!"
-30 END
+10 PRINT "Enter a number:"
+20 INPUT N
+30 PRINT "You entered", N
+40 END
