@@ -16,26 +16,26 @@ public abstract class BinaryExpression<T extends BinaryOperator> implements Expr
     /**
      * The left hand side of the expression, this is a node of the tree and may itself be an expression.
      */
-    protected final AbstractSyntaxTreeNode left;
+    protected final Expression left;
 
     /**
      * The right hand side of the expression, this is a node of the tree and may itself be an expression.
      */
-    protected final AbstractSyntaxTreeNode right;
+    protected final Expression right;
 
     /**
      * The operator for this binary expression.
      */
     protected final T operator;
 
-    protected BinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, T operator) {
+    protected BinaryExpression(Expression left, Expression right, T operator) {
         this.left = left;
         this.right = right;
         this.operator = operator;
     }
 
     @Override
-    public <S, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<S, K> visitor) {
+    public final <S, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<S, K> visitor) {
         // Need to accept both sides/child nodes of the expression first.
         left.accept(visitor);
         right.accept(visitor);
@@ -49,7 +49,7 @@ public abstract class BinaryExpression<T extends BinaryOperator> implements Expr
      *
      * @return {@link #left}
      */
-    public AbstractSyntaxTreeNode getLeft() {
+    public Expression getLeft() {
         return left;
     }
 
@@ -58,7 +58,7 @@ public abstract class BinaryExpression<T extends BinaryOperator> implements Expr
      *
      * @return {@link #right}
      */
-    public AbstractSyntaxTreeNode getRight() {
+    public Expression getRight() {
         return right;
     }
 

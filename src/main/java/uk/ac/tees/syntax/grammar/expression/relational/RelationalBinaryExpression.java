@@ -2,6 +2,7 @@ package uk.ac.tees.syntax.grammar.expression.relational;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.expression.BinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.Expression;
 
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  */
 public final class RelationalBinaryExpression extends BinaryExpression<RelationalOperator> {
 
-    public RelationalBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, RelationalOperator operator) {
+    public RelationalBinaryExpression(Expression left, Expression right, RelationalOperator operator) {
         super(left, right, operator);
     }
 

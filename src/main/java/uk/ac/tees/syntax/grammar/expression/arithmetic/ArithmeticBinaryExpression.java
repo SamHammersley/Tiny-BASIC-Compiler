@@ -2,6 +2,7 @@ package uk.ac.tees.syntax.grammar.expression.arithmetic;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.expression.BinaryExpression;
+import uk.ac.tees.syntax.grammar.expression.Expression;
 
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  */
 public final class ArithmeticBinaryExpression extends BinaryExpression<ArithmeticOperator> {
 
-    public ArithmeticBinaryExpression(AbstractSyntaxTreeNode left, AbstractSyntaxTreeNode right, ArithmeticOperator operator) {
+    public ArithmeticBinaryExpression(Expression left, Expression right, ArithmeticOperator operator) {
         super(left, right, operator);
     }
 

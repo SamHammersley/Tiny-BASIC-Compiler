@@ -18,9 +18,9 @@ public final class UnaryExpression implements Expression {
     /**
      * The expression.
      */
-    private final AbstractSyntaxTreeNode expression;
+    private final Expression expression;
 
-    public UnaryExpression(UnaryOperator operator, AbstractSyntaxTreeNode expression) {
+    public UnaryExpression(UnaryOperator operator, Expression expression) {
         this.operator = operator;
         this.expression = expression;
     }

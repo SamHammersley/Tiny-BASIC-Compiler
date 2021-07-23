@@ -2,6 +2,7 @@ package uk.ac.tees.syntax.grammar.statement;
 
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
+import uk.ac.tees.syntax.grammar.expression.Expression;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
 import java.util.Objects;
@@ -21,9 +22,9 @@ public final class LetStatement extends Statement {
     /**
      * The value to be assigned to the identifier.
      */
-    private final AbstractSyntaxTreeNode value;
+    private final Expression value;
 
-    public LetStatement(UnassignedIdentifier identifier, AbstractSyntaxTreeNode value) {
+    public LetStatement(UnassignedIdentifier identifier, Expression value) {
         super("LET");
         this.identifier = identifier;
         this.value = value;
@@ -33,7 +34,7 @@ public final class LetStatement extends Statement {
         return identifier;
     }
 
-    public AbstractSyntaxTreeNode getValue() {
+    public Expression getValue() {
         return value;
     }
 

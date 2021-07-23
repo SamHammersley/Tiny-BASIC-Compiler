@@ -132,7 +132,7 @@ public final class RecursiveDescentParser extends Parser {
      * @throws ParseException if the expected token criteria is not matched.
      */
     private IfStatement parseIfStatement() throws ParseException {
-        AbstractSyntaxTreeNode left = parseExpression();
+        Expression left = parseExpression();
 
         supplier.predictType(REL_OP);
         RelationalOperator operator = supplier.getValue(RelationalOperator::fromSymbol);
