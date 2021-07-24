@@ -1,5 +1,6 @@
 package uk.ac.tees.codegeneration.x86_64;
 
+import uk.ac.tees.optimise.ConstantExpressionEvaluator;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
@@ -138,7 +139,8 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
     @Visitor
     private void visit(IdentifierFactor node) {
         char identifier = node.getName();
-        builder.append(INDENTATION).append("mov rax, [rbp - ").append(localVariableAddress.get(identifier)).append("]\n")
+        builder.append(INDENTATION).append("mov rax, [rbp - ")
+                .append(localVariableAddress.get(identifier)).append("]\n")
                 .append(INDENTATION).append("push rax\n");
     }
 
@@ -166,24 +168,12 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
 
     @Visitor
     private void visit(ArithmeticBinaryExpression node) {
-        builder.append(INDENTATION).append("pop rbx\n")
-                .append(INDENTATION).append("pop rax\n");
+        X86_64ExpressionCompiler expressionCompiler = new X86_64ExpressionCompiler(this);
 
-        switch (node.getOperator()) {
-            case ADD:
-            case SUB:
-                builder.append(INDENTATION).append(node.getOperator().name().toLowerCase()).append(" rax,");
-                break;
+        ConstantExpressionEvaluator<String, X86_64ExpressionCompiler> evaluator
+                = new ConstantExpressionEvaluator<>(expressionCompiler);
 
-            case DIV:
-                builder.append(INDENTATION).append("xor rdx, rdx\n");
-            case MUL:
-                builder.append(INDENTATION).append('i').append(node.getOperator().name().toLowerCase());
-                break;
-        }
-
-        builder.append(" rbx\n")
-                .append(INDENTATION).append("push rax\n");
+        builder.append(evaluator.visitTree(node));
     }
 
     @Visitor
