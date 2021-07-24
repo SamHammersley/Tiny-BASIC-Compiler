@@ -28,7 +28,8 @@ import uk.ac.tees.syntax.visitor.Visitor;
  * @see <a href="https://graphviz.gitlab.io/_pages/doc/info/lang.html">DOT Language</a>
  * <p>
  */
-public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<String, AbstractSyntaxTreeNode> {
+public final class GraphDescriptionVisitor<T extends AbstractSyntaxTreeNode>
+        extends AbstractSyntaxTreeVisitor<String, T> {
 
     /**
      * The name of the graph, this is typically the name given to the program.
@@ -52,7 +53,7 @@ public final class GraphDescriptionVisitor extends AbstractSyntaxTreeVisitor<Str
     }
 
     @Override
-    public String visitTree(AbstractSyntaxTreeNode root) {
+    public String visitTree(T root) {
         root.accept(this);
 
         return graphDescription.build(graphName);
