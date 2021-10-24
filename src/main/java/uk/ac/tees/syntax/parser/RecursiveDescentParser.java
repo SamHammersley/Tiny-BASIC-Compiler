@@ -20,7 +20,6 @@ import uk.ac.tees.syntax.parser.exception.UnrecognisedCommandException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static uk.ac.tees.tokenizer.Token.Type.*;
 
@@ -38,19 +37,6 @@ import static uk.ac.tees.tokenizer.Token.Type.*;
  * @author Sam Hammersley - Gonsalves (q5315908)
  */
 public final class RecursiveDescentParser extends Parser {
-
-    /**
-     * Maps keyword values to statement parsing functions.
-     */
-    private final Map<String, StatementParser> statementParsers = Map.of(
-            "if", this::parseIfStatement,
-            "print", this::parsePrintStatement,
-            "let", this::parseLetStatement,
-            "input", this::parseInputStatement,
-            "goto", this::parseGotoStatement,
-            "gosub", this::parseGoSubStatement,
-            "return", this::parseReturnStatement,
-            "end", this::parseEndStatement);
 
     public RecursiveDescentParser(TokenSupplier supplier) {
         super(supplier);
@@ -110,16 +96,21 @@ public final class RecursiveDescentParser extends Parser {
         supplier.scan(KEYWORD);
 
         String keyword = supplier.getValue(String::toLowerCase);
-
-        if (!statementParsers.containsKey(keyword)) {
-            throw new UnrecognisedCommandException(supplier.getCurrentToken());
-        }
-
         if (supplier.hasNext()) {
             supplier.scan();
         }
 
-        return statementParsers.get(keyword).parse();
+        return switch(keyword) {
+            case "if" -> parseIfStatement();
+            case "print" -> parsePrintStatement();
+            case "let" -> parseLetStatement();
+            case "input" -> parseInputStatement();
+            case "goto" -> parseGotoStatement();
+            case "gosub" -> parseGoSubStatement();
+            case "return" -> parseReturnStatement();
+            case "end" -> parseEndStatement();
+            default -> throw new UnrecognisedCommandException(supplier.getCurrentToken());
+        };
     }
 
     /**
@@ -395,23 +386,6 @@ public final class RecursiveDescentParser extends Parser {
         }
 
         return factor;
-    }
-
-    /**
-     * Represents a function that parses and returns a {@link Statement}.
-     *
-     * @author Sam Hammersley - Gonsalves (q5315908)
-     */
-    private interface StatementParser {
-
-        /**
-         * Parses a {@link Statement}, using tokens from {@link RecursiveDescentParser#supplier}.
-         *
-         * @return the parsed {@link Statement}.
-         * @throws ParseException when input is syntactically incorrect.
-         */
-        Statement parse() throws ParseException;
-
     }
 
 }
