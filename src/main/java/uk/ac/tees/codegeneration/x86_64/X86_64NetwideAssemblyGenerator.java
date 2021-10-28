@@ -73,7 +73,7 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
     /**
      * Denotes whether the ascii deconversion function is required.
      */
-    private boolean addAsciiDeconvert;
+    private boolean addDecimalConvert;
 
     /**
      * Gets the offset from stack frame base pointer for the given identifier.
@@ -103,7 +103,7 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
             addDecimalToAsciiFunction();
         }
 
-        if (addAsciiDeconvert) {
+        if (addDecimalConvert) {
             addAsciiToDecimalFunction();
         }
 
@@ -249,7 +249,7 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
             builder.append(INDENTATION).append("pop rax").append('\n');
             builder.append(INDENTATION).append("mov [rbp - ").append(addressOffset).append("], rax").append('\n');
         }
-        addAsciiDeconvert = true;
+        addDecimalConvert = true;
     }
 
     /**
@@ -258,7 +258,7 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
      * together the new values, in a register, which is then pushed onto the stack.
      */
     private void addDecimalToAsciiFunction() {
-        builder.append("ascii_conversion:\n")
+        builder.append("decimal_to_ascii:\n")
                 // preserve return address in r8 register.
                 .append(INDENTATION).append("pop r8\n")
                 // pop the value to convert off the stack into rax.
@@ -296,7 +296,7 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
      * then joins back together the new values, in a register, which is then pushed onto the stack.
      */
     private void addAsciiToDecimalFunction() {
-        builder.append("ascii_deconversion:\n")
+        builder.append("ascii_to_decimal:\n")
                 // preserve return address in r8 register.
                 .append(INDENTATION).append("pop r8\n")
                 // pop the value to deconvert off the stack into r9.

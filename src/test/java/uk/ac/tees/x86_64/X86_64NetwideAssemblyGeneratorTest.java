@@ -59,7 +59,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
                     "    pop rax\n" +
                     "    add rax, rbx\n" +
                     "    push rax\n" +
-                    "    call ascii_conversion\n" +
+                    "    call decimal_to_ascii\n" +
                     "    mov rax, 1\n" +
                     "    mov rdi, 1\n" +
                     "    mov rsi, rsp\n" +
@@ -93,7 +93,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
                     "    mov rax, 60\n" +
                     "    mov rdi, 0\n" +
                     "    syscall\n" +
-                    "ascii_conversion:\n" +
+                    "decimal_to_ascii:\n" +
                     "    pop r8\n" +
                     "    pop rax\n" +
                     "    mov r9, 10\n" +
@@ -158,7 +158,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
 
                         "    mov rax, [rbp - 8]\n" +
                         "    push rax\n" +
-                        "    call ascii_deconversion\n" +
+                        "    call ascii_to_decimal\n" +
                         "    pop rax\n" +
                         "    mov [rbp - 8], rax\n" +
 
@@ -170,7 +170,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
                         "    syscall\n" +
                         "    mov rax, [rbp - 16]\n" +
                         "    push rax\n" +
-                        "    call ascii_deconversion\n" +
+                        "    call ascii_to_decimal\n" +
                         "    pop rax\n" +
                         "    mov [rbp - 16], rax\n";
 
@@ -187,7 +187,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
     void testCompoundPrintStatement() {
         final String expectedOutput =
                 "    push 5\n" +
-                        "    call ascii_conversion\n" +
+                        "    call decimal_to_ascii\n" +
                         "    mov rax, 1\n" +
                         "    mov rdi, 1\n" +
                         "    mov rsi, rsp\n" +
@@ -201,7 +201,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
                         "    pop rax\n" +
                         "    mov rax, [rbp - null]\n" +
                         "    push rax\n" +
-                        "    call ascii_conversion\n" +
+                        "    call decimal_to_ascii\n" +
                         "    mov rax, 1\n" +
                         "    mov rdi, 1\n" +
                         "    mov rsi, rsp\n" +

@@ -23,8 +23,8 @@ final class X86_64CompilerConstants {
     static final int STD_IN_FILE_DESCRIPTOR = 0;
     static final int SYS_EXIT_ID = 60;
     static final String INDENTATION = "    ";
-    static final String CALL_ASCII_CONVERSION = "call ascii_conversion";
-    static final String CALL_ASCII_DECONVERSION = "call ascii_deconversion";
+    static final String CALL_ASCII_CONVERSION = "call decimal_to_ascii";
+    static final String CALL_ASCII_DECONVERSION = "call ascii_to_decimal";
 
     /**
      * The registers used for system calls, as described in the Linux Application Binary Interface documentation.
