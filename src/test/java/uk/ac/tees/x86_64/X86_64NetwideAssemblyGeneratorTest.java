@@ -22,89 +22,90 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 final class X86_64NetwideAssemblyGeneratorTest {
 
     private static final String ASSEMBLY_OUTPUT =
-            "section .rodata\n" +
-                    "    new_line_char: db 0x0A\n" +
-                    "\n" +
-                    "section .text\n" +
-                    "    global _start\n" +
-                    "_start:\n" +
-                    "    push rbp\n" +
-                    "    mov rbp, rsp\n" +
-                    "    sub rsp, 8\n" +
-                    "_line_10:\n" +
-                    "    push 6\n" +
-                    "    pop rax\n" +
-                    "    mov [rbp - 8], rax\n" +
-                    "_line_20:\n" +
-                    "    mov rax, [rbp - 8]\n" +
-                    "    push rax\n" +
-                    "    mov rax, [rbp - 8]\n" +
-                    "    push rax\n" +
-                    "    pop rbx\n" +
-                    "    pop rax\n" +
-                    "    imul rbx\n" +
-                    "    push rax\n" +
-                    "    mov rax, [rbp - 8]\n" +
-                    "    push rax\n" +
-                    "    push 1\n" +
-                    "    pop rbx\n" +
-                    "    pop rax\n" +
-                    "    sub rax, rbx\n" +
-                    "    push rax\n" +
-                    "    push 10\n" +
-                    "    pop rbx\n" +
-                    "    pop rax\n" +
-                    "    imul rbx\n" +
-                    "    push rax\n" +
-                    "    pop rbx\n" +
-                    "    pop rax\n" +
-                    "    add rax, rbx\n" +
-                    "    push rax\n" +
-                    "    call decimal_to_ascii\n" +
-                    "    mov rax, 1\n" +
-                    "    mov rdi, 1\n" +
-                    "    mov rsi, rsp\n" +
-                    "    mov rdx, 8\n" +
-                    "    syscall\n" +
-                    "    pop rax\n" +
-                    "_line_30:\n" +
-                    "    mov rax, [rbp - 8]\n" +
-                    "    push rax\n" +
-                    "    mov rax, [rbp - 8]\n" +
-                    "    push rax\n" +
-                    "    pop rax\n" +
-                    "    pop rbx\n" +
-                    "    cmp rbx, rax\n" +
-                    "    jle _line_40\n" +
-                    "    xor rax, rax\n" +
-                    "    mov rsp, rbp\n" +
-                    "    pop rbp\n" +
-                    "    mov rax, 60\n" +
-                    "    mov rdi, 0\n" +
-                    "    syscall\n" +
-                    "_line_40:\n" +
-                    "    xor rax, rax\n" +
-                    "    mov rsp, rbp\n" +
-                    "    pop rbp\n" +
-                    "    mov rax, 60\n" +
-                    "    mov rdi, 0\n" +
-                    "    syscall\n" +
-                    "decimal_to_ascii:\n" +
-                    "    pop r8\n" +
-                    "    pop rax\n" +
-                    "    mov r9, 10\n" +
-                    "    mov r10, 0\n" +
-                    "add_ascii_offset_loop:\n" +
-                    "    xor rdx, rdx\n" +
-                    "    idiv r9\n" +
-                    "    add rdx, 48\n" +
-                    "    or r10, rdx\n" +
-                    "    shl r10, 8\n" +
-                    "    cmp rax, 0\n" +
-                    "    jne add_ascii_offset_loop\n" +
-                    "    push r10\n" +
-                    "    push r8\n" +
-                    "    ret\n";
+            """
+                    section .rodata
+
+                    section .text
+                        global _start
+                    _start:
+                        push rbp
+                        mov rbp, rsp
+                        sub rsp, 8
+                    _line_10:
+                        push 6
+                        pop rax
+                        mov [rbp - 8], rax
+                    _line_20:
+                        mov rax, [rbp - 8]
+                        push rax
+                        mov rax, [rbp - 8]
+                        push rax
+                        pop rbx
+                        pop rax
+                        imul rbx
+                        push rax
+                        mov rax, [rbp - 8]
+                        push rax
+                        push 1
+                        pop rbx
+                        pop rax
+                        sub rax, rbx
+                        push rax
+                        push 10
+                        pop rbx
+                        pop rax
+                        imul rbx
+                        push rax
+                        pop rbx
+                        pop rax
+                        add rax, rbx
+                        push rax
+                        call decimal_to_ascii
+                        mov rax, 1
+                        mov rdi, 1
+                        mov rsi, rsp
+                        mov rdx, 8
+                        syscall
+                        pop rax
+                    _line_30:
+                        mov rax, [rbp - 8]
+                        push rax
+                        mov rax, [rbp - 8]
+                        push rax
+                        pop rax
+                        pop rbx
+                        cmp rbx, rax
+                        jle _line_40
+                        xor rax, rax
+                        mov rsp, rbp
+                        pop rbp
+                        mov rax, 60
+                        mov rdi, 0
+                        syscall
+                    _line_40:
+                        xor rax, rax
+                        mov rsp, rbp
+                        pop rbp
+                        mov rax, 60
+                        mov rdi, 0
+                        syscall
+                    decimal_to_ascii:
+                        pop r8
+                        pop rax
+                        mov r9, 10
+                        mov r10, 0
+                    add_ascii_offset_loop:
+                        xor rdx, rdx
+                        idiv r9
+                        add rdx, 48
+                        or r10, rdx
+                        shl r10, 8
+                        cmp rax, 0
+                        jne add_ascii_offset_loop
+                        push r10
+                        push r8
+                        ret
+                    """;
 
     private Program manualAbstractSyntaxTree() {
         // B * B (6 * 6)
@@ -145,30 +146,30 @@ final class X86_64NetwideAssemblyGeneratorTest {
     @Test
     void testInputStatement() {
         final String expectedOutput =
-                "    lea r8, [rbp - 8]\n" +
-                        "    mov rax, 0\n" +
-                        "    mov rdi, 0\n" +
-                        "    mov rsi, r8\n" +
-                        "    mov rdx, 8\n" +
-                        "    syscall\n" +
-
-                        "    mov rax, [rbp - 8]\n" +
-                        "    push rax\n" +
-                        "    call ascii_to_decimal\n" +
-                        "    pop rax\n" +
-                        "    mov [rbp - 8], rax\n" +
-
-                        "    lea r8, [rbp - 16]\n" +
-                        "    mov rax, 0\n" +
-                        "    mov rdi, 0\n" +
-                        "    mov rsi, r8\n" +
-                        "    mov rdx, 8\n" +
-                        "    syscall\n" +
-                        "    mov rax, [rbp - 16]\n" +
-                        "    push rax\n" +
-                        "    call ascii_to_decimal\n" +
-                        "    pop rax\n" +
-                        "    mov [rbp - 16], rax\n";
+                """
+                            lea r8, [rbp - 8]
+                            mov rax, 0
+                            mov rdi, 0
+                            mov rsi, r8
+                            mov rdx, 8
+                            syscall
+                            mov rax, [rbp - 8]
+                            push rax
+                            call ascii_to_decimal
+                            pop rax
+                            mov [rbp - 8], rax
+                            lea r8, [rbp - 16]
+                            mov rax, 0
+                            mov rdi, 0
+                            mov rsi, r8
+                            mov rdx, 8
+                            syscall
+                            mov rax, [rbp - 16]
+                            push rax
+                            call ascii_to_decimal
+                            pop rax
+                            mov [rbp - 16], rax
+                        """;
 
         X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
         List<UnassignedIdentifier> ids = List.of(
