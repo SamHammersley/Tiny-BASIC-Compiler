@@ -62,15 +62,13 @@ public final class X86_64DataSection {
 
     @Override
     public String toString() {
-        addPredefinedEntry("new_line_char", "db", "0x0A");
-
-        StringBuilder readOnlyBuilder = new StringBuilder("section .rodata\n");
+        StringBuilder builder = new StringBuilder("section " + type.getLabel() + "\n");
 
         for (DataEntry entry : data.values()) {
-            readOnlyBuilder.append(INDENTATION).append(entry).append('\n');
+            builder.append(INDENTATION).append(entry).append('\n');
         }
 
-        return readOnlyBuilder.append('\n').toString();
+        return builder.append('\n').toString();
     }
 
     @Override
