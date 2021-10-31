@@ -54,20 +54,19 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
     private void visit(AbstractSyntaxTreeNode node) {
         addAsciiConvert = true;
         builder.append(INDENTATION).append(CALL_ASCII_CONVERSION).append('\n');
+        // syscall expects value/operand in rsp, so we can just push the value onto the stack.
         print("rsp", 8);
+        // the value/operand is at the top of the stack, pop into rax and essentially discard.
         builder.append(INDENTATION).append("pop rax\n");
     }
 
     @Visitor
     private void visit(StringLiteral node) {
-        // todo: need to fix this, newline char treated as 2 chars, probably have to pattern match here
-        // and then for each match, decrement the operand size and replace the new line char with
-        // 0xA.
-        // -2 from operand size for the quotation marks.
-        int operandSize = node.getValue().length() - 2;
-        String operand = node.getValue().replace("\\n", "\",0xA,\"");
-        String label = dataSection.getLabel(operand);
-        print(label, operandSize);
+        // remove quotation marks and unescape double-escaped characters.
+        String[] hexArray = X86_64CompilerConstants.stringLiteralCharsToHex(node.getValue());
+        String operand = String.join(",", hexArray);
+
+        print(dataSection.getLabel(operand), hexArray.length);
     }
 
     /**

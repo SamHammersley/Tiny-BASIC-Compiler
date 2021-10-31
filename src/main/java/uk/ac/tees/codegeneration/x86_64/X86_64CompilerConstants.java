@@ -1,6 +1,7 @@
 package uk.ac.tees.codegeneration.x86_64;
 
 import uk.ac.tees.syntax.grammar.expression.relational.RelationalOperator;
+import uk.ac.tees.syntax.grammar.factor.StringLiteral;
 
 /**
  * Class holding constant data for X86-64 compiler.
@@ -72,6 +73,20 @@ final class X86_64CompilerConstants {
         }
 
         return jumpOp.toLowerCase();
+    }
+
+    /**
+     * Converts {@link StringLiteral#getValue()} to an array of hex strings that each represent a character.
+     * @param s the string to convert
+     * @return an array of hex strings.
+     */
+    static String[] stringLiteralCharsToHex(String s) {
+        return s.replaceAll("\"", "")
+                .translateEscapes()
+                .chars()
+                .mapToObj(Integer::toHexString)
+                .map("0x"::concat)
+                .toArray(String[]::new);
     }
 
     public enum DataSectionType {

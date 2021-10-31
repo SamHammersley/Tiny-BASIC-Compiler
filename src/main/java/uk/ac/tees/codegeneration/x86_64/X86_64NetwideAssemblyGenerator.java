@@ -151,9 +151,11 @@ public final class X86_64NetwideAssemblyGenerator extends AbstractSyntaxTreeVisi
 
     @Visitor
     private void visit(StringLiteral node) {
-        String value = node.getValue().replace("\\n", "\",0xA,\"");
+        // convert the string to an array of hex strings (for each character).
+        String[] hexArray = X86_64CompilerConstants.stringLiteralCharsToHex(node.getValue());
+        String operand = String.join(",", hexArray);
 
-        dataSection.addEntry(value, "db");
+        dataSection.addEntry(operand, "db");
     }
 
     @Visitor
