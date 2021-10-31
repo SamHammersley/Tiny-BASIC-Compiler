@@ -3,6 +3,8 @@ package uk.ac.tees.syntax.grammar.statement;
 import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.visitor.AbstractSyntaxTreeVisitor;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,20 +17,26 @@ public class PrintStatement extends Statement {
     /**
      * The {@link AbstractSyntaxTreeNode} expression to print.
      */
-    private final AbstractSyntaxTreeNode expression;
+    private final List<AbstractSyntaxTreeNode> expressions;
 
-    public PrintStatement(AbstractSyntaxTreeNode expression) {
+    public PrintStatement(List<AbstractSyntaxTreeNode> expressions) {
         super("PRINT");
-        this.expression = expression;
+        this.expressions = expressions;
     }
 
-    public AbstractSyntaxTreeNode getExpression() {
-        return expression;
+    public PrintStatement(AbstractSyntaxTreeNode...expressions) {
+        this(Arrays.asList(expressions));
+    }
+
+    public List<AbstractSyntaxTreeNode> getExpressions() {
+        return expressions;
     }
 
     @Override
     public <T, K extends AbstractSyntaxTreeNode> void accept(AbstractSyntaxTreeVisitor<T, K> visitor) {
-        expression.accept(visitor);
+        for (AbstractSyntaxTreeNode e : expressions) {
+            e.accept(visitor);
+        }
 
         visitor.visitNode(this);
     }
@@ -38,17 +46,15 @@ public class PrintStatement extends Statement {
         if (this == object) {
             return true;
         }
-        if (!(object instanceof PrintStatement)) {
+        if (!(object instanceof PrintStatement other)) {
             return false;
         }
 
-        PrintStatement other = (PrintStatement) object;
-
-        return expression.equals(other.expression);
+        return expressions.equals(other.expressions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(expression);
+        return Objects.hash(expressions);
     }
 }

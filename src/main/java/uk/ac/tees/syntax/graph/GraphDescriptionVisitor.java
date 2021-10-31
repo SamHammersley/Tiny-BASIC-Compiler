@@ -138,16 +138,8 @@ public final class GraphDescriptionVisitor<T extends AbstractSyntaxTreeNode>
     private void visit(PrintStatement node) {
         graphDescription.add(node);
 
-        graphDescription.associate(node, node.getExpression());
-    }
-
-    @Visitor
-    private void visit(CompoundPrintStatement node) {
-        graphDescription.add(node);
-
-        for (PrintStatement child : node.getStatements()) {
-            graphDescription.remove(child);
-            graphDescription.associate(node, child.getExpression());
+        for (AbstractSyntaxTreeNode expression : node.getExpressions()) {
+            graphDescription.associate(node, expression);
         }
     }
 }

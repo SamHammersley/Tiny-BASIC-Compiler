@@ -101,10 +101,10 @@ public final class RecursiveDescentParser extends Parser {
         }
 
         return switch(keyword) {
-            case "if" -> parseIfStatement();
             case "print" -> parsePrintStatement();
-            case "let" -> parseLetStatement();
             case "input" -> parseInputStatement();
+            case "if" -> parseIfStatement();
+            case "let" -> parseLetStatement();
             case "goto" -> parseGotoStatement();
             case "gosub" -> parseGoSubStatement();
             case "return" -> parseReturnStatement();
@@ -145,23 +145,17 @@ public final class RecursiveDescentParser extends Parser {
      * @return a {@link PrintStatement} object.
      * @throws ParseException if the expected token criteria is not matched.
      */
-    private Statement parsePrintStatement() throws ParseException {
-        AbstractSyntaxTreeNode expression = parsePrintExpression();
-
-        if (!supplier.currentTypeIs(COMMA)) {
-            return new PrintStatement(expression);
-        }
-
-        CompoundPrintStatement statement = new CompoundPrintStatement();
-        statement.addExpression(expression);
+    private PrintStatement parsePrintStatement() throws ParseException {
+        List<AbstractSyntaxTreeNode> expressions = new ArrayList<>();
+        expressions.add(parsePrintExpression());
 
         while (supplier.currentTypeIs(COMMA)) {
             supplier.scan();
 
-            statement.addExpression(parsePrintExpression());
+            expressions.add(parsePrintExpression());
         }
 
-        return statement;
+        return new PrintStatement(expressions);
     }
 
     /**

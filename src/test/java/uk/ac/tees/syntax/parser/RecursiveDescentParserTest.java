@@ -1,6 +1,7 @@
 package uk.ac.tees.syntax.parser;
 
 import org.junit.jupiter.api.Test;
+import uk.ac.tees.syntax.grammar.AbstractSyntaxTreeNode;
 import uk.ac.tees.syntax.grammar.Line;
 import uk.ac.tees.syntax.grammar.Program;
 import uk.ac.tees.syntax.grammar.UnassignedIdentifier;
@@ -15,6 +16,7 @@ import uk.ac.tees.syntax.parser.exception.ParseException;
 import uk.ac.tees.syntax.parser.exception.UnrecognisedCommandException;
 import uk.ac.tees.tokenizer.Token;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -151,23 +153,38 @@ class RecursiveDescentParserTest {
     @Test
     void testParseStatement() throws ParseException {
         TokenSupplier mockSupplier = mock(TokenSupplier.class);
-        when(mockSupplier.getValue(any())).thenReturn("print").thenReturn(10).thenReturn(ArithmeticOperator.MUL).thenReturn(10);
+        when(mockSupplier.getValue(any()))
+                .thenReturn("print")
+                .thenReturn(10)
+                .thenReturn(ArithmeticOperator.MUL)
+                .thenReturn(10);
 
-        when(mockSupplier.getType()).thenReturn(NUMBER).thenReturn(NUMBER).thenReturn(IDENTIFIER); // parsing factors
-        when(mockSupplier.getValue()).thenReturn("X"); // parsing identifier factor
+        when(mockSupplier.getType())
+                .thenReturn(NUMBER)
+                .thenReturn(NUMBER)
+                .thenReturn(IDENTIFIER); // parsing factors
 
-        when(mockSupplier.currentTypeIs(same(MULTIPLY), same(DIV))).thenReturn(true).thenReturn(false);
-        when(mockSupplier.currentTypeIs(same(COMMA))).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(mockSupplier.getValue())
+                .thenReturn("X"); // parsing identifier factor
+
+        when(mockSupplier.currentTypeIs(same(MULTIPLY), same(DIV)))
+                .thenReturn(true)
+                .thenReturn(false);
+
+        when(mockSupplier.currentTypeIs(same(COMMA)))
+                .thenReturn(true)
+                .thenReturn(false);
 
         RecursiveDescentParser parser = new RecursiveDescentParser(mockSupplier);
         Statement actual = parser.parseStatement();
 
-        CompoundPrintStatement expected = new CompoundPrintStatement();
-        expected.addExpression(new ArithmeticBinaryExpression(
+        List<AbstractSyntaxTreeNode> expressions = new ArrayList<>();
+        expressions.add(new ArithmeticBinaryExpression(
                 new NumberFactor(10),
                 new NumberFactor(10),
                 ArithmeticOperator.MUL));
-        expected.addExpression(new IdentifierFactor('X'));
+        expressions.add(new IdentifierFactor('X'));
+        PrintStatement expected = new PrintStatement(expressions);
 
         assertEquals(expected, actual);
 

@@ -39,7 +39,9 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
 
     @Override
     public String visitTree(PrintStatement node) {
-        visitNode(node.getExpression());
+        for (AbstractSyntaxTreeNode expression : node.getExpressions()) {
+            visitNode(expression);
+        }
 
         return builder.toString();
     }
@@ -58,10 +60,13 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
 
     @Visitor
     private void visit(StringLiteral node) {
+        // todo: need to fix this, newline char treated as 2 chars, probably have to pattern match here
+        // and then for each match, decrement the operand size and replace the new line char with
+        // 0xA.
+        // -2 from operand size for the quotation marks.
+        int operandSize = node.getValue().length() - 2;
         String operand = node.getValue().replace("\\n", "\",0xA,\"");
         String label = dataSection.getLabel(operand);
-        // -2 for the quotation marks
-        int operandSize = operand.length() - 2;
         print(label, operandSize);
     }
 
@@ -73,7 +78,5 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
      */
     private void print(String address, int operandSize) {
         systemCall(builder, SYS_WRITE_ID, STD_OUT_FILE_DESCRIPTOR, address, operandSize);
-
-        systemCall(builder, SYS_WRITE_ID, STD_OUT_FILE_DESCRIPTOR, "new_line_char", 1);
     }
 }

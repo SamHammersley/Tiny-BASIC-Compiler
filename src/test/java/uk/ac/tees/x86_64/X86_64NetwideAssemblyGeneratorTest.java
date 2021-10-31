@@ -13,6 +13,7 @@ import uk.ac.tees.syntax.grammar.factor.IdentifierFactor;
 import uk.ac.tees.syntax.grammar.factor.NumberFactor;
 import uk.ac.tees.syntax.grammar.factor.StringLiteral;
 import uk.ac.tees.syntax.grammar.statement.*;
+import uk.ac.tees.syntax.graph.GraphDescriptionVisitor;
 
 import java.util.List;
 
@@ -64,11 +65,6 @@ final class X86_64NetwideAssemblyGeneratorTest {
                     "    mov rdi, 1\n" +
                     "    mov rsi, rsp\n" +
                     "    mov rdx, 8\n" +
-                    "    syscall\n" +
-                    "    mov rax, 1\n" +
-                    "    mov rdi, 1\n" +
-                    "    mov rsi, new_line_char\n" +
-                    "    mov rdx, 1\n" +
                     "    syscall\n" +
                     "    pop rax\n" +
                     "_line_30:\n" +
@@ -179,58 +175,6 @@ final class X86_64NetwideAssemblyGeneratorTest {
                 new UnassignedIdentifier('N'), new UnassignedIdentifier('O'));
 
         new InputStatement(ids).accept(compiler);
-
-        assertEquals(expectedOutput, compiler.toString());
-    }
-
-    @Test
-    void testCompoundPrintStatement() {
-        final String expectedOutput =
-                "    push 5\n" +
-                        "    call decimal_to_ascii\n" +
-                        "    mov rax, 1\n" +
-                        "    mov rdi, 1\n" +
-                        "    mov rsi, rsp\n" +
-                        "    mov rdx, 8\n" +
-                        "    syscall\n" +
-                        "    mov rax, 1\n" +
-                        "    mov rdi, 1\n" +
-                        "    mov rsi, new_line_char\n" +
-                        "    mov rdx, 1\n" +
-                        "    syscall\n" +
-                        "    pop rax\n" +
-                        "    mov rax, [rbp - null]\n" +
-                        "    push rax\n" +
-                        "    call decimal_to_ascii\n" +
-                        "    mov rax, 1\n" +
-                        "    mov rdi, 1\n" +
-                        "    mov rsi, rsp\n" +
-                        "    mov rdx, 8\n" +
-                        "    syscall\n" +
-                        "    mov rax, 1\n" +
-                        "    mov rdi, 1\n" +
-                        "    mov rsi, new_line_char\n" +
-                        "    mov rdx, 1\n" +
-                        "    syscall\n" +
-                        "    pop rax\n" +
-                        "    mov rax, 1\n" +
-                        "    mov rdi, 1\n" +
-                        "    mov rsi, rodata0\n" +
-                        "    mov rdx, 7\n" +
-                        "    syscall\n" +
-                        "    mov rax, 1\n" +
-                        "    mov rdi, 1\n" +
-                        "    mov rsi, new_line_char\n" +
-                        "    mov rdx, 1\n" +
-                        "    syscall\n";
-
-        X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
-
-        CompoundPrintStatement statement = new CompoundPrintStatement();
-        statement.addExpression(new NumberFactor(5));
-        statement.addExpression(new IdentifierFactor('X'));
-        statement.addExpression(new StringLiteral("Test Test"));
-        statement.accept(compiler);
 
         assertEquals(expectedOutput, compiler.toString());
     }
