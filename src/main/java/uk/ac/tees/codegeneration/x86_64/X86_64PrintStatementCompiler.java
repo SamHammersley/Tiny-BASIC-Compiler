@@ -29,9 +29,9 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
     private final StringBuilder builder = new StringBuilder();
 
     /**
-     * Denotes whether the ascii conversion function is required.
+     * Denotes whether the ascii conversion util subroutines are required.
      */
-    private boolean addAsciiConvert;
+    private boolean includeAsciiUtil;
 
     X86_64PrintStatementCompiler(X86_64DataSection dataSection) {
         this.dataSection = dataSection;
@@ -47,12 +47,12 @@ public final class X86_64PrintStatementCompiler extends AbstractSyntaxTreeVisito
     }
 
     public boolean shouldConvert() {
-        return addAsciiConvert;
+        return includeAsciiUtil;
     }
 
     @Visitor(types = {NumberFactor.class, IdentifierFactor.class, ArithmeticBinaryExpression.class})
     private void visit(AbstractSyntaxTreeNode node) {
-        addAsciiConvert = true;
+        includeAsciiUtil = true;
         builder.append(INDENTATION).append(CALL_ASCII_CONVERSION).append('\n');
         // syscall expects value/operand in rsp, so we can just push the value onto the stack.
         print("rsp", 8);

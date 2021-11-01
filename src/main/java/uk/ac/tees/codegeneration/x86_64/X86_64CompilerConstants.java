@@ -15,8 +15,6 @@ final class X86_64CompilerConstants {
      * find the index in the string to replace with the actual operations.
      */
     static final String LOCAL_VAR_RESERVE_PLACE_HOLDER = "_local_var_size_";
-    static final int ASCII_DECIMAL_DIVISOR = 10;
-    static final int ASCII_DIGIT_OFFSET = 48;
     static final int MAX_LOCAL_VARIABLE_COUNT = Math.abs('Z' - 'A') + 1;
     static final int SYS_WRITE_ID = 1;
     static final int STD_OUT_FILE_DESCRIPTOR = 1;
@@ -26,6 +24,7 @@ final class X86_64CompilerConstants {
     static final String INDENTATION = "    ";
     static final String CALL_ASCII_CONVERSION = "call decimal_to_ascii";
     static final String CALL_ASCII_DECONVERSION = "call ascii_to_decimal";
+    static final String INCLUDE_ASCII_UTILS = "%include \"ascii_util.asm\"\n";
 
     /**
      * The registers used for system calls, as described in the Linux Application Binary Interface documentation.

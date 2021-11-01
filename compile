@@ -7,6 +7,6 @@ then
 
 else
   file_out=$(echo "$input_file" | cut -f 1 -d '.')
-  nasm -f elf64 -o $file_out.o $input_file
+  nasm -i ./include/ -f elf64 -o $file_out.o $input_file
   ld -o $file_out $file_out.o
 fi

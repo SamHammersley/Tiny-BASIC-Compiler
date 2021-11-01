@@ -23,6 +23,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
 
     private static final String ASSEMBLY_OUTPUT =
             """
+                    %include "ascii_util.asm"
                     section .rodata
 
                     section .text
@@ -89,22 +90,6 @@ final class X86_64NetwideAssemblyGeneratorTest {
                         mov rax, 60
                         mov rdi, 0
                         syscall
-                    decimal_to_ascii:
-                        pop r8
-                        pop rax
-                        mov r9, 10
-                        mov r10, 0
-                    add_ascii_offset_loop:
-                        xor rdx, rdx
-                        idiv r9
-                        add rdx, 48
-                        or r10, rdx
-                        shl r10, 8
-                        cmp rax, 0
-                        jne add_ascii_offset_loop
-                        push r10
-                        push r8
-                        ret
                     """;
 
     private Program manualAbstractSyntaxTree() {
@@ -140,7 +125,7 @@ final class X86_64NetwideAssemblyGeneratorTest {
         X86_64NetwideAssemblyGenerator compiler = new X86_64NetwideAssemblyGenerator();
         String assembly = compiler.visitTree(manualAbstractSyntaxTree());
 
-        assertEquals(assembly, ASSEMBLY_OUTPUT);
+        assertEquals(ASSEMBLY_OUTPUT, assembly);
     }
 
     @Test
